@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="css/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed:700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed:100,400,700&display=swap">
 
 <style>
   body,
@@ -14,11 +14,16 @@
   }
 
   h1,
-  h2,
-  h3 {
+  h2 {
     font-family: 'Roboto Condensed', sans-serif;
     font-weight: 700;
     color: #333;
+  }
+
+  h3 {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 400;
+    color: #111;
   }
 
   a {
@@ -44,7 +49,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
-<script src="js/app.js">  </script>
+<script src="js/app.js"> </script>
 
 <body>
   <div class="w3-top" id="top-menu-bar">
@@ -65,8 +70,16 @@
     <a href="#About" class="w3-bar-item w3-button" onClick="clickBurger()">About</a>
   </div>
 
+  <div class="w3-content w3-padding-64" id="Top" style="max-width:920px">
 
-  <div class="w3-content w3-padding-64" id="Top" style="max-width:960px">
+    <div class="w3-row w3-container">
+      <h3>Latest update</h3>
+    </div>
+
+    <div class="w3-row" id="FirstItem">
+    </div>
+    <hr>
+    <!-- Plot CO2 -->
     <div class="w3-row">
       <div class="w3-col w3-container m6 l7">
         <h2>Atmospheric CO2 levels are increasing</h2>
@@ -74,7 +87,6 @@
         million).
         Since the industrial revolution this level has increased steadily and is currently at around 410 ppm.
         This chart is updated monthly
-
         <p>
           Data source:
           <a href="https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html" target="_blank" rel="noopener">NOAA</a>
@@ -87,21 +99,77 @@
         </p>
       </div>
       <div class="w3-col w3-container m6 l5">
-        <canvas id="myChart2"></canvas>
-        <script> plotAtmosphericCO2("myChart2"); </script>
+        <canvas id="plotCO2"></canvas>
+        <script>
+          plotAtmosphericCO2("plotCO2");
+        </script>
       </div>
     </div>
     <hr>
 
+    <!-- Methane CH4 -->
+    <div class="w3-row">
+      <div class="w3-col w3-container m6 l7">
+        <h2>Atmospheric Methane levels are increasing</h2>
+        This chart is updated monthly
+        <p>
+          Data source:
+          <a href="https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html" target="_blank" rel="noopener">NOAA</a>
+        </p>
+        <p>
+          Reference: Dr. Pieter Tans,
+          <a href="https://www.esrl.noaa.gov/gmd/ccgg/trends" target="_blank" rel="noopener">NOAA/ESRL</a>
+          and Dr. Ralph Keeling,
+          <a href="http://scrippsco2.ucsd.edu/" target="_blank" rel="noopener">Scripps Institution of Oceanography</a>
+        </p>
+      </div>
+      <div class="w3-col w3-container m6 l5">
+        <canvas id="plotCH4"></canvas>
+        <script>
+          plotAtmosphericCH4("plotCH4");
+        </script>
+      </div>
+    </div>
+    <hr>
+
+    <!-- Arctic Ice Extent -->
+    <div class="w3-row" id="LatestNews">
+      <div class="w3-col w3-container m6 l7">
+        <h2>Ice extent in the Arctic is decreasing</h2>
+        This chart is updated monthly
+        <p>
+          Data source:
+          <a href="https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html" target="_blank" rel="noopener">NOAA</a>
+        </p>
+        <p>
+          Reference: Dr. Pieter Tans,
+          <a href="https://www.esrl.noaa.gov/gmd/ccgg/trends" target="_blank" rel="noopener">NOAA/ESRL</a>
+          and Dr. Ralph Keeling,
+          <a href="http://scrippsco2.ucsd.edu/" target="_blank" rel="noopener">Scripps Institution of Oceanography</a>
+        </p>
+      </div>
+      <div class="w3-col w3-container m6 l5">
+        <canvas id="plotArcticIce"></canvas>
+        <script>
+          plotArcticIce("plotArcticIce");
+        </script>
+      </div>
+    </div>
+    <hr>
     <!---------- NEWS  ---------->
 
     <div class="w3-container w3-section" id="News">
     </div>
-
     <div class="w3-container w3-section">
       <h2>News</h2>
       <p>Latest charts and statistics coming here</p>
     </div>
+
+    <script>
+      let elmtLatest = document.getElementById("LatestNews");
+      let elmtFirst = document.getElementById("FirstItem");
+      elmtLatest.parentNode.insertBefore(elmtLatest, elmtFirst);
+    </script>
 
     <hr>
 
@@ -109,7 +177,6 @@
 
     <div class="w3-container w3-section" id="API">
     </div>
-
     <div class="w3-container w3-section">
       <h2>API</h2>
       A basic API provides JSON-formatted data for all the visualizations on this web site.
@@ -132,7 +199,6 @@
 
     <div class="w3-container w3-section" id="About">
     </div>
-
     <div class="w3-container w3-section">
       <h2>About</h2>
       This website collects and visualizes publicly available data on the state of the earth.
@@ -147,7 +213,6 @@
     <hr>
 
   </div>
-
 
   <!---------- FOOTER ---------->
 
@@ -191,7 +256,6 @@
         .catch(err => console.log(err));
     }
   </script>
-
 </body>
 
 </html>
