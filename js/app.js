@@ -20,8 +20,8 @@ Chart.defaults.global.plugins.colorschemes.scheme = 'brewer.SetTwo8';
 // 
 // Atmospheric CO2
 // 
-function plotAtmosphericCO2(elementId) {
-  var myChart2 = new Chart(document.getElementById(elementId), {
+function plotAtmosphericCO2(elementId, elementSource) {
+  var myChart = new Chart(document.getElementById(elementId), {
     type: 'line',
     options: {
       legend: {
@@ -39,20 +39,23 @@ function plotAtmosphericCO2(elementId) {
       }
     }
   });
-  fetch('https://probably.one:4438/co2')
+  let url = 'https://probably.one:4438/co2';
+  fetch(url)
     .then(status)
     .then(json)
     .then(results => {
+      console.log('Atmospheric CO2 results', results);
+      printSourceAndLink(results, elementSource, url);
       let values = results.data.map(x => ({
         x: x.date,
         y: x.interpolated
       }));
-      myChart2.data.datasets.push({
+      myChart.data.datasets.push({
         data: values,
         fill: false,
         label: 'Mauna Loa, Hawaii'
       });
-      myChart2.update();
+      myChart.update();
     })
     .catch(err => console.log(err));
 }
@@ -60,12 +63,14 @@ function plotAtmosphericCO2(elementId) {
 //
 // Atmospheric CH4 Methane
 //
-function plotAtmosphericCH4(elementId) {
-  fetch('https://probably.one:4438/ch4')
+function plotAtmosphericCH4(elementId, elementSource) {
+  let url = 'https://probably.one:4438/ch4';
+  fetch(url)
     .then(status)
     .then(json)
     .then(results => {
       console.log('Atmospheric methane results:', results);
+      printSourceAndLink(results, elementSource, url);
       var myChart = new Chart(document.getElementById(elementId), {
         type: 'line',
         options: {
@@ -109,12 +114,14 @@ function plotAtmosphericCH4(elementId) {
 //
 // Arctic Ice Extent
 //
-function plotArcticIce(elementId) {
-  fetch('https://probably.one:4438/ice-nsidc')
+function plotArcticIce(elementId, elementSource) {
+  let url = 'https://probably.one:4438/ice-nsidc';
+  fetch(url)
     .then(status)
     .then(json)
     .then(results => {
       console.log('ICE NSIDC Results:', results);
+      printSourceAndLink(results, elementSource, url);
       var myChart = new Chart(document.getElementById(elementId), {
         type: 'line',
         options: {
@@ -163,6 +170,515 @@ function plotArcticIce(elementId) {
         });
         myChart.update();
       }
+    })
+    .catch(err => console.log(err));
+}
+
+//
+// World Population
+//
+function plotWorldPopulation(elementID, elementSource) {
+  let url = 'https://probably.one:4438/WPP2019_TotalPopulationByRegion';
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Population Results:', results);
+      printSourceAndLink(results, elementSource, url);
+      var myChart = new Chart(document.getElementById(elementID), {
+        type: 'line',
+        options: {
+          responsive: true,
+          aspectRatio: 1,
+          legend: {
+            display: true,
+            reverse: true,
+            position: 'right',
+            align: 'middle',
+            labels: {
+              boxWidth: 10
+            },
+          },
+          scales: {
+            yAxes: [{
+              stacked: true,
+              ticks: {
+                callback: function (value, index, values) {
+                  return value / 1000
+                }
+              }
+            }],
+            xAxes: [{
+              ticks: {
+                maxTicksLimit: 8,
+                autoSkip: true,
+              }
+            }]
+          }
+        }
+      });
+      myChart.data.labels = results.data[0].data.map(x => x.year);
+      while (results.data.length) {
+        let x = results.data.pop();
+        if (x.region === 'World') continue;
+        console.log('Population region', x);
+        if (x.region === 'Latin America and the Caribbean') {
+          x.region = 'S America';
+        } else if (x.region === 'Northern America') {
+          x.region = 'N America';
+        }
+        myChart.data.datasets.push({
+          label: x.region,
+          data: x.data.map(y => y.population),
+          fill: true
+        });
+      }
+      myChart.update();
+    })
+    .catch(err => console.log(err));
+}
+
+//
+// Global Oil Production
+//
+function plotGlobalOilProduction(elementId, elementSource) {
+  url = 'https://probably.one:4438/eia-international-data-oil-production';
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Oil production results:', results);
+      printSourceAndLink(results, elementSource, url);
+      var myChart = new Chart(document.getElementById(elementId), {
+        type: 'line',
+        options: {
+          responsive: true,
+          aspectRatio: 1,
+          legend: {
+            display: true,
+            labels: {
+              boxWidth: 10
+            },
+          },
+          scales: {
+            yAxes: [{
+              stacked: true,
+              ticks: {
+                callback: function (value, index, values) {
+                  return value / 1000
+                }
+              }
+            }],
+            xAxes: [{
+              ticks: {
+                maxTicksLimit: 8,
+                autoSkip: true,
+              }
+            }]
+          }
+        }
+      });
+      myChart.data.labels = results.data[0].data.map(x => x.year);
+      while (results.data.length) {
+        let x = results.data.pop();
+        if (x.region === 'World') continue
+        myChart.data.datasets.push({
+          label: x.region,
+          data: x.data.map(y => y.data),
+          fill: true
+        });
+      }
+      myChart.update();
+    })
+    .catch(err => console.log(err));
+}
+
+//
+// Print the sources for the data. Create a button for getting chart data.
+//
+function printSourceAndLink(res, elmtId, url) {
+  let str = "<p>Source not defined</p>";
+  if (res.source !== undefined && res.source !== null) {
+    str = "<p>Source: " + res.source + "</p>"; // yes, intentional overwrite of str
+  }
+  if (res.link !== undefined && res.link !== null) {
+    str += "<p>Link: <a target='_blank' rel='noopener' href='";
+    str += res.link + "'>";
+    str += res.link + "</a>"
+  }
+  str += "<p><button class='w3-button w3-dark-grey w3-round-small' onClick=\"tryUrl('"
+  str += url + "')\">Get chart data</button></p>";
+  document.getElementById(elmtId).innerHTML = str;
+}
+
+//
+// Global Coal
+//
+function plotGlobalCoalProduction(elementId, elementSource) {
+  let url = "https://probably.one:4438/eia-international-data-coal";
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Coal:', results);
+      printSourceAndLink(results, elementSource, url);
+      var myChart = new Chart(document.getElementById(elementId), {
+        type: 'line',
+        options: {
+          responsive: true,
+          aspectRatio: 1,
+          legend: {
+            display: true,
+            labels: {
+              boxWidth: 10
+            },
+          },
+          scales: {
+            yAxes: [{
+              stacked: true,
+              ticks: {
+                callback: function (value, index, values) {
+                  return value / 1000
+                }
+              }
+            }],
+            xAxes: [{
+              ticks: {
+                maxTicksLimit: 8,
+                autoSkip: true,
+              }
+            }]
+          }
+        }
+      });
+      myChart.data.labels = results.data[0].data.map(x => x.year);
+      while (results.data.length) {
+        let x = results.data.pop();
+        if (x.region === 'World') continue
+        myChart.data.datasets.push({
+          label: x.region,
+          data: x.data.map(y => y.data),
+          fill: true
+        });
+      }
+      myChart.update();
+    })
+    .catch(err => console.log(err));
+}
+
+//
+// Global Gas
+//
+function plotGlobalGasProduction(elementId, elementSource) {
+  fetch('https://probably.one:4438/eia-international-data-dry-natural-gas-production')
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Gas results:', results);
+      printSourceAndLink(results, elementSource, url);
+      var myChart = new Chart(document.getElementById(elementId), {
+        type: 'line',
+        options: {
+          responsive: true,
+          aspectRatio: 1,
+          legend: {
+            display: true,
+            labels: {
+              boxWidth: 10
+            },
+          },
+          scales: {
+            yAxes: [{
+              stacked: true,
+              ticks: {
+                callback: function (value, index, values) {
+                  return value / 1000
+                }
+              }
+            }],
+            xAxes: [{
+              ticks: {
+                maxTicksLimit: 8,
+                autoSkip: true,
+              }
+            }]
+          }
+        }
+      });
+      myChart.data.labels = results.data[0].data.map(x => x.year);
+      while (results.data.length) {
+        let x = results.data.pop();
+        if (x.region === 'World') continue
+        myChart.data.datasets.push({
+          label: x.region,
+          data: x.data.map(y => y.data),
+          fill: true
+        });
+      }
+      myChart.update();
+    })
+    .catch(err => console.log(err));
+}
+
+//
+// Ozone Hole Southern Hemisphere
+//
+function plotOzoneHole(elementId, elementSource) {
+  let url = 'https://probably.one:4438/ozone';
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Ozone results:', results);
+      printSourceAndLink(results, elementSource, url);
+      var myChart = new Chart(document.getElementById(elementId), {
+        type: 'line',
+        options: {
+          aspectRatio: 1,
+          scales: {
+            yAxes: [{
+                id: 'hole',
+                position: 'left',
+                grid: {
+                  display: false
+                }
+              }
+              /*, {
+                            id: 'level',
+                            position: 'right'
+                          }*/
+            ],
+            xAxes: [{
+              ticks: {
+                autoSkip: true,
+                maxTicksLimit: 8
+              },
+              type: 'time',
+              time: {
+                unit: 'year'
+              }
+            }]
+          }
+        }
+      });
+      let dates = results.data.map(x => x.date);
+      let values = results.data.map(x => x.meanOzoneHoleSize);
+      /*
+      let levels = results.data.map(x => x.minimumOzoneLevel);
+      myChart.data.datasets.push({
+        yAxisID: 'level',
+        label: 'Atmospheric ozone level',
+        data: levels,
+        type: 'line',
+        fill: false,
+        pointRadius: 3
+      });
+*/
+      myChart.data.datasets.push({
+        yAxisID: 'hole',
+        label: 'Ozone hole size',
+        data: values,
+        fill: false,
+        pointRadius: 3
+      });
+      myChart.data.labels = dates;
+      myChart.update();
+    })
+    .catch(err => console.log(err));
+}
+
+//
+// Global Temperature Anomaly
+//
+function plotGlobalTemp(elementId, elementSource) {
+  var myChart = new Chart(document.getElementById(elementId), {
+    type: 'line',
+    options: {
+      aspectRatio: 1,
+      tooltips: {
+        mode: 'index',
+        intersect: false,
+      },
+      scales: {
+        xAxes: [{
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 8
+          },
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          stacked: false,
+          ticks: {
+            callback: function (value, index, values) {
+              return Math.round(value * 10) / 10 + "\u00b0" + "C";
+            }
+          }
+        }]
+      }
+    }
+  });
+  let url = 'https://probably.one:4438/temperature-anomaly';
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Results:', results);
+      printSourceAndLink(results, elementSource, url);
+      let regions = [
+        'Global',
+        'Northern Hemisphere',
+        'Southern Hemisphere'
+      ];
+      let country = [];
+      for (let i = 0; i < regions.length; i++) {
+        let c = results.data.filter(x => {
+          return x.country === regions[i]
+        });
+        country[i] = c[0];
+        let d1 = country[i].data.map(x => x.median);
+        let l1 = country[i].data.map(x => x.year);
+        myChart.data.datasets.push({
+          data: d1,
+          label: regions[i],
+          fill: false
+        });
+        if (i === 0) {
+          myChart.data.labels = l1.slice();
+        }
+        myChart.update();
+      }
+    })
+    .catch(err => console.log(err));
+}
+
+//
+// Brazil Forest Fires
+//
+function plotBrazilFires(elementId, elementSource) {
+  let url = 'https://probably.one:4438/queimadas';
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Queimadas Results:', results);
+      printSourceAndLink(results, elementSource, url);
+      var myChart = new Chart(document.getElementById(elementId), {
+        type: 'line',
+        options: {
+          aspectRatio: 1,
+          plugins: {
+            colorschemes: {
+              scheme: 'tableau.Tableau10'
+            },
+          },
+          tooltips: {
+            enabled: false
+          },
+          scales: {
+            xAxes: [{
+              gridLines: {
+                display: false
+              }
+            }],
+            yAxes: [{
+              stacked: false
+            }]
+          }
+        }
+      });
+      while (results.data.length) {
+        let x = results.data.pop();
+        let values = x.data;
+        // Too much data here
+        // Let us just look at 2019 and Average
+        if (x.year != 2019 && x.year != "Average") { // && x.year != "Maximum" && x.year != "Minimum") 
+          continue;
+        }
+        myChart.data.datasets.push({
+          data: values,
+          label: x.year,
+          fill: false
+        });
+      }
+      myChart.data.labels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+      myChart.update();
+    })
+    .catch(err => console.log(err));
+}
+
+//
+// Global Sea Level Rise
+//
+function plotGlobalSeaLevel(elementId, elementSource) {
+  let url = 'https://probably.one:4438/CSIRO_Recons';
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('GSML results:', results);
+      printSourceAndLink(results, elementSource, url);
+      var myChart = new Chart(document.getElementById(elementId), {
+        type: 'scatter',
+        options: {
+          plugins: {
+            colorschemes: {
+              scheme: 'tableau.Tableau10'
+            },
+          },
+          responsive: true,
+          aspectRatio: 1,
+          legend: {
+            display: true,
+            labels: {
+              boxWidth: 10
+            },
+          },
+          scales: {
+            yAxes: [{
+              stacked: false,
+            }],
+            xAxes: [{
+              type: 'time',
+              ticks: {
+                maxTicksLimit: 8,
+                autoSkip: true,
+              }
+            }]
+          }
+        }
+      });
+      let x = results.data.pop();
+      let xd = x.data.map(d => ({
+        x: d.year + "-06",
+        y: d.data
+      }));
+      myChart.data.datasets.push({
+        label: 'Land based measurements',
+        data: xd,
+        fill: false
+      });
+      myChart.update();
+      fetch('https://probably.one:4438/CSIRO_Alt_yearly')
+        .then(status)
+        .then(json)
+        .then(results => {
+          console.log('CSIRO 2', results);
+          let x = results.data.pop();
+          let xd = x.data.map(d => ({
+            x: d.year + "-06",
+            y: d.data
+          }));
+          myChart.data.datasets.push({
+            label: 'Satellite measurements',
+            data: xd,
+            fill: false
+          });
+          myChart.update();
+        })
+        .catch(err => console.log(err))
     })
     .catch(err => console.log(err));
 }
