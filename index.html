@@ -69,15 +69,16 @@
 
   <div class="w3-content w3-padding-64" id="Top" style="max-width:920px">
 
-    <div class="w3-row">
-      <h3>Latest update</h3>
+    <div class="w3-container" style="background-color:#eee;">
+      <div class="w3-row">
+        <h3>Latest update</h3>
+      </div>
+      <div class="w3-row" id="NewsPlaceholder">
+      </div>
     </div>
-    <div class="w3-row" id="FirstItem">
-    </div>
-    <hr>
 
     <!-- Plot CO2 -->
-    <div class="w3-row">
+    <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Atmospheric CO2 levels are increasing</h2>
         The level of CO2 in the atmosphere over the last 800.000 years has fluctuated between 180 and 280 ppm (parts per
@@ -94,13 +95,22 @@
         </script>
       </div>
     </div>
-    <hr>
 
     <!-- Methane CH4 -->
-    <div class="w3-row">
+    <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
-        <h2>Atmospheric Methane levels are increasing</h2>
-        This chart is updated monthly
+        <h2>Atmospheric methane levels are increasing</h2>
+        Methane (CH4) is a powerful greenhouse gas, with a global heating potential 25 times that of CO2.
+        Sources of methane are natural gas manufacturing, agriculture, waste management, coal mining and more.
+        About two thirds of methane emissions are from human activities.
+        <br>
+        Using a global network of monitoring sites, the NOAA tracks the atmospheric levels of methane.
+        Methane levels are measured in ppb (parts per billion).
+        The
+        <a href="https://www.epa.gov/ghgemissions/overview-greenhouse-gases" target="_blank" rel="noopener">
+          US Environmental Protection Agency
+        </a>
+        has a good overview of the various greehouse gases and their impact.
         <p id="sourcesCH4">
         </p>
       </div>
@@ -111,13 +121,12 @@
         </script>
       </div>
     </div>
-    <hr>
 
     <!-- Arctic Ice Extent -->
-    <div class="w3-row">
+    <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Ice extent in the Arctic is steadily decreasing, now 38&percnt; less than 1979</h2>
-        NSIDC (National Snow and Ice Data Center at University of Colorado, Boulder provides imagery and data to help
+        NSIDC (National Snow and Ice Data Center at University of Colorado, Boulder) provides imagery and data to help
         understand
         how the extent of sea ice is retreating in the Arctic and Antarctic regions.
         Sea ice extent is defined as areas
@@ -140,10 +149,9 @@
         </script>
       </div>
     </div>
-    <hr>
 
     <!-- World Population -->
-    <div class="w3-row" id="LatestNews">
+    <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>World population will stabilize at about 11 billion in 2100</h2>
         World population is currently 7.7 billion. The UN projects that the number of people on earth will reach about
@@ -161,10 +169,9 @@
         </script>
       </div>
     </div>
-    <hr>
 
     <!-- Global Oil Production -->
-    <div class="w3-row" id="LatestNews">
+    <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Global oil production: 100 million barrels per day, steadily increasing</h2>
         According to the US Energy Information Administration EIA, global oil production is now above 100 million
@@ -185,10 +192,9 @@
         </script>
       </div>
     </div>
-    <hr>
 
     <!-- Global Gas Production -->
-    <div class="w3-row" id="LatestNews">
+    <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Global gas production</h2>
         According to the US Energy Information Administration EIA,
@@ -202,10 +208,9 @@
         </script>
       </div>
     </div>
-    <hr>
 
     <!-- Global Coal Production -->
-    <div class="w3-row">
+    <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Coal production increasing again, but still below 2013 peak</h2>
         According to the US Energy Information Administration EIA, global coal production hit a peak in 2013.
@@ -232,7 +237,7 @@
     <hr>
 
     <!-- Ozone Hole -->
-    <div class="w3-row">
+    <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>And now some good news: The ozone hole is shrinking</h2>
         Ozone is a colorless gas present in the upper atmosphere which absorbs UV radiation from the sun.
@@ -261,10 +266,9 @@
         </script>
       </div>
     </div>
-    <hr>
 
     <!-- Global Temperature Anomaly -->
-    <div class="w3-row">
+    <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>The earth is more than 1&deg;Celsius hotter than in pre-industrial times, the increase is
           accelerating</h2>
@@ -285,10 +289,35 @@
         </script>
       </div>
     </div>
-    <hr>
+
+    <!-- Svalbard Temperature Anomaly -->
+    <div class="w3-row w3-padding-32" id="LatestNews">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Arctic temperatures increasing dramatically: +5&deg; since 1900</h2>
+        Data from The Norwegian Meteorological Institute and
+        The Norwegian Centre for Climate Services indicate that temperatures in the Arctic,
+        as measured at Svalbard Airport (78.24 degrees North), are now at least 5&deg;C higher than 50-100 years ago.
+        The increased temperature in the Arctic leads to thawing of the permafrost,
+        which in turn releases CO2 and methane currently trapped in the permafrost.
+        The report
+        <a href="https://cms.met.no/site/2/klimaservicesenteret/climate-in-svalbard-2100/_attachment/14428?_ts=169fd13ff23"
+          target="_blank" rel="noopener">
+          Climate in Svalbard 2100 by NCCS
+        </a>
+        is an excellent overview of future climate impact in the Arctic.
+        <p id="sourcesSvalbardTemp">
+        </p>
+      </div>
+      <div class="w3-container w3-col m6 l5">
+        <canvas id="plotSvalbardTemp"></canvas>
+        <script>
+          plotSvalbardTemp("plotSvalbardTemp", "sourcesSvalbardTemp");
+        </script>
+      </div>
+    </div>
 
     <!-- Brazil Forest Fire Activity -->
-    <div class="w3-row">
+    <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Forest fire activity in the Amazon: 2019 was below average</h2>
         <p id="sourcesBrazil">
@@ -301,10 +330,9 @@
         </script>
       </div>
     </div>
-    <hr>
 
     <!-- Global Sea Level Rise -->
-    <div class="w3-row">
+    <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Sea levels have increased 250mm since 1880, current rate of increase: 50mm per decade</h2>
         Global mean sea levels have increased by over 200mm since the late 1800's.
@@ -326,7 +354,21 @@
         </script>
       </div>
     </div>
-    <hr>
+
+    <!-- CCS Carbon Capture -->
+    <div class="w3-row w3-padding-32">
+      <div class="w3-container w3-col m6 l7">
+        <h2>The disappointing state of Carbon Capture and Storage: It is mostly used to extract more oil</h2>
+        <p id="sourcesCCS">
+        </p>
+      </div>
+      <div class="w3-container w3-col m6 l5">
+        <canvas id="plotCCS"></canvas>
+        <script>
+          plotCCS("plotCCS", "sourcesCCS");
+        </script>
+      </div>
+    </div>
 
     <!---------- NEWS  ---------->
 
@@ -339,11 +381,9 @@
 
     <script>
       let elmtLatest = document.getElementById("LatestNews");
-      let elmtFirst = document.getElementById("FirstItem");
-      elmtLatest.parentNode.insertBefore(elmtLatest, elmtFirst);
+      let elmtPlaceholder = document.getElementById("NewsPlaceholder");
+      elmtPlaceholder.parentNode.insertBefore(elmtLatest, elmtPlaceholder);
     </script>
-
-    <hr>
 
     <!---------- API ---------->
 
@@ -365,7 +405,6 @@
         </div>
       </div>
     </div>
-    <hr>
 
     <!---------- ABOUT ---------->
 
@@ -383,7 +422,6 @@
       <p>H&aring;kon Dahle, Oslo, Norway, 2019</p>
     </div>
     <hr>
-
   </div>
 
   <!---------- FOOTER ---------->

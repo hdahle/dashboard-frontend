@@ -555,6 +555,59 @@ function plotGlobalTemp(elementId, elementSource) {
 }
 
 //
+// Svalbard - Arctic Temperature Development
+//
+function plotSvalbardTemp(elementId, elementSource) {
+  var myChart = new Chart(document.getElementById(elementId), {
+    type: 'line',
+    options: {
+      aspectRatio: 1,
+      tooltips: {
+        mode: 'index',
+        intersect: false,
+      },
+      scales: {
+        xAxes: [{
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 8
+          },
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          stacked: false,
+          ticks: {
+            callback: function (value, index, values) {
+              return Math.round(value * 10) / 10 + "\u00b0" + "C";
+            }
+          }
+        }]
+      }
+    }
+  });
+  let url = 'https://probably.one:4438/temperature-svalbard';
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Results:', results);
+      printSourceAndLink(results, elementSource, url);
+      let d1 = results.data[0].data.map(x => x.temperature);
+      let l1 = results.data[0].data.map(x => x.year);
+      myChart.data.datasets.push({
+        data: d1,
+        label: results.data[0].country,
+        fill: false
+      });
+      myChart.data.labels = l1;
+      myChart.update();
+    })
+    .catch(err => console.log(err));
+}
+
+//
 // Brazil Forest Fires
 //
 function plotBrazilFires(elementId, elementSource) {
@@ -679,6 +732,48 @@ function plotGlobalSeaLevel(elementId, elementSource) {
           myChart.update();
         })
         .catch(err => console.log(err))
+    })
+    .catch(err => console.log(err));
+}
+
+
+//
+// CCS - Cabon Capture
+//
+function plotCCS(elementId, elementSource) {
+  var myChart = new Chart(document.getElementById(elementId), {
+    type: 'pie',
+    options: {
+      aspectRatio: 1,
+      tooltips: {
+        mode: 'index',
+        intersect: false,
+      },
+      scales: {
+        xAxes: [{
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 8
+          }
+        }]
+      }
+    }
+  });
+  let url = 'https://probably.one:4438/operational-ccs';
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Results:', results);
+      /*
+      printSourceAndLink(results, elementSource, url);
+      myChart.data.datasets.push({
+        data: results.data.map(x => x.capacity),
+        label: ""
+      });
+      myChart.data.labels = results.data.map(x => x.project);
+      myChart.update();
+      */
     })
     .catch(err => console.log(err));
 }
