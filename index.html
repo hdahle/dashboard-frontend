@@ -54,7 +54,13 @@
       <a href="#Top" class="w3-bar-item w3-button">probably.one</a>
       <a href="#About" class="w3-bar-item w3-button w3-hide-small w3-right">About</a>
       <a href="#API" class="w3-bar-item w3-button w3-hide-small w3-right">API</a>
-      <a href="#News" class="w3-bar-item w3-button w3-hide-small w3-right">News</a>
+      <!-- 
+      <a href="#FossilFuels" class="w3-bar-item w3-button w3-hide-small w3-right">Oil/gas/coal</a>
+      <a href="#Warming" class="w3-bar-item w3-button w3-hide-small w3-right">Warming</a>
+      <a href="#Emissions" class="w3-bar-item w3-button w3-hide-small w3-right">Emissions</a>
+      <a href="#SeaAndIce" class="w3-bar-item w3-button w3-hide-small w3-right">Sea and ice</a>
+      <a href="#Forests" class="w3-bar-item w3-button w3-hide-small w3-right">Forests</a>
+      -->
       <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
         onclick="clickBurger()">&#9776;</a>
     </div>
@@ -62,7 +68,6 @@
 
   <div id="burger" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-black my-font w3-top"
     style="margin-top:38px">
-    <a href="#News" class="w3-bar-item w3-button" onClick="clickBurger()">News</a>
     <a href="#API" class="w3-bar-item w3-button" onClick="clickBurger()">API</a>
     <a href="#About" class="w3-bar-item w3-button" onClick="clickBurger()">About</a>
   </div>
@@ -92,6 +97,29 @@
         <canvas id="plotCO2"></canvas>
         <script>
           plotAtmosphericCO2("plotCO2", "sourcesCO2");
+        </script>
+      </div>
+    </div>
+
+    <!-- Plot CO2 by region -->
+    <div class="w3-row w3-padding-32">
+      <div class="w3-container w3-col m6 l7">
+        <h2>CO2 emissions by region</h2>
+        CO2 emissions per year is still increasing, especially in Asia.
+        However most Asian countries emit less CO2 per
+        capita than western countries.
+        CO2 emissions represent about two thirds of total greenhouse gas emissions.
+        Other gases and in particular methane (CH4) are significant contributors to global heating.
+        <p>
+          Emissions from international transport such as shipping and air travel is counted as a separate region.
+        </p>
+        <p id="sourcesCO2ByRegion">
+        </p>
+      </div>
+      <div class="w3-container w3-col m6 l5">
+        <canvas id="plotCO2ByRegion"></canvas>
+        <script>
+          plotEmissionsByRegion("plotCO2ByRegion", "sourcesCO2ByRegion");
         </script>
       </div>
     </div>
@@ -126,15 +154,12 @@
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Ice extent in the Arctic is steadily decreasing, now 38&percnt; less than 1979</h2>
-        NSIDC (National Snow and Ice Data Center at University of Colorado, Boulder) provides imagery and data to help
-        understand
-        how the extent of sea ice is retreating in the Arctic and Antarctic regions.
-        Sea ice extent is defined as areas
-        of the
-        sea with at least 15% ice cover.
+        NSIDC (National Snow and Ice Data Center at University of Colorado, Boulder)
+        provides imagery and data to help understand
+        how sea ice is retreating in the Arctic and Antarctic regions.
+        Sea ice extent is defined as areas of the sea with at least 15% ice cover.
         The extent of sea ice is measured in thousands of square kilometers.
-        The chart shows the annual cycle for
-        several years.
+        The chart shows the annual cycle for several years.
         In the Arctic, sea ice cover is at its lowest in September, before the onset of winter.
         <p>
           The NSIDC dataset contains ice extent data since 1979
@@ -270,7 +295,7 @@
     <!-- Global Temperature Anomaly -->
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
-        <h2>The earth is more than 1&deg;Celsius hotter than in pre-industrial times, the increase is
+        <h2>The earth is more than 1&deg;C hotter than in pre-industrial times, the increase is
           accelerating</h2>
         Using the HadCRUT4 dataset from
         <a href="https://www.metoffice.gov.uk/hadobs/hadcrut4/index.html" target="_blank" rel="noopener">
@@ -278,7 +303,10 @@
         </a>,
         the chart shows average global temperatures compared to the period 1961-1990, in degrees Celsius.
         Global temperatures are now more than 1°C higher than in 1850,
-        when the burning of fossil fuels started at scale during the industrial revolution.
+        when burning of fossil fuels started at scale during the
+        <a href="https://en.wikipedia.org/wiki/Industrial_Revolution" target="_blank" rel="noopener">
+          industrial revolution.
+        </a>
         <p id="sourcesGlobalTemp">
         </p>
       </div>
@@ -372,13 +400,6 @@
 
     <!---------- NEWS  ---------->
 
-    <div class="w3-container w3-section" id="News">
-    </div>
-    <div class="w3-container w3-section">
-      <h2>News</h2>
-      <p>Latest charts and statistics coming here</p>
-    </div>
-
     <script>
       let elmtLatest = document.getElementById("LatestNews");
       let elmtPlaceholder = document.getElementById("NewsPlaceholder");
@@ -391,19 +412,8 @@
     </div>
     <div class="w3-container w3-section">
       <h2>API</h2>
-      A basic API provides JSON-formatted data for all the visualizations on this web site.
-      Note that this is just a preview - the API will change in the next few months.
-      <div class="w3-container">
-        <div class="w3-row">
-          <div class="w3-col s8 m6 l5">
-            Atmospheric CO2 levels, Mauna Loa, Hawaii
-          </div>
-          <div class="w3-col s3 m2 l2">
-            <button class="w3-button w3-black w3-round-small" onClick="tryUrl('https://probably.one:4438/co2')">
-              Try API</button>
-          </div>
-        </div>
-      </div>
+      A basic API providing JSON-formatted data for all the visualizations on this web site is in the works.
+      For now, the Get chart data buttons offers a preview.
     </div>
 
     <!---------- ABOUT ---------->
@@ -413,13 +423,13 @@
     <div class="w3-container w3-section">
       <h2>About</h2>
       This website collects and visualizes publicly available data on the state of the earth.
-      The intent is to provide some interesting indications on what is happening to our environment.
+      The intent is to provide factual data on what is happening to our environment.
       <p>
         There are lots of data providers out there, buth public and private,
         with vast amounts of relevant data.
         This web site aims to use and publish data that is freely available and distributable.
       </p>
-      <p>H&aring;kon Dahle, Oslo, Norway, 2019</p>
+      <p>H&aring;kon Dahle, Oslo, Norway, 2020</p>
     </div>
     <hr>
   </div>
@@ -449,7 +459,7 @@
     }
   </script>
 
-  <!---------- function tryUrl() for API section ---------->
+  <!---------- function tryUrl() for API buttons ---------->
 
   <script>
     function tryUrl(url) {

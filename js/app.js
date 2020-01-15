@@ -61,6 +61,84 @@ function plotAtmosphericCO2(elementId, elementSource) {
 }
 
 //
+// CO2 by region
+//
+function plotEmissionsByRegion(elementId, elementSource) {
+  let url = 'https://probably.one:4438/annual-co-emissions-by-region';
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('CO2 Emissions by region results:', results);
+      printSourceAndLink(results, elementSource, url);
+      var myChart = new Chart(document.getElementById(elementId), {
+        type: 'line',
+        options: {
+          aspectRatio: 1,
+          tooltips: {
+            intersect: false,
+            mode: 'index'
+          },
+          legend: {
+            position: 'right',
+            reverse: true,
+            labels: {
+              boxWidth: 10,
+              padding: 6
+            },
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'year'
+              },
+              ticks: {
+                autoSkip: true,
+                maxTicksLimit: 8
+              }
+            }],
+            yAxes: [{
+              stacked: true,
+              ticks: {
+                callback: function (value, index, values) {
+                  return value / 1000 + " Gt";
+                }
+              }
+            }]
+          }
+        }
+      });
+      let regions = [
+        'EU-28', 'Europe (other)', 'United States', 'Americas (other)',
+        'China', 'India', 'Asia and Pacific (other)', 'Africa',
+        'Middle East', 'International transport'
+      ];
+      let regionLabels = [
+        'EU-28', 'Eur(rest)', 'USA', 'Americas',
+        'China', 'India', 'AsiaPac', 'Africa',
+        'Mid East', 'Transport'
+      ];
+      for (let i = 0; i < results.data.length; i++) {
+        let idx = regions.indexOf(results.data[i].country);
+        if (idx !== -1) {
+          // region found, plot it
+          let xy = results.data[i].data.map(d => {
+            return { x: d.year + "-12-31", y: d.tonnes }
+          });
+          // console.log(results.data[i].country, xy[xy.length - 1], xy);
+          myChart.data.datasets.push({
+            data: xy.slice(-160),
+            label: regionLabels[idx]
+          });
+          myChart.update();
+        }
+      }
+    })
+    .catch(err => console.log(err));
+}
+
+//
 // Atmospheric CH4 Methane
 //
 function plotAtmosphericCH4(elementId, elementSource) {
@@ -188,6 +266,10 @@ function plotWorldPopulation(elementID, elementSource) {
       var myChart = new Chart(document.getElementById(elementID), {
         type: 'line',
         options: {
+          tooltips: {
+            intersect: false,
+            mode: 'index'
+          },
           responsive: true,
           aspectRatio: 1,
           legend: {
@@ -252,6 +334,10 @@ function plotGlobalOilProduction(elementId, elementSource) {
       var myChart = new Chart(document.getElementById(elementId), {
         type: 'line',
         options: {
+          tooltips: {
+            intersect: false,
+            mode: 'index'
+          },
           responsive: true,
           aspectRatio: 1,
           legend: {
@@ -325,6 +411,10 @@ function plotGlobalCoalProduction(elementId, elementSource) {
       var myChart = new Chart(document.getElementById(elementId), {
         type: 'line',
         options: {
+          tooltips: {
+            intersect: false,
+            mode: 'index'
+          },
           responsive: true,
           aspectRatio: 1,
           legend: {
@@ -379,6 +469,10 @@ function plotGlobalGasProduction(elementId, elementSource) {
       var myChart = new Chart(document.getElementById(elementId), {
         type: 'line',
         options: {
+          tooltips: {
+            intersect: false,
+            mode: 'index'
+          },
           responsive: true,
           aspectRatio: 1,
           legend: {
@@ -437,12 +531,12 @@ function plotOzoneHole(elementId, elementSource) {
           aspectRatio: 1,
           scales: {
             yAxes: [{
-                id: 'hole',
-                position: 'left',
-                grid: {
-                  display: false
-                }
+              id: 'hole',
+              position: 'left',
+              grid: {
+                display: false
               }
+            }
               /*, {
                             id: 'level',
                             position: 'right'
@@ -741,32 +835,14 @@ function plotGlobalSeaLevel(elementId, elementSource) {
 // CCS - Cabon Capture
 //
 function plotCCS(elementId, elementSource) {
-  var myChart = new Chart(document.getElementById(elementId), {
-    type: 'pie',
-    options: {
-      aspectRatio: 1,
-      tooltips: {
-        mode: 'index',
-        intersect: false,
-      },
-      scales: {
-        xAxes: [{
-          ticks: {
-            autoSkip: true,
-            maxTicksLimit: 8
-          }
-        }]
-      }
-    }
-  });
   let url = 'https://probably.one:4438/operational-ccs';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Results:', results);
-      /*
+      console.log('CCS Results:', results);
       printSourceAndLink(results, elementSource, url);
+      /*
       myChart.data.datasets.push({
         data: results.data.map(x => x.capacity),
         label: ""
