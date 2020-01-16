@@ -44,7 +44,7 @@
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
 <script src="js/app.js"> </script>
 
@@ -105,11 +105,14 @@
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>CO2 emissions by region</h2>
-        CO2 emissions per year is still increasing, especially in Asia.
-        However most Asian countries emit less CO2 per
-        capita than western countries.
-        CO2 emissions represent about two thirds of total greenhouse gas emissions.
-        Other gases and in particular methane (CH4) are significant contributors to global heating.
+        CO2 emissions are still increasing, especially in Asia.
+        However most Asian countries have far lower emissions per capita than western countries.
+        China, the country with the highest emissions in the world,
+        still has only one third of the emissions per capita compared to countries such as USA, Canada and Australia.
+        <p>
+          CO2 emissions represent about two thirds of total greenhouse gas emissions.
+          Other gases and in particular methane (CH4) are significant contributors to global heating.
+        </p>
         <p>
           Emissions from international transport such as shipping and air travel is counted as a separate region.
         </p>
@@ -120,6 +123,41 @@
         <canvas id="plotCO2ByRegion"></canvas>
         <script>
           plotEmissionsByRegion("plotCO2ByRegion", "sourcesCO2ByRegion");
+        </script>
+      </div>
+    </div>
+
+    <!-- Emissions Norway -->
+    <div class="w3-row w3-padding-32">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Greenhouse gas emissions Norway</h2>
+        While CO2 emissions have increased from 35 to almost 44
+        million tons per year since 1990,
+        the emissions of perfluorocarbons (PFC) and sulphur hexafluoride (SF6) mainly from the
+        aluminum and magnesium industries are now close to 0.
+        The emissions of hydrofluorocarbons (HFC) from air-con and cooling systems has increased,
+        although this should be sharply reduced soon
+        as new coolants with lower global warming potential is being used.
+        More on this at
+        <a href="https://miljostatus.miljodirektoratet.no/tema/klima/norske-utslipp-av-klimagasser/f-gasser/"
+          target="_blank" rel="noopener">
+          Ministry of Climate and Environment.
+        </a>
+        <p>
+          Norwegian oil and gas production represents about
+          27&percnt; of total emissions. These emissions are expected to
+          be reduced in the future at the cost of higher global emissions,
+          when on-shore hydroelectric power replaces off-shore gas turbines
+          for powering oil and gas extraction.
+          Numbers are in millions of tons of CO2 equivalents.
+        </p>
+        <p id="sourcesEmissionsNorway">
+        </p>
+      </div>
+      <div class="w3-container w3-col m6 l5">
+        <canvas id="plotEmissionsNorway"></canvas>
+        <script>
+          plotEmissionsNorway("plotEmissionsNorway", "sourcesEmissionsNorway");
         </script>
       </div>
     </div>
@@ -259,7 +297,6 @@
         </script>
       </div>
     </div>
-    <hr>
 
     <!-- Ozone Hole -->
     <div class="w3-row w3-padding-32">

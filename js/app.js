@@ -190,6 +190,66 @@ function plotAtmosphericCH4(elementId, elementSource) {
 }
 
 //
+// Norway Annual GHG Emissions
+//
+function plotEmissionsNorway(elementId, elementSource) {
+  let url = 'https://probably.one:4438/emissions-norway';
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Norway:', results);
+      printSourceAndLink(results, elementSource, url);
+      var myChart = new Chart(document.getElementById(elementId), {
+        type: 'line',
+        options: {
+          responsive: true,
+          aspectRatio: 1,
+          legend: {
+            display: true,
+            reverse: true,
+            position: 'right',
+            labels: {
+              boxWidth: 10
+            },
+          },
+          scales: {
+            yAxes: [{
+              stacked: true,
+              ticks: {
+                callback: function (value, index, values) {
+                  return Math.trunc(value / 1000) + " MtCO2e";
+                }
+              }
+            }],
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'year'
+              },
+              ticks: {
+                maxTicksLimit: 8,
+                autoSkip: true,
+              }
+            }]
+          }
+        }
+      });
+      // Plot all datasets except 0 which is the Total
+      for (let i = 1; i < results.data.length; i++) {
+        myChart.data.datasets.push({
+          data: results.data[i].values.map(x => {
+            return { t: x.t + "-12-31", y: x.y }
+          }),
+          label: results.data[i].name
+        })
+      }
+      myChart.update();
+    })
+    .catch(err => console.log(err))
+}
+
+//
 // Arctic Ice Extent
 //
 function plotArcticIce(elementId, elementSource) {
@@ -528,20 +588,13 @@ function plotOzoneHole(elementId, elementSource) {
       var myChart = new Chart(document.getElementById(elementId), {
         type: 'line',
         options: {
+          tooltips: {
+            intersect: false,
+            mode: 'x'
+          },
           aspectRatio: 1,
+          responsive: true,
           scales: {
-            yAxes: [{
-              id: 'hole',
-              position: 'left',
-              grid: {
-                display: false
-              }
-            }
-              /*, {
-                            id: 'level',
-                            position: 'right'
-                          }*/
-            ],
             xAxes: [{
               ticks: {
                 autoSkip: true,
@@ -555,27 +608,15 @@ function plotOzoneHole(elementId, elementSource) {
           }
         }
       });
-      let dates = results.data.map(x => x.date);
-      let values = results.data.map(x => x.meanOzoneHoleSize);
-      /*
-      let levels = results.data.map(x => x.minimumOzoneLevel);
       myChart.data.datasets.push({
-        yAxisID: 'level',
-        label: 'Atmospheric ozone level',
-        data: levels,
-        type: 'line',
+        label: 'Ozone hole (millions of sq.km)',
+        data: results.data.map(x => {
+          return { t: x.date, y: x.meanOzoneHoleSize }
+        }),
         fill: false,
-        pointRadius: 3
+        pointRadius: 3,
+        pointBackgroundColor: 'rgba(20,200,40,0.1'
       });
-*/
-      myChart.data.datasets.push({
-        yAxisID: 'hole',
-        label: 'Ozone hole size',
-        data: values,
-        fill: false,
-        pointRadius: 3
-      });
-      myChart.data.labels = dates;
       myChart.update();
     })
     .catch(err => console.log(err));
@@ -721,9 +762,6 @@ function plotBrazilFires(elementId, elementSource) {
               scheme: 'tableau.Tableau10'
             },
           },
-          tooltips: {
-            enabled: false
-          },
           scales: {
             xAxes: [{
               gridLines: {
@@ -768,12 +806,17 @@ function plotGlobalSeaLevel(elementId, elementSource) {
       console.log('GSML results:', results);
       printSourceAndLink(results, elementSource, url);
       var myChart = new Chart(document.getElementById(elementId), {
-        type: 'scatter',
+        type: 'line',
         options: {
-          plugins: {
-            colorschemes: {
-              scheme: 'tableau.Tableau10'
-            },
+          /*          plugins: {
+                      colorschemes: {
+                        scheme: 'tableau.Tableau10'
+                      },
+                    },
+          */
+          tooltips: {
+            intersect: false,
+            mode: 'x'
           },
           responsive: true,
           aspectRatio: 1,
@@ -784,11 +827,11 @@ function plotGlobalSeaLevel(elementId, elementSource) {
             },
           },
           scales: {
-            yAxes: [{
-              stacked: false,
-            }],
             xAxes: [{
               type: 'time',
+              time: {
+                unit: 'year'
+              },
               ticks: {
                 maxTicksLimit: 8,
                 autoSkip: true,
@@ -797,11 +840,12 @@ function plotGlobalSeaLevel(elementId, elementSource) {
           }
         }
       });
-      let x = results.data.pop();
-      let xd = x.data.map(d => ({
-        x: d.year + "-06",
+      let xd = results.data[0].data.map(d => ({
+        x: d.year + "-06-30",
         y: d.data
       }));
+      console.log('Sealevel', xd);
+
       myChart.data.datasets.push({
         label: 'Land based measurements',
         data: xd,
@@ -813,11 +857,11 @@ function plotGlobalSeaLevel(elementId, elementSource) {
         .then(json)
         .then(results => {
           console.log('CSIRO 2', results);
-          let x = results.data.pop();
-          let xd = x.data.map(d => ({
-            x: d.year + "-06",
+          let xd = results.data[0].data.map(d => ({
+            x: d.year + "-06-30",
             y: d.data
           }));
+          console.log('Sealevel2', xd);
           myChart.data.datasets.push({
             label: 'Satellite measurements',
             data: xd,
@@ -829,7 +873,6 @@ function plotGlobalSeaLevel(elementId, elementSource) {
     })
     .catch(err => console.log(err));
 }
-
 
 //
 // CCS - Cabon Capture
