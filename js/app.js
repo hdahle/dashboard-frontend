@@ -808,12 +808,6 @@ function plotGlobalSeaLevel(elementId, elementSource) {
       var myChart = new Chart(document.getElementById(elementId), {
         type: 'line',
         options: {
-          /*          plugins: {
-                      colorschemes: {
-                        scheme: 'tableau.Tableau10'
-                      },
-                    },
-          */
           tooltips: {
             intersect: false,
             mode: 'x'
@@ -844,8 +838,6 @@ function plotGlobalSeaLevel(elementId, elementSource) {
         x: d.year + "-06-30",
         y: d.data
       }));
-      console.log('Sealevel', xd);
-
       myChart.data.datasets.push({
         label: 'Land based measurements',
         data: xd,
@@ -861,7 +853,6 @@ function plotGlobalSeaLevel(elementId, elementSource) {
             x: d.year + "-06-30",
             y: d.data
           }));
-          console.log('Sealevel2', xd);
           myChart.data.datasets.push({
             label: 'Satellite measurements',
             data: xd,
@@ -885,14 +876,44 @@ function plotCCS(elementId, elementSource) {
     .then(results => {
       console.log('CCS Results:', results);
       printSourceAndLink(results, elementSource, url);
-      /*
-      myChart.data.datasets.push({
-        data: results.data.map(x => x.capacity),
-        label: ""
+      var myChart = new Chart(document.getElementById(elementId), {
+        type: 'horizontalBar',
+        options: {
+          responsive: true,
+          aspectRatio: 0.7,
+          scales: {
+            yAxes: [{
+              gridLines: {
+                display: false
+              }
+            }]
+          },
+          legend: {
+            display: false
+          },
+          tooltips: {
+            intersect: true
+          }
+        }
       });
-      myChart.data.labels = results.data.map(x => x.project);
+      // sort results and stick it into array 'd' for ease of use
+      let d = results.data.sort((a, b) => b.capacity - a.capacity);
+      // If last element of results.data has "project" === null, drop it
+      if (d[d.length - 1].project === null) {
+        d.pop();
+      }
+      let names = d.map(x => x.project + ", " + x.country);
+      let data = d.map(x => x.capacity);
+      let bgColor = d.map(x => (x.type === 'EOR') ? 'rgba(200,40,30,0.2)' : 'rgba(40,200,30,0.2)');
+      let lineColor = d.map(x => (x.type === 'EOR') ? 'rgba(200,40,30,0.8)' : 'rgba(40,200,30,0.8)');
+      myChart.data.datasets.push({
+        data: data,
+        backgroundColor: bgColor,
+        borderColor: lineColor,
+        borderWidth: 1
+      });
+      myChart.data.labels = names;
       myChart.update();
-      */
     })
     .catch(err => console.log(err));
 }
