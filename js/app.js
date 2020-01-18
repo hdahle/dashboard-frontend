@@ -218,7 +218,7 @@ function plotEmissionsNorway(elementId, elementSource) {
               stacked: true,
               ticks: {
                 callback: function (value, index, values) {
-                  return Math.trunc(value / 1000) + " MtCO2e";
+                  return Math.trunc(value / 1000) + " Mt";
                 }
               }
             }],
@@ -824,6 +824,13 @@ function plotGlobalSeaLevel(elementId, elementSource) {
             },
           },
           scales: {
+            yAxes: [{
+              ticks: {
+                callback: function (value, index, values) {
+                  return value + " mm";
+                }
+              }
+            }],
             xAxes: [{
               type: 'time',
               time: {
@@ -839,7 +846,7 @@ function plotGlobalSeaLevel(elementId, elementSource) {
       });
       let xd = results.data[0].data.map(d => ({
         x: d.year + "-06-30",
-        y: d.data
+        y: d.data + 150
       }));
       myChart.data.datasets.push({
         label: 'Land based measurements',
@@ -854,7 +861,7 @@ function plotGlobalSeaLevel(elementId, elementSource) {
           console.log('CSIRO 2', results);
           let xd = results.data[0].data.map(d => ({
             x: d.year + "-06-30",
-            y: d.data
+            y: d.data + 150
           }));
           myChart.data.datasets.push({
             label: 'Satellite measurements',
