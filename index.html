@@ -20,7 +20,8 @@
     color: #333;
   }
 
-  h3 {
+  h3,
+  h4 {
     font-family: 'Roboto Condensed', sans-serif;
     font-weight: 400;
     color: #444;
@@ -74,9 +75,9 @@
 
   <div class="w3-content w3-padding-64" id="Top" style="max-width:920px">
 
-    <div class="w3-container" style="background-color:#eee;">
-      <div class="w3-row">
-        <h3>Latest update</h3>
+    <div class="w3-section w3-light-grey">
+      <div class="w3-row w3-margin-left">
+        <h4>Latest update</h4>
       </div>
       <div class="w3-row" id="NewsPlaceholder">
       </div>
@@ -89,7 +90,15 @@
         The level of CO2 in the atmosphere over the last 800.000 years has fluctuated between 180 and 280 ppm (parts per
         million).
         Since the industrial revolution this level has increased rapidly and is currently at around 410 ppm.
-        This chart is updated monthly
+        This chart is updated monthly.
+        <p>
+          Notice the saw-tooth pattern in the chart:
+          This is due to seasonal variations in photo-synthesis:
+          There is more land-mass and more greenery in the Northern
+          hemisphere than in the Southern hemisphere,
+          therefore the earth consumes more CO2 in the Northern summer.
+          In the winter season, more CO2 is released.
+        </p>
         <p id="sourcesCO2">
         </p>
       </div>
@@ -441,27 +450,25 @@
     <div class="w3-row w3-padding-32" id="LatestNews">
       <div class="w3-container w3-col m6 l7">
         <h2>The surprising state of Carbon Capture and Storage: CCS creates more emissions than it captures</h2>
-        According to the
+        According to
         <a href="https://www.globalccsinstitute.com/" target="_blank" rel="noopener">
           Global CCS Institute
-        </a>,
-        there are currently 19 CCS projects in operation worldwide, capturing 38 million tons CO2 annually
+        </a>
+        there are currently 19 large-scale CCS projects in operation worldwide,
+        capturing 38 million tons CO2 annually
         (less than 0.1&percnt; of global CO2 emissions).
         <p>
-          Most of the captured CO2 (30 of the 38 million tons) is used for EOR - Enhanced Oil Recovery:
+          Most of the captured CO2 (30 million tons) is used for EOR - Enhanced Oil Recovery:
           Injection of CO2 into oil wells in order to extract more oil.
-          The
           <a href="https://www.iea.org/commentaries/can-co2-eor-really-provide-carbon-negative-oil" target="_blank"
             rel="noopener">
             IEA
           </a>
           estimates that this accounts for an extra 500.000 barrels of oil per day.
-          This equals 78 million tons of annual CO2 emissions.
+          This equals 78 million tons CO2 emissions per year.
           In other words, CCS generates an extra 40 million tons of CO2 emissions annually.
         </p>
-        The chart lists all current CCS operations globally,
-        research and pilot programs not included,
-        with capacity in millions of tons of CO2.
+        The chart lists all CCS projects in use.
         Those with a red color use the captured CO2 for EOR.
         <p id="sourcesCCS">
         </p>

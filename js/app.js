@@ -827,7 +827,7 @@ function plotGlobalSeaLevel(elementId, elementSource) {
             yAxes: [{
               ticks: {
                 callback: function (value, index, values) {
-                  return value + " mm";
+                  return value + "mm";
                 }
               }
             }],
