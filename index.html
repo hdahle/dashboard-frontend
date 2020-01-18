@@ -38,7 +38,7 @@
   .fa-twitter,
   .fa-instagram {
     background: white;
-    color: gray;
+    color: black;
     text-decoration: none;
   }
 </style>
@@ -388,6 +388,20 @@
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Forest fire activity in the Amazon: 2019 was below average</h2>
+        This chart is based on public data from
+        <a href="http://queimadas.dgi.inpe.br/queimadas/portal" target="_blank" rel="noopener">
+          INPE, Brazil's National Institute for Space Research
+        </a>
+        which monitors forest fire activity in Latin America on a daily basis using satellite imagery.
+        This chart shows each month of 2019 plotted against
+        the monthly averages in the period 1999 to 2018.
+        2019 has seen less than average fire activity.
+        <p>
+          The data is a measure of fire activity, and not necessarily the number of fires per month.
+          When a satellite image indicates an area with fire activity,
+          there might actually be more than one fire within that image pixel.
+          Also, a single forest fire may span several pixels.
+        </p>
         <p id="sourcesBrazil">
         </p>
       </div>
@@ -499,45 +513,50 @@
   <!---------- FOOTER ---------->
 
   <div class="w3-container w3-center my-font w3-section">
-    <p> design by dashboard.eco
-      &nbsp;<a href="https://twitter.com/probably_one" class="fa fa-twitter" target="_blank" rel="noopener"></a>
-      &nbsp;<a href="#" class="fa fa-instagram" target="_blank" rel="noopener"></a>
-    </p>
+    <p> design by dashboard.eco </p>
+    &nbsp;
+    <a href="https://twitter.com/probably_one" class="fa fa-twitter" target="_blank" rel="noopener"></a>
+    &nbsp;
+    <a href="#" class="fa fa-instagram" target="_blank" rel="noopener"></a>
+    &nbsp;
+    <a href="https://profiles.eco/dashboard?ref=tm" rel="noopener">
+      <img style="width:16px" class="eco-trustmark" alt=".eco profile for dashboard.eco"
+        src="https://trust.profiles.eco/dashboard/eco-mark.svg?color=%23000000">
+    </a>
   </div>
   <div class="w3-container w3-center w3-section">
     We probably only have one earth
-  </div>
 
-  <!---------- function clickBurger() burger menu ---------->
+    <!---------- function clickBurger() burger menu ---------->
 
-  <script>
-    function clickBurger() {
-      var x = document.getElementById("burger");
-      if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-      } else {
-        x.className = x.className.replace(" w3-show", "");
+    <script>
+      function clickBurger() {
+        var x = document.getElementById("burger");
+        if (x.className.indexOf("w3-show") == -1) {
+          x.className += " w3-show";
+        } else {
+          x.className = x.className.replace(" w3-show", "");
+        }
       }
-    }
-  </script>
+    </script>
 
-  <!---------- function tryUrl() for API buttons ---------->
+    <!---------- function tryUrl() for API buttons ---------->
 
-  <script>
-    function tryUrl(url) {
-      var myWindow = window.open();
-      myWindow.document.write("<html><body><pre><code>")
-      fetch(url)
-        .then(status)
-        .then(json)
-        .then(results => {
-          myWindow.document.write(JSON.stringify(results, 0, 2));
-          myWindow.document.write("</code></pre></body></html>")
-          myWindow.document.close();
-        })
-        .catch(err => console.log(err));
-    }
-  </script>
+    <script>
+      function tryUrl(url) {
+        var myWindow = window.open();
+        myWindow.document.write("<html><body><pre><code>")
+        fetch(url)
+          .then(status)
+          .then(json)
+          .then(results => {
+            myWindow.document.write(JSON.stringify(results, 0, 2));
+            myWindow.document.write("</code></pre></body></html>")
+            myWindow.document.close();
+          })
+          .catch(err => console.log(err));
+      }
+    </script>
 </body>
 
 </html>
