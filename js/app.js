@@ -450,10 +450,13 @@ function printSourceAndLink(res, elmtId, url) {
   if (res.link !== undefined && res.link !== null) {
     str += "<p>Link: <a target='_blank' rel='noopener' href='";
     str += res.link + "'>";
-    str += res.link + "</a>"
+    str += res.link + "</a></p>"
   }
+  str += "<div class='w3-hide-small'>";
   str += "<p><button class='w3-button w3-dark-grey w3-round-small' onClick=\"tryUrl('"
-  str += url + "')\">Get chart data</button></p>";
+  str += url;
+  str += "')\">Get chart data</button></p>";
+  str += "</div>";
   document.getElementById(elmtId).innerHTML = str;
 }
 
