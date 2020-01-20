@@ -193,7 +193,7 @@ function plotAtmosphericCH4(elementId, elementSource) {
 // Norway Annual GHG Emissions
 //
 function plotEmissionsNorway(elementId, elementSource) {
-  let url = 'https://probably.one:4438/emissions-norway';
+  let url = 'https://api.dashboard.eco/emissions-norway';
   fetch(url)
     .then(status)
     .then(json)
@@ -253,12 +253,12 @@ function plotEmissionsNorway(elementId, elementSource) {
 // Arctic Ice Extent
 //
 function plotArcticIce(elementId, elementSource) {
-  let url = 'https://probably.one:4438/ice-nsidc';
+  let url = 'https://api.dashboard.eco/ice-nsidc';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('ICE NSIDC Results:', results);
+      console.log('ICE NSIDC:', results);
       printSourceAndLink(results, elementSource, url);
       var myChart = new Chart(document.getElementById(elementId), {
         type: 'line',
@@ -581,7 +581,7 @@ function plotGlobalGasProduction(elementId, elementSource) {
 // Ozone Hole Southern Hemisphere
 //
 function plotOzoneHole(elementId, elementSource) {
-  let url = 'https://probably.one:4438/ozone';
+  let url = 'https://api.dashboard.eco/ozone-nasa';
   fetch(url)
     .then(status)
     .then(json)
