@@ -39,7 +39,7 @@ function plotAtmosphericCO2(elementId, elementSource) {
       }
     }
   });
-  let url = 'https://probably.one:4438/co2';
+  let url = 'https://api.dashboard.eco/maunaloaco2';
   fetch(url)
     .then(status)
     .then(json)
@@ -142,7 +142,7 @@ function plotEmissionsByRegion(elementId, elementSource) {
 // Atmospheric CH4 Methane
 //
 function plotAtmosphericCH4(elementId, elementSource) {
-  let url = 'https://probably.one:4438/ch4';
+  let url = 'https://api.dashbaord.eco/maunaloach4';
   fetch(url)
     .then(status)
     .then(json)
