@@ -110,6 +110,30 @@
       </div>
     </div>
 
+    <!-- Plot 420.000 years of CO2 -->
+    <div class="w3-row w3-padding-32">
+      <div class="w3-container w3-col m6 l7">
+        <h2>CO2 levels the last 420.000 years: Dramatic increase since the industrial revolution</h2>
+        This chart contains data from the "Vostok" ice core drilled in Antarctica in 1998
+        as a collaborative project between
+        France, Russia and USA.
+        The CO2 data goes back over 400.000 years,
+        and shows how CO2 levels in the air has varied
+        through four climate cycles.
+        By combining the "Vostok" dataset with the Mauna Loa dataset,
+        we clearly see the sharp increase in CO2 levels the last
+        100 years.
+        <p id="sourcesVostok">
+        </p>
+      </div>
+      <div class="w3-container w3-col m6 l5">
+        <canvas id="plotVostok"></canvas>
+        <script>
+          plotVostok("plotVostok", "sourcesVostok");
+        </script>
+      </div>
+    </div>
+
     <!-- Plot CO2 by region -->
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">

@@ -60,6 +60,54 @@ function plotAtmosphericCO2(elementId, elementSource) {
     .catch(err => console.log(err));
 }
 
+// 
+// Atmospheric CO2 over 420.000 years
+// 
+function plotVostok(elementId, elementSource) {
+  var myChart = new Chart(document.getElementById(elementId), {
+    type: 'scatter',
+    options: {
+      legend: {
+        display: false
+      },
+      aspectRatio: 1,
+      scales: {
+        xAxes: [{
+          ticks: {
+            min: -420000,
+            max: 2020,
+            autoSkip: true,
+            maxTicksLimit: 8,
+            callback: function (value, index, values) {
+              if (value == 0) return null;
+              if (value == -420000) return null;
+              return value
+            }
+          },
+        }]
+      }
+    }
+  });
+  let url = 'https://api.dashboard.eco/vostok-and-maunaloa';
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Vostok:', results);
+      printSourceAndLink(results, elementSource, url);
+      myChart.data.datasets.push({
+        data: results.data,
+        fill: false,
+        //        borderColor: 'rgba(32,231,24,0.7)',
+        borderWidth: 3,
+        showLine: true,
+        label: 'CO2 in ppm'
+      });
+      myChart.update();
+    })
+    .catch(err => console.log(err));
+}
+
 //
 // CO2 by region
 //
@@ -153,12 +201,6 @@ function plotAtmosphericCH4(elementId, elementSource) {
         type: 'line',
         options: {
           aspectRatio: 1,
-          plugins: {
-            colorschemes: {
-              scheme: 'tableau.Tableau10',
-              fillAlpha: 0.2
-            }
-          },
           legend: {
             display: false
           },
@@ -181,6 +223,7 @@ function plotAtmosphericCH4(elementId, elementSource) {
       let values = results.data.map(x => x.average);
       myChart.data.datasets.push({
         label: "CH4 monthly",
+        fill: false,
         data: values
       });
       myChart.data.labels = dates;
