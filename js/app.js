@@ -749,12 +749,12 @@ function plotSvalbardTemp(elementId, elementSource) {
 // Brazil Forest Fires
 //
 function plotBrazilFires(elementId, elementSource) {
-  let url = 'https://api.dashboard.eco/queimadas';
+  let url = 'https://api.dashboard.eco/queimadas-brazil';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Queimadas Results:', results);
+      console.log('Brazil:', results);
       printSourceAndLink(results, elementSource, url);
       var myChart = new Chart(document.getElementById(elementId), {
         type: 'line',
@@ -780,8 +780,7 @@ function plotBrazilFires(elementId, elementSource) {
       while (results.data.length) {
         let x = results.data.pop();
         let values = x.data;
-        // Too much data here
-        // Let us just look at 2019 and Average
+        // Too much data here. Let us just look at 2019 and Average
         if (x.year != 2019 && x.year != "Average") { // && x.year != "Maximum" && x.year != "Minimum") 
           continue;
         }
