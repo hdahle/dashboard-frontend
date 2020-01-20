@@ -142,7 +142,7 @@ function plotEmissionsByRegion(elementId, elementSource) {
 // Atmospheric CH4 Methane
 //
 function plotAtmosphericCH4(elementId, elementSource) {
-  let url = 'https://api.dashbaord.eco/maunaloach4';
+  let url = 'https://api.dashboard.eco/maunaloach4';
   fetch(url)
     .then(status)
     .then(json)
@@ -725,7 +725,7 @@ function plotSvalbardTemp(elementId, elementSource) {
       }
     }
   });
-  let url = 'https://probably.one:4438/temperature-svalbard';
+  let url = 'https://api.dashboard.eco/temperature-svalbard';
   fetch(url)
     .then(status)
     .then(json)
@@ -749,7 +749,7 @@ function plotSvalbardTemp(elementId, elementSource) {
 // Brazil Forest Fires
 //
 function plotBrazilFires(elementId, elementSource) {
-  let url = 'https://probably.one:4438/queimadas';
+  let url = 'https://api.dashboard.eco/queimadas';
   fetch(url)
     .then(status)
     .then(json)
@@ -801,7 +801,7 @@ function plotBrazilFires(elementId, elementSource) {
 // Global Sea Level Rise
 //
 function plotGlobalSeaLevel(elementId, elementSource) {
-  let url = 'https://probably.one:4438/CSIRO_Recons';
+  let url = 'https://api.dashboard.eco/CSIRO_Recons';
   fetch(url)
     .then(status)
     .then(json)
@@ -854,7 +854,7 @@ function plotGlobalSeaLevel(elementId, elementSource) {
         fill: false
       });
       myChart.update();
-      fetch('https://probably.one:4438/CSIRO_Alt_yearly')
+      fetch('https://api.dashboard.eco/CSIRO_Alt_yearly')
         .then(status)
         .then(json)
         .then(results => {
