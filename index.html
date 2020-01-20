@@ -73,7 +73,7 @@
     <a href="#About" class="w3-bar-item w3-button" onClick="clickBurger()">About</a>
   </div>
 
-  <div class="w3-content w3-padding-64" id="Top" style="max-width:920px">
+  <div class="w3-content w3-padding-32" id="Top" style="max-width:920px">
 
     <div class="w3-section w3-light-grey">
       <div class="w3-row w3-margin-left">
@@ -449,12 +449,12 @@
     <!-- CCS Carbon Capture -->
     <div class="w3-row w3-padding-32" id="LatestNews">
       <div class="w3-container w3-col m6 l7">
-        <h2>The surprising state of Carbon Capture and Storage: CCS creates more emissions than it captures</h2>
+        <h2>Carbon Capture and Storage: CCS creates more CO2 than it captures</h2>
         According to
         <a href="https://www.globalccsinstitute.com/" target="_blank" rel="noopener">
           Global CCS Institute
         </a>
-        there are currently 19 large-scale CCS projects in operation worldwide,
+        there are 19 large-scale CCS projects in operation as of end-of-2019,
         capturing 38 million tons CO2 annually
         (less than 0.1&percnt; of global CO2 emissions).
         <p>
@@ -494,7 +494,7 @@
     </div>
     <div class="w3-container w3-section">
       <h2>API</h2>
-      A basic API providing JSON-formatted data for all the visualizations on this web site is in the works.
+      A basic API providing JSON-formatted data for all the visualizations on this web site is coming.
       For now, the Get chart data buttons offers a preview.
     </div>
 
@@ -507,9 +507,8 @@
       This website collects and visualizes publicly available data on the state of the earth.
       The intent is to provide factual data on what is happening to our environment.
       <p>
-        There are lots of data providers out there, buth public and private,
-        with vast amounts of relevant data.
-        This web site aims to use and publish data that is freely available and distributable.
+        There are many public and private environmental data providers with vast amounts of relevant data.
+        This site aims to make open data useful and understandable for anyone with a mobile device or computer.
       </p>
       <p>H&aring;kon Dahle, Oslo, Norway, 2020</p>
     </div>
@@ -532,37 +531,38 @@
   </div>
   <div class="w3-container w3-center w3-section">
     We probably only have one earth
+  </div>
 
-    <!---------- function clickBurger() burger menu ---------->
+  <!---------- function clickBurger() burger menu ---------->
 
-    <script>
-      function clickBurger() {
-        var x = document.getElementById("burger");
-        if (x.className.indexOf("w3-show") == -1) {
-          x.className += " w3-show";
-        } else {
-          x.className = x.className.replace(" w3-show", "");
-        }
+  <script>
+    function clickBurger() {
+      var x = document.getElementById("burger");
+      if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+      } else {
+        x.className = x.className.replace(" w3-show", "");
       }
-    </script>
+    }
+  </script>
 
-    <!---------- function tryUrl() for API buttons ---------->
+  <!---------- function tryUrl() for API buttons ---------->
 
-    <script>
-      function tryUrl(url) {
-        var myWindow = window.open();
-        myWindow.document.write("<html><body><pre><code>")
-        fetch(url)
-          .then(status)
-          .then(json)
-          .then(results => {
-            myWindow.document.write(JSON.stringify(results, 0, 2));
-            myWindow.document.write("</code></pre></body></html>")
-            myWindow.document.close();
-          })
-          .catch(err => console.log(err));
-      }
-    </script>
+  <script>
+    function tryUrl(url) {
+      var myWindow = window.open();
+      myWindow.document.write("<html><body><pre><code>")
+      fetch(url)
+        .then(status)
+        .then(json)
+        .then(results => {
+          myWindow.document.write(JSON.stringify(results, 0, 2));
+          myWindow.document.write("</code></pre></body></html>")
+          myWindow.document.close();
+        })
+        .catch(err => console.log(err));
+    }
+  </script>
 </body>
 
 </html>

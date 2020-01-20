@@ -359,7 +359,7 @@ function plotWorldPopulation(elementID, elementSource) {
           }
         }
       });
-      myChart.data.labels = results.data[0].data.map(x => x.year);
+      myChart.data.labels = results.data[0].data.map(x => x.t);
       while (results.data.length) {
         let x = results.data.pop();
         if (x.region === 'World') continue;
@@ -371,7 +371,7 @@ function plotWorldPopulation(elementID, elementSource) {
         }
         myChart.data.datasets.push({
           label: x.region,
-          data: x.data.map(y => y.population),
+          data: x.data.map(y => y.y),
           fill: true
         });
       }
