@@ -73,8 +73,10 @@
     <a href="#About" class="w3-bar-item w3-button" onClick="clickBurger()">About</a>
   </div>
 
+  <!-- Limit content width to 920px -->
   <div class="w3-content w3-padding-32" id="Top" style="max-width:920px">
 
+    <!-- Placeholder DIV for Latest News -->
     <div class="w3-section w3-light-grey">
       <div class="w3-row w3-margin-left">
         <h4>Latest update</h4>
@@ -87,10 +89,11 @@
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Atmospheric CO2 levels are increasing</h2>
-        The level of CO2 in the atmosphere over the last 800.000 years has fluctuated between 180 and 280 ppm (parts per
-        million).
-        Since the industrial revolution this level has increased rapidly and is currently at around 410 ppm.
-        This chart is updated monthly.
+        The <a href="https://www.esrl.noaa.gov/gmd/obop/mlo/" target="_blank" rel="noopener">
+          NOAA/ESRL (Earth Systems Research Laboratory)</a>
+        operates the Mauna Loa Observatory in Hawaii,
+        collecting atmospheric data since the 1950's.
+        This chart uses their CO2 data, and shows a clear increasing trend.
         <p>
           Notice the saw-tooth pattern in the chart:
           This is due to seasonal variations in photo-synthesis:
@@ -99,7 +102,10 @@
           therefore the earth consumes more CO2 in the Northern summer.
           In the winter season, more CO2 is released.
         </p>
-        <p id="sourcesCO2">
+        <div onclick="accordion('sourcesCO2')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesCO2" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -113,15 +119,19 @@
     <!-- Plot Law Dome 2000 years of CO2 -->
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
-        <h2>CO2 levels the last 2000 years</h2>
+        <h2>CO2 levels over the last 2000 years</h2>
         This chart contains data from the
         <a href="https://cdiac.ess-dive.lbl.gov/trends/co2/modern_co2.html" target="_blank" rel="noopener">
           Law Dome ice core
         </a>
         drilled in East Antarctica.
         The CO2 data starts at year 154 and ends in 1996, and provides more detail than the "Vostok" dataset.
-        The Law Dome data set shows how atmospheric CO2 levels started rising sharply at the end of the 1800's.
-        <p id="sourcesLawDome">
+        The Law Dome data set shows how atmospheric CO2 levels started rising sharply in the second half of the 1800's,
+        when fossil fuels started powering the industrial revolution.
+        <div onclick="accordion('sourcesLawDome')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesLawDome" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -135,17 +145,20 @@
     <!-- Plot Vostok 420.000 years of CO2 -->
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
-        <h2>CO2 levels the last 420.000 years: Dramatic increase since the industrial revolution</h2>
+        <h2>CO2 levels over the last 420.000 years</h2>
         This chart contains data from the "Vostok" ice core drilled in Antarctica in 1998
         as a collaborative project between
         France, Russia and USA.
         The CO2 data goes back over 400.000 years,
-        and shows how CO2 levels in the air has varied
+        and shows how CO2 levels in the air has varied between 180 and 280ppm
         through four climate cycles.
         By combining the "Vostok" dataset with the Mauna Loa dataset,
         we clearly see the sharp increase in CO2 levels the last
         100 years.
-        <p id="sourcesVostok">
+        <div onclick="accordion('sourcesVostok')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesVostok" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -171,7 +184,10 @@
         <p>
           Emissions from international transport such as shipping and air travel is counted as a separate region.
         </p>
-        <p id="sourcesCO2ByRegion">
+        <div onclick="accordion('sourcesCO2ByRegion')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesCO2ByRegion" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -206,7 +222,10 @@
           for powering oil and gas extraction.
           Numbers are in millions of tons of CO2 equivalents.
         </p>
-        <p id="sourcesEmissionsNorway">
+        <div onclick="accordion('sourcesEmissionsNorway')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesEmissionsNorway" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -232,7 +251,10 @@
           US Environmental Protection Agency
         </a>
         has a good overview of the various greehouse gases and their impact.
-        <p id="sourcesCH4">
+        <div onclick="accordion('sourcesCH4')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesCH4" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -257,13 +279,16 @@
         <p>
           The NSIDC dataset contains ice extent data since 1979
         </p>
-        <p id="arcticIceReference">
+        <div onclick="accordion('sourcesArcticIce')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesArcticIce" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
         <canvas id="plotArcticIce"></canvas>
         <script>
-          plotArcticIce("plotArcticIce", "arcticIceReference");
+          plotArcticIce("plotArcticIce", "sourcesArcticIce");
         </script>
       </div>
     </div>
@@ -272,18 +297,21 @@
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>World population will stabilize at about 11 billion in 2100</h2>
-        World population is currently 7.7 billion. The UN projects that the number of people on earth will reach about
-        11
-        billion in year 2100, and will then remain stable. Virtually all the population growth will be in Africa, where
-        the
-        population will grow by 3 billion from 1.3 to 4.3 billion.
-        <p id="worldPopulationSource">
+        World population is currently 7.7 billion.
+        The UN projects that the number of people on earth will reach about
+        11 billion in year 2100, and will then remain stable.
+        Virtually all the population growth will be in Africa, where
+        the population will grow by 3 billion from 1.3 to 4.3 billion.
+        <div onclick="accordion('sourcesWorldPopulation')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesWorldPopulation" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
         <canvas id="plotWorldPopulation"></canvas>
         <script>
-          plotWorldPopulation("plotWorldPopulation", "worldPopulationSource");
+          plotWorldPopulation("plotWorldPopulation", "sourcesWorldPopulation");
         </script>
       </div>
     </div>
@@ -292,21 +320,26 @@
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Global oil production: 100 million barrels per day, steadily increasing</h2>
-        According to the US Energy Information Administration EIA, global oil production is now above 100 million
+        According to the US Energy Information Administration EIA,
+        global oil production is now above 100 million
         barrels of oil
         per day. Production is not slowing down. According to the
         <a href="https://www.iea.org/news/united-states-to-lead-global-oil-supply-growth-while-no-peak-in-oil-demand-in-sight"
           target="_blank" rel="noopener">International Energy Agency IEA
-        </a>, peak oil is nowhere in sight, with the sharp growth in US shale oil leading the growth in the coming
-        years.
+        </a>,
+        peak oil is nowhere in sight,
+        with the sharp growth in US shale oil leading the growth in the coming years.
         Other countries representing growth are Brazil, Norway and Guyana.
-        <p id="sourcesOil">
+        <div onclick="accordion('sourcesOil')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesOil" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
-        <canvas id="plotGlobalOilProduction"></canvas>
+        <canvas id="plotOil"></canvas>
         <script>
-          plotGlobalOilProduction("plotGlobalOilProduction", "sourcesOil");
+          plotGlobalOilProduction("plotOil", "sourcesOil");
         </script>
       </div>
     </div>
@@ -315,11 +348,15 @@
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Global gas production is accelerating</h2>
-        The chart uses data from the US Energy Information Administration EIA, and shows the increased production of
+        The chart uses data from the US Energy Information Administration EIA,
+        and shows the increased production of
         natural gas globally.
-        Natural gas production is measured in Bcf - Billions of cubic feet.
+        Production numbers are in Bcf - Billions of cubic feet.
         Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
-        <p id="sourcesGas">
+        <div onclick="accordion('sourcesGas')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesGas" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -334,7 +371,8 @@
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Coal production increasing again, but still below 2013 peak</h2>
-        According to the US Energy Information Administration EIA, global coal production hit a peak in 2013.
+        According to the US Energy Information Administration EIA,
+        global coal production hit a peak in 2013.
         Other sources such as BP confirm this.
         While coal production in 2018 was higher than 2017, it is still below 2013 levels.
         The chart shows annual coal production in millions of short tons since 1980.
@@ -345,7 +383,10 @@
         </a>
         <br>
         Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
-        <p id="sourcesCoal">
+        <div onclick="accordion('sourcesCoal')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesCoal" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -376,7 +417,10 @@
           The chart shows the mean size of
           the hole during this period, in millions of square km.
         </p>
-        <p id="sourcesOzone">
+        <div onclick="accordion('sourcesOzone')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesOzone" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -402,7 +446,10 @@
         <a href="https://en.wikipedia.org/wiki/Industrial_Revolution" target="_blank" rel="noopener">
           industrial revolution.
         </a>
-        <p id="sourcesGlobalTemp">
+        <div onclick="accordion('sourcesGlobalTemp')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesGlobalTemp" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -428,7 +475,10 @@
           Climate in Svalbard 2100 by NCCS
         </a>
         is an excellent overview of future climate impact in the Arctic.
-        <p id="sourcesSvalbardTemp">
+        <div onclick="accordion('sourcesSvalbardTemp')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesSvalbardTemp" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -457,7 +507,10 @@
           there might actually be more than one fire within that image pixel.
           Also, a single forest fire may span several pixels.
         </p>
-        <p id="sourcesBrazil">
+        <div onclick="accordion('sourcesBrazil')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesBrazil" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -481,7 +534,10 @@
         stations in 1900, 235 stations in the 1980s).
         The dataset from 1993 and onwards uses satellite technology.
         Units in mm (millimeters).
-        <p id="sourcesSeaLevel">
+        <div onclick="accordion('sourcesSeaLevel')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesSeaLevel" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -515,7 +571,10 @@
           In other words, CCS generates an extra 40 million tons of CO2 emissions annually.
         </p>
         The chart lists all CCS projects as of 2019. Those is red color use captured CO2 for EOR.
-        <p id="sourcesCCS">
+        <div onclick="accordion('sourcesCCS')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesCCS" class="w3-hide">
         </p>
       </div>
       <div class="w3-container w3-col m6 l5">
@@ -561,7 +620,7 @@
     <hr>
   </div>
 
-  <!---------- FOOTER ---------->
+  <!-- FOOTER -->
 
   <div class="w3-container w3-center my-font w3-section">
     <p> design by dashboard.eco </p>
@@ -579,8 +638,7 @@
     We probably only have one earth
   </div>
 
-  <!---------- function clickBurger() burger menu ---------->
-
+  <!-- BURGER MENU -->
   <script>
     function clickBurger() {
       var x = document.getElementById("burger");
@@ -592,8 +650,7 @@
     }
   </script>
 
-  <!---------- function tryUrl() for API buttons ---------->
-
+  <!-- API BUTTONS -->
   <script>
     function tryUrl(url) {
       var myWindow = window.open();
@@ -607,6 +664,18 @@
           myWindow.document.close();
         })
         .catch(err => console.log(err));
+    }
+  </script>
+
+  <!-- OPEN/CLOSE ACCORDION -->
+  <script>
+    function accordion(id) {
+      var x = document.getElementById(id);
+      if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+      } else {
+        x.className = x.className.replace(" w3-show", "");
+      }
     }
   </script>
 </body>

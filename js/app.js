@@ -68,7 +68,7 @@ function plotVostok(elementId, elementSource) {
     type: 'scatter',
     options: {
       legend: {
-        display: false
+        display: true
       },
       aspectRatio: 1,
       scales: {
@@ -88,7 +88,7 @@ function plotVostok(elementId, elementSource) {
       }
     }
   });
-  let url = 'https://api.dashboard.eco/vostok-and-maunaloa';
+  let url = 'https://api.dashboard.eco/vostok';
   fetch(url)
     .then(status)
     .then(json)
@@ -98,12 +98,26 @@ function plotVostok(elementId, elementSource) {
       myChart.data.datasets.push({
         data: results.data,
         fill: false,
-        //        borderColor: 'rgba(32,231,24,0.7)',
-        borderWidth: 3,
+        borderWidth: 2,
         showLine: true,
         label: 'CO2 in ppm'
       });
       myChart.update();
+      fetch('https://api.dashboard.eco/maunaloa-annual-mean')
+        .then(status)
+        .then(json)
+        .then(results => {
+          console.log('MaunaLoaAnnual:', results);
+          myChart.data.datasets.push({
+            data: results.data,
+            fill: false,
+            borderWidth: 3,
+            showLine: true,
+            label: 'Mauna Loa CO2'
+          });
+          myChart.update();
+        })
+        .catch(err => console.log(err));
     })
     .catch(err => console.log(err));
 }
@@ -144,8 +158,7 @@ function plotLawDome(elementId, elementSource) {
       myChart.data.datasets.push({
         data: results.data,
         fill: false,
-        //        borderColor: 'rgba(32,231,24,0.7)',
-        borderWidth: 3,
+        borderWidth: 2,
         showLine: true,
         label: 'Law Dome CO2'
       });
@@ -159,7 +172,7 @@ function plotLawDome(elementId, elementSource) {
           myChart.data.datasets.push({
             data: results.data,
             fill: false,
-            borderWidth: 3,
+            borderWidth: 2,
             showLine: true,
             label: 'Mauna Loa CO2'
           });
@@ -550,10 +563,10 @@ function plotGlobalOilProduction(elementId, elementSource) {
 function printSourceAndLink(res, elmtId, url) {
   let str = "<p>Source not defined</p>";
   if (res.source !== undefined && res.source !== null) {
-    str = "<p>Source: " + res.source + "</p>"; // yes, intentional overwrite of str
+    str = "<p>" + res.source + "</p>"; // yes, intentional overwrite of str
   }
   if (res.link !== undefined && res.link !== null) {
-    str += "<p>Link: <a target='_blank' rel='noopener' href='";
+    str += "<p><a target='_blank' rel='noopener' href='";
     str += res.link + "'>";
     str += res.link + "</a></p>"
   }
@@ -955,6 +968,7 @@ function plotGlobalSeaLevel(elementId, elementSource) {
       myChart.data.datasets.push({
         label: 'Land based measurements',
         data: xd,
+        borderWidth: 2,
         fill: false
       });
       myChart.update();
@@ -970,6 +984,7 @@ function plotGlobalSeaLevel(elementId, elementSource) {
           myChart.data.datasets.push({
             label: 'Satellite measurements',
             data: xd,
+            borderWidth: 2,
             fill: false
           });
           myChart.update();
@@ -994,8 +1009,15 @@ function plotCCS(elementId, elementSource) {
         type: 'horizontalBar',
         options: {
           responsive: true,
-          aspectRatio: 0.7,
+          aspectRatio: 0.8,
           scales: {
+            xAxes: [{
+              ticks: {
+                callback: function (value, index, values) {
+                  return value + " Mt";
+                }
+              }
+            }],
             yAxes: [{
               gridLines: {
                 display: false
