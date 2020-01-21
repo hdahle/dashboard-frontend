@@ -108,6 +108,68 @@ function plotVostok(elementId, elementSource) {
     .catch(err => console.log(err));
 }
 
+// 
+// Law Dome: Atmospheric CO2 over 2000 years
+// 
+function plotLawDome(elementId, elementSource) {
+  var myChart = new Chart(document.getElementById(elementId), {
+    type: 'scatter',
+    options: {
+      legend: {
+        display: true
+      },
+      aspectRatio: 1,
+      scales: {
+        xAxes: [{
+          ticks: {
+            max: 2020,
+            autoSkip: true,
+            maxTicksLimit: 8,
+            callback: function (value, index, values) {
+              if (value == 2000) return null;
+              return value
+            }
+          },
+        }]
+      }
+    }
+  });
+  let url = 'https://api.dashboard.eco/law2018co2';
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('LawDome:', results);
+      printSourceAndLink(results, elementSource, url);
+      myChart.data.datasets.push({
+        data: results.data,
+        fill: false,
+        //        borderColor: 'rgba(32,231,24,0.7)',
+        borderWidth: 3,
+        showLine: true,
+        label: 'Law Dome CO2'
+      });
+      myChart.update();
+
+      fetch('https://api.dashboard.eco/maunaloa-annual-mean')
+        .then(status)
+        .then(json)
+        .then(results => {
+          console.log('MaunaLoaAnnual:', results);
+          myChart.data.datasets.push({
+            data: results.data,
+            fill: false,
+            borderWidth: 3,
+            showLine: true,
+            label: 'Mauna Loa CO2'
+          });
+          myChart.update();
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+}
+
 //
 // CO2 by region
 //

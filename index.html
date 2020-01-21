@@ -110,7 +110,29 @@
       </div>
     </div>
 
-    <!-- Plot 420.000 years of CO2 -->
+    <!-- Plot Law Dome 2000 years of CO2 -->
+    <div class="w3-row w3-padding-32">
+      <div class="w3-container w3-col m6 l7">
+        <h2>CO2 levels the last 2000 years</h2>
+        This chart contains data from the
+        <a href="https://cdiac.ess-dive.lbl.gov/trends/co2/modern_co2.html" target="_blank" rel="noopener">
+          Law Dome ice core
+        </a>
+        drilled in East Antarctica.
+        The CO2 data starts at year 154 and ends in 1996, and provides more detail than the "Vostok" dataset.
+        The Law Dome data set shows how atmospheric CO2 levels started rising sharply at the end of the 1800's.
+        <p id="sourcesLawDome">
+        </p>
+      </div>
+      <div class="w3-container w3-col m6 l5">
+        <canvas id="plotLawDome"></canvas>
+        <script>
+          plotLawDome("plotLawDome", "sourcesLawDome");
+        </script>
+      </div>
+    </div>
+
+    <!-- Plot Vostok 420.000 years of CO2 -->
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>CO2 levels the last 420.000 years: Dramatic increase since the industrial revolution</h2>
