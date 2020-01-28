@@ -397,6 +397,36 @@
       </div>
     </div>
 
+    <!-- Emissions by fuel type -->
+    <div class="w3-row w3-padding-32" id="LatestNews">
+      <div class="w3-container w3-col m6 l7">
+        <h2>CO2 emissions from fossil fuels increased by 2&percnt; in 2018.
+          Natural Gas was the biggest contributor to this increase</h2>
+        According to fossil fuel and cement production emissions data provided by the
+        <a href="https://www.globalcarbonproject.org/carbonbudget/">
+          Global Carbon Project
+        </a>
+        there was a 2&percnt; increase in CO2 emissions from fossil fuels in 2018.
+        Natural gas represented the biggest part of this increase.
+        Coal is the number one source of CO2 with 37&percnt; oil 34&percnt; and gas 20&percnt;.
+        <p>
+          Note that 2017 and 2018 data are preliminary.
+          The chart will be updated as soon as final data become available.
+        </p>
+        <div onclick="accordion('sourcesFuelType')" class="w3-button w3-block w3-stretch w3-left-align">
+          Sources &nbsp; <i class="fa fa-angle-down"></i>
+        </div>
+        <p id="sourcesFuelType" class="w3-hide">
+        </p>
+      </div>
+      <div class="w3-container w3-col m6 l5">
+        <canvas id="plotEmissionsByFuelType"></canvas>
+        <script>
+          plotEmissionsByFuelType("plotEmissionsByFuelType", "sourcesFuelType");
+        </script>
+      </div>
+    </div>
+
     <!-- Ozone Hole -->
     <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
@@ -413,7 +443,7 @@
         <p>
           NASA Ozone Watch tracks the size of the ozone hole over the Antarctic
           and the Arctic.
-          The Antarctic ozone hole reaches its annual peak size in September/October.
+          The Antarctic ozone hole reaches its peak size in September/October.
           The chart shows the mean size of
           the hole during this period, in millions of square km.
         </p>
@@ -549,7 +579,7 @@
     </div>
 
     <!-- CCS Carbon Capture -->
-    <div class="w3-row w3-padding-32" id="LatestNews">
+    <div class="w3-row w3-padding-32">
       <div class="w3-container w3-col m6 l7">
         <h2>Carbon Capture and Storage: CCS creates more CO2 than it captures</h2>
         According to
@@ -625,7 +655,7 @@
   <div class="w3-container w3-center my-font w3-section">
     <p> design by dashboard.eco </p>
     &nbsp;
-<!--    <a href="https://twitter.com/probably_one" class="fa fa-twitter" target="_blank" rel="noopener"></a>
+    <!--    <a href="https://twitter.com/probably_one" class="fa fa-twitter" target="_blank" rel="noopener"></a>
     &nbsp; 
 -->
     <a href="https://www.instagram.com/dashboard.eco/" class="fa fa-instagram" target="_blank" rel="noopener"></a>

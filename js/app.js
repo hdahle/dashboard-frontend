@@ -53,6 +53,7 @@ function plotAtmosphericCO2(elementId, elementSource) {
       myChart.data.datasets.push({
         data: values,
         fill: false,
+        borderWidth: 2,
         label: 'Mauna Loa, Hawaii'
       });
       myChart.update();
@@ -299,6 +300,7 @@ function plotAtmosphericCH4(elementId, elementSource) {
       myChart.data.datasets.push({
         label: "CH4 monthly",
         fill: false,
+        borderWidth: 2,
         data: values
       });
       myChart.data.labels = dates;
@@ -463,7 +465,7 @@ function plotWorldPopulation(elementID, elementSource) {
             yAxes: [{
               stacked: true,
               ticks: {
-                callback: function (value, index, values) {
+                callback: function (value) {
                   return value / 1000
                 }
               }
@@ -528,7 +530,7 @@ function plotGlobalOilProduction(elementId, elementSource) {
             yAxes: [{
               stacked: true,
               ticks: {
-                callback: function (value, index, values) {
+                callback: function (value) {
                   return value / 1000
                 }
               }
@@ -608,7 +610,7 @@ function plotGlobalCoalProduction(elementId, elementSource) {
             yAxes: [{
               stacked: true,
               ticks: {
-                callback: function (value, index, values) {
+                callback: function (value) {
                   return value / 1000
                 }
               }
@@ -666,7 +668,7 @@ function plotGlobalGasProduction(elementId, elementSource) {
             yAxes: [{
               stacked: true,
               ticks: {
-                callback: function (value, index, values) {
+                callback: function (value) {
                   return value / 1000
                 }
               }
@@ -688,6 +690,64 @@ function plotGlobalGasProduction(elementId, elementSource) {
           label: x.region,
           data: x.data.map(y => y.data),
           fill: true
+        });
+      }
+      myChart.update();
+    })
+    .catch(err => console.log(err));
+}
+
+
+//
+// Emissions by fuel-type
+//
+function plotEmissionsByFuelType(elementId, elementSource) {
+  let url = 'https://api.dashboard.eco/emissions-by-fuel-type';
+  let myChart = new Chart(document.getElementById(elementId), {
+    type: 'line',
+    options: {
+      responsive: true,
+      aspectRatio: 1,
+      legend: {
+        reverse: true,
+        position: 'right',
+        labels: {
+          boxWidth: 10
+        },
+      },
+      tooltips: {
+        intersect: false,
+        mode: 'nearest'
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            callback: (value) => (value / 1000) + ' Gt'
+          }
+        }],
+        xAxes: [{
+          type: 'linear',
+          ticks: {
+            min: 1960
+          }
+        }]
+      }
+    }
+  });
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Emissions by type:', results);
+      printSourceAndLink(results, elementSource, url);
+      while (results.data.length) {
+        let d = results.data.pop();
+        if (d.fuel === 'Per Capita') continue;
+        myChart.data.datasets.push({
+          label: d.fuel,
+          fill: false,
+          borderWidth: 3,
+          data: d.data.map(d => ({ x: parseInt(d.x), y: d.y }))
         });
       }
       myChart.update();
@@ -736,7 +796,8 @@ function plotOzoneHole(elementId, elementSource) {
         }),
         fill: false,
         pointRadius: 3,
-        pointBackgroundColor: 'rgba(20,200,40,0.1'
+        pointBackgroundColor: 'rgba(20,200,40,0.1)',
+        borderWidth: 2
       });
       myChart.update();
     })
@@ -799,6 +860,7 @@ function plotGlobalTemp(elementId, elementSource) {
         myChart.data.datasets.push({
           data: d1,
           label: regions[i],
+          borderWidth: 2,
           fill: false
         });
         if (i === 0) {
@@ -855,6 +917,7 @@ function plotSvalbardTemp(elementId, elementSource) {
       myChart.data.datasets.push({
         data: d1,
         label: results.data[0].country,
+        borderWidth: 2,
         fill: false
       });
       myChart.data.labels = l1;
@@ -905,6 +968,7 @@ function plotBrazilFires(elementId, elementSource) {
         myChart.data.datasets.push({
           data: values,
           label: x.year,
+          borderWidth: 2,
           fill: false
         });
       }
