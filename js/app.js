@@ -1,3 +1,9 @@
+//
+// app.js
+//
+// H. Dahle
+//
+
 function status(response) {
   if (response.status >= 200 && response.status < 300) {
     return Promise.resolve(response)
@@ -20,8 +26,9 @@ Chart.defaults.global.plugins.colorschemes.scheme = 'brewer.SetTwo8';
 // 
 // Atmospheric CO2
 // 
-function plotAtmosphericCO2(elementId, elementSource) {
-  var myChart = new Chart(document.getElementById(elementId), {
+function plotAtmosphericCO2(elmt /*elementId, elementSource*/) {
+  let id = insertAccordionAndCanvas(elmt);
+  let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'line',
     options: {
       legend: {
@@ -44,8 +51,8 @@ function plotAtmosphericCO2(elementId, elementSource) {
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Atmospheric CO2 results', results);
-      printSourceAndLink(results, elementSource, url);
+      console.log('Atmospheric CO2:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
       let values = results.data.map(x => ({
         x: x.date,
         y: x.interpolated
@@ -64,8 +71,9 @@ function plotAtmosphericCO2(elementId, elementSource) {
 // 
 // Atmospheric CO2 over 420.000 years
 // 
-function plotVostok(elementId, elementSource) {
-  var myChart = new Chart(document.getElementById(elementId), {
+function plotVostok(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
+  let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'scatter',
     options: {
       legend: {
@@ -94,8 +102,8 @@ function plotVostok(elementId, elementSource) {
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Vostok:', results);
-      printSourceAndLink(results, elementSource, url);
+      console.log('Vostok:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
       myChart.data.datasets.push({
         data: results.data,
         fill: false,
@@ -108,7 +116,7 @@ function plotVostok(elementId, elementSource) {
         .then(status)
         .then(json)
         .then(results => {
-          console.log('MaunaLoaAnnual:', results);
+          console.log('MaunaLoaAnnual:', results.data.length);
           myChart.data.datasets.push({
             data: results.data,
             fill: false,
@@ -126,8 +134,9 @@ function plotVostok(elementId, elementSource) {
 // 
 // Law Dome: Atmospheric CO2 over 2000 years
 // 
-function plotLawDome(elementId, elementSource) {
-  var myChart = new Chart(document.getElementById(elementId), {
+function plotLawDome(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
+  var myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'scatter',
     options: {
       legend: {
@@ -154,8 +163,8 @@ function plotLawDome(elementId, elementSource) {
     .then(status)
     .then(json)
     .then(results => {
-      console.log('LawDome:', results);
-      printSourceAndLink(results, elementSource, url);
+      console.log('LawDome:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
       myChart.data.datasets.push({
         data: results.data,
         fill: false,
@@ -169,7 +178,7 @@ function plotLawDome(elementId, elementSource) {
         .then(status)
         .then(json)
         .then(results => {
-          console.log('MaunaLoaAnnual:', results);
+          console.log('MaunaLoaAnnual:', results.data.length);
           myChart.data.datasets.push({
             data: results.data,
             fill: false,
@@ -187,15 +196,16 @@ function plotLawDome(elementId, elementSource) {
 //
 // CO2 by region
 //
-function plotEmissionsByRegion(elementId, elementSource) {
+function plotEmissionsByRegion(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
   let url = 'https://probably.one:4438/annual-co-emissions-by-region';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('CO2 Emissions by region results:', results);
-      printSourceAndLink(results, elementSource, url);
-      var myChart = new Chart(document.getElementById(elementId), {
+      console.log('CO2 Emissions by region:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
+      var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
           aspectRatio: 1,
@@ -265,15 +275,16 @@ function plotEmissionsByRegion(elementId, elementSource) {
 //
 // Atmospheric CH4 Methane
 //
-function plotAtmosphericCH4(elementId, elementSource) {
+function plotAtmosphericCH4(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/maunaloach4';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Atmospheric methane results:', results);
-      printSourceAndLink(results, elementSource, url);
-      var myChart = new Chart(document.getElementById(elementId), {
+      console.log('Atmospheric CH4:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
+      var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
           aspectRatio: 1,
@@ -312,15 +323,16 @@ function plotAtmosphericCH4(elementId, elementSource) {
 //
 // Norway Annual GHG Emissions
 //
-function plotEmissionsNorway(elementId, elementSource) {
+function plotEmissionsNorway(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/emissions-norway';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Norway:', results);
-      printSourceAndLink(results, elementSource, url);
-      var myChart = new Chart(document.getElementById(elementId), {
+      console.log('Norway:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
+      var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
           responsive: true,
@@ -372,15 +384,16 @@ function plotEmissionsNorway(elementId, elementSource) {
 //
 // Arctic Ice Extent
 //
-function plotArcticIce(elementId, elementSource) {
+function plotArcticIce(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/ice-nsidc';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('ICE NSIDC:', results);
-      printSourceAndLink(results, elementSource, url);
-      var myChart = new Chart(document.getElementById(elementId), {
+      console.log('ICE NSIDC:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
+      let myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
           aspectRatio: 1,
@@ -435,15 +448,16 @@ function plotArcticIce(elementId, elementSource) {
 //
 // World Population
 //
-function plotWorldPopulation(elementID, elementSource) {
+function plotWorldPopulation(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
   let url = 'https://probably.one:4438/WPP2019_TotalPopulationByRegion';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Population Results:', results);
-      printSourceAndLink(results, elementSource, url);
-      var myChart = new Chart(document.getElementById(elementID), {
+      console.log('Population:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
+      var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
           tooltips: {
@@ -483,7 +497,7 @@ function plotWorldPopulation(elementID, elementSource) {
       while (results.data.length) {
         let x = results.data.pop();
         if (x.region === 'World') continue;
-        console.log('Population region', x);
+        //console.log('Population region', x);
         if (x.region === 'Latin America and the Caribbean') {
           x.region = 'S America';
         } else if (x.region === 'Northern America') {
@@ -503,15 +517,16 @@ function plotWorldPopulation(elementID, elementSource) {
 //
 // Global Oil Production
 //
-function plotGlobalOilProduction(elementId, elementSource) {
-  url = 'https://probably.one:4438/eia-international-data-oil-production';
+function plotGlobalOilProduction(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
+  let url = 'https://probably.one:4438/eia-international-data-oil-production';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Oil production results:', results);
-      printSourceAndLink(results, elementSource, url);
-      var myChart = new Chart(document.getElementById(elementId), {
+      console.log('Oil production:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
+      var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
           tooltips: {
@@ -560,38 +575,18 @@ function plotGlobalOilProduction(elementId, elementSource) {
 }
 
 //
-// Print the sources for the data. Create a button for getting chart data.
-//
-function printSourceAndLink(res, elmtId, url) {
-  let str = "<p>Source not defined</p>";
-  if (res.source !== undefined && res.source !== null) {
-    str = "<p>" + res.source + "</p>"; // yes, intentional overwrite of str
-  }
-  if (res.link !== undefined && res.link !== null) {
-    str += "<p><a target='_blank' rel='noopener' href='";
-    str += res.link + "'>";
-    str += res.link + "</a></p>"
-  }
-  str += "<div class='w3-hide-small'>";
-  str += "<p><button class='w3-button w3-dark-grey w3-round-small' onClick=\"tryUrl('"
-  str += url;
-  str += "')\">Get chart data</button></p>";
-  str += "</div>";
-  document.getElementById(elmtId).innerHTML = str;
-}
-
-//
 // Global Coal
 //
-function plotGlobalCoalProduction(elementId, elementSource) {
+function plotGlobalCoalProduction(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
   let url = "https://probably.one:4438/eia-international-data-coal";
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Coal:', results);
-      printSourceAndLink(results, elementSource, url);
-      var myChart = new Chart(document.getElementById(elementId), {
+      console.log('Coal:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
+      var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
           tooltips: {
@@ -642,14 +637,16 @@ function plotGlobalCoalProduction(elementId, elementSource) {
 //
 // Global Gas
 //
-function plotGlobalGasProduction(elementId, elementSource) {
-  fetch('https://probably.one:4438/eia-international-data-dry-natural-gas-production')
+function plotGlobalGasProduction(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
+  let url = 'https://probably.one:4438/eia-international-data-dry-natural-gas-production';
+  fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Gas results:', results);
-      printSourceAndLink(results, elementSource, url);
-      var myChart = new Chart(document.getElementById(elementId), {
+      console.log('Gas:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
+      let myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
           tooltips: {
@@ -701,9 +698,10 @@ function plotGlobalGasProduction(elementId, elementSource) {
 //
 // Emissions by fuel-type
 //
-function plotEmissionsByFuelType(elementId, elementSource) {
+function plotEmissionsByFuelType(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/emissions-by-fuel-type';
-  let myChart = new Chart(document.getElementById(elementId), {
+  let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'line',
     options: {
       responsive: true,
@@ -738,8 +736,8 @@ function plotEmissionsByFuelType(elementId, elementSource) {
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Emissions by type:', results);
-      printSourceAndLink(results, elementSource, url);
+      console.log('Emissions by type:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
       while (results.data.length) {
         let d = results.data.pop();
         if (d.fuel === 'Per Capita') continue;
@@ -758,15 +756,16 @@ function plotEmissionsByFuelType(elementId, elementSource) {
 //
 // Ozone Hole Southern Hemisphere
 //
-function plotOzoneHole(elementId, elementSource) {
+function plotOzoneHole(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/ozone-nasa';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Ozone results:', results);
-      printSourceAndLink(results, elementSource, url);
-      var myChart = new Chart(document.getElementById(elementId), {
+      console.log('Ozone results:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
+      let myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
           tooltips: {
@@ -807,8 +806,9 @@ function plotOzoneHole(elementId, elementSource) {
 //
 // Global Temperature Anomaly
 //
-function plotGlobalTemp(elementId, elementSource) {
-  var myChart = new Chart(document.getElementById(elementId), {
+function plotGlobalTemp(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
+  let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'line',
     options: {
       aspectRatio: 1,
@@ -842,8 +842,8 @@ function plotGlobalTemp(elementId, elementSource) {
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Results:', results);
-      printSourceAndLink(results, elementSource, url);
+      console.log('Results:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
       let regions = [
         'Global',
         'Northern Hemisphere',
@@ -875,8 +875,9 @@ function plotGlobalTemp(elementId, elementSource) {
 //
 // Svalbard - Arctic Temperature Development
 //
-function plotSvalbardTemp(elementId, elementSource) {
-  var myChart = new Chart(document.getElementById(elementId), {
+function plotSvalbardTemp(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
+  let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'line',
     options: {
       aspectRatio: 1,
@@ -910,8 +911,8 @@ function plotSvalbardTemp(elementId, elementSource) {
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Results:', results);
-      printSourceAndLink(results, elementSource, url);
+      console.log('Svalbard:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
       let d1 = results.data[0].data.map(x => x.temperature);
       let l1 = results.data[0].data.map(x => x.year);
       myChart.data.datasets.push({
@@ -929,15 +930,16 @@ function plotSvalbardTemp(elementId, elementSource) {
 //
 // Brazil Forest Fires
 //
-function plotBrazilFires(elementId, elementSource) {
+function plotBrazilFires(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/queimadas-brazil';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Brazil:', results);
-      printSourceAndLink(results, elementSource, url);
-      var myChart = new Chart(document.getElementById(elementId), {
+      console.log('Brazil:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
+      var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
           aspectRatio: 1,
@@ -962,13 +964,14 @@ function plotBrazilFires(elementId, elementSource) {
         let x = results.data.pop();
         let values = x.data;
         // Too much data here. Let us just look at 2019 and Average
-        if (x.year != 2019 && x.year != "Average") { // && x.year != "Maximum" && x.year != "Minimum") 
+        if (x.year != 2019 && x.year != 2020 && x.year != "Average") { // && x.year != "Maximum" && x.year != "Minimum") 
           continue;
         }
         myChart.data.datasets.push({
           data: values,
           label: x.year,
           borderWidth: 2,
+          pointRadius: x.year == 2020 ? 3 : 0,
           fill: false
         });
       }
@@ -981,15 +984,16 @@ function plotBrazilFires(elementId, elementSource) {
 //
 // Global Sea Level Rise
 //
-function plotGlobalSeaLevel(elementId, elementSource) {
+function plotGlobalSeaLevel(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/CSIRO_Recons';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('GSML results:', results);
-      printSourceAndLink(results, elementSource, url);
-      var myChart = new Chart(document.getElementById(elementId), {
+      console.log('SeaLevelRecons:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
+      let myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
           tooltips: {
@@ -1040,7 +1044,7 @@ function plotGlobalSeaLevel(elementId, elementSource) {
         .then(status)
         .then(json)
         .then(results => {
-          console.log('CSIRO 2', results);
+          console.log('SeaLevelNew:', results.data.length);
           let xd = results.data[0].data.map(d => ({
             x: d.year + "-06-30",
             y: d.data + 150
@@ -1061,15 +1065,16 @@ function plotGlobalSeaLevel(elementId, elementSource) {
 //
 // CCS - Cabon Capture
 //
-function plotCCS(elementId, elementSource) {
+function plotCCS(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
   let url = 'https://probably.one:4438/operational-ccs';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('CCS Results:', results);
-      printSourceAndLink(results, elementSource, url);
-      var myChart = new Chart(document.getElementById(elementId), {
+      console.log('CCS:', results.data.length);
+      insertSourceAndLink(results, id.accordionId, url);
+      var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'horizontalBar',
         options: {
           responsive: true,

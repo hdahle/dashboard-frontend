@@ -47,7 +47,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
-<script src="js/app.js"> </script>
+<script src="js/app.js"></script>
+<script src="js/dom.js"></script>
 
 <body>
   <div class="w3-top" id="top-menu-bar">
@@ -86,7 +87,7 @@
     </div>
 
     <!-- Plot CO2 -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotAtmosphericCO2">
       <div class="w3-container w3-col m6 l7">
         <h2>Atmospheric CO2 levels are increasing</h2>
         The <a href="https://www.esrl.noaa.gov/gmd/obop/mlo/" target="_blank" rel="noopener">
@@ -102,22 +103,14 @@
           therefore the earth consumes more CO2 in the Northern summer.
           In the winter season, more CO2 is released.
         </p>
-        <div onclick="accordion('sourcesCO2')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesCO2" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotCO2"></canvas>
-        <script>
-          plotAtmosphericCO2("plotCO2", "sourcesCO2");
-        </script>
-      </div>
+      <script>
+        plotAtmosphericCO2("plotAtmosphericCO2")
+      </script>
     </div>
 
     <!-- Plot Law Dome 2000 years of CO2 -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotLawDome">
       <div class="w3-container w3-col m6 l7">
         <h2>CO2 levels over the last 2000 years</h2>
         This chart contains data from the
@@ -126,24 +119,17 @@
         </a>
         drilled in East Antarctica.
         The CO2 data starts at year 154 and ends in 1996, and provides more detail than the "Vostok" dataset.
-        The Law Dome data set shows how atmospheric CO2 levels started rising sharply in the second half of the 1800's,
+        The Law Dome data set shows how atmospheric CO2 levels started rising sharply in the second half of the
+        1800's,
         when fossil fuels started powering the industrial revolution.
-        <div onclick="accordion('sourcesLawDome')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesLawDome" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotLawDome"></canvas>
-        <script>
-          plotLawDome("plotLawDome", "sourcesLawDome");
-        </script>
-      </div>
+      <script>
+        plotLawDome("plotLawDome");
+      </script>
     </div>
 
     <!-- Plot Vostok 420.000 years of CO2 -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotVostok">
       <div class="w3-container w3-col m6 l7">
         <h2>CO2 levels over the last 420.000 years</h2>
         This chart contains data from the "Vostok" ice core drilled in Antarctica in 1998
@@ -155,51 +141,37 @@
         By combining the "Vostok" dataset with the Mauna Loa dataset,
         we clearly see the sharp increase in CO2 levels the last
         100 years.
-        <div onclick="accordion('sourcesVostok')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesVostok" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotVostok"></canvas>
-        <script>
-          plotVostok("plotVostok", "sourcesVostok");
-        </script>
-      </div>
+      <script>
+        plotVostok("plotVostok");
+      </script>
     </div>
 
     <!-- Plot CO2 by region -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotCO2ByRegion">
       <div class="w3-container w3-col m6 l7">
         <h2>CO2 emissions by region</h2>
         CO2 emissions are still increasing, especially in Asia.
         However most Asian countries have far lower emissions per capita than western countries.
         China, the country with the highest emissions in the world,
-        still has only one third of the emissions per capita compared to countries such as USA, Canada and Australia.
+        still has only one third of the emissions per capita compared to countries such as USA, Canada and
+        Australia.
         <p>
           CO2 emissions represent about two thirds of total greenhouse gas emissions.
           Other gases and in particular methane (CH4) are significant contributors to global heating.
         </p>
         <p>
-          Emissions from international transport such as shipping and air travel is counted as a separate region.
-        </p>
-        <div onclick="accordion('sourcesCO2ByRegion')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesCO2ByRegion" class="w3-hide">
+          Emissions from international transport such as shipping and air travel is counted as a separate
+          region.
         </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotCO2ByRegion"></canvas>
-        <script>
-          plotEmissionsByRegion("plotCO2ByRegion", "sourcesCO2ByRegion");
-        </script>
-      </div>
+      <script>
+        plotEmissionsByRegion("plotCO2ByRegion");
+      </script>
     </div>
 
     <!-- Emissions Norway -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotEmissionsNorway">
       <div class="w3-container w3-col m6 l7">
         <h2>Greenhouse gas emissions Norway</h2>
         While CO2 emissions have increased from 35 to almost 44
@@ -222,22 +194,14 @@
           for powering oil and gas extraction.
           Numbers are in millions of tons of CO2 equivalents.
         </p>
-        <div onclick="accordion('sourcesEmissionsNorway')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesEmissionsNorway" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotEmissionsNorway"></canvas>
-        <script>
-          plotEmissionsNorway("plotEmissionsNorway", "sourcesEmissionsNorway");
-        </script>
-      </div>
+      <script>
+        plotEmissionsNorway("plotEmissionsNorway");
+      </script>
     </div>
 
     <!-- Methane CH4 -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotAtmosphericCH4">
       <div class="w3-container w3-col m6 l7">
         <h2>Atmospheric methane levels are increasing</h2>
         Methane (CH4) is a powerful greenhouse gas, with a global heating potential 25 times that of CO2.
@@ -251,22 +215,14 @@
           US Environmental Protection Agency
         </a>
         has a good overview of the various greehouse gases and their impact.
-        <div onclick="accordion('sourcesCH4')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesCH4" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotCH4"></canvas>
-        <script>
-          plotAtmosphericCH4("plotCH4", "sourcesCH4");
-        </script>
-      </div>
+      <script>
+        plotAtmosphericCH4("plotAtmosphericCH4");
+      </script>
     </div>
 
     <!-- Arctic Ice Extent -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotArcticIce">
       <div class="w3-container w3-col m6 l7">
         <h2>Ice extent in the Arctic is steadily decreasing, now 38&percnt; less than 1979</h2>
         NSIDC (National Snow and Ice Data Center at University of Colorado, Boulder)
@@ -279,22 +235,14 @@
         <p>
           The NSIDC dataset contains ice extent data since 1979
         </p>
-        <div onclick="accordion('sourcesArcticIce')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesArcticIce" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotArcticIce"></canvas>
-        <script>
-          plotArcticIce("plotArcticIce", "sourcesArcticIce");
-        </script>
-      </div>
+      <script>
+        plotArcticIce("plotArcticIce");
+      </script>
     </div>
 
     <!-- World Population -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotWorldPopulation">
       <div class="w3-container w3-col m6 l7">
         <h2>World population will stabilize at about 11 billion in 2100</h2>
         World population is currently 7.7 billion.
@@ -302,22 +250,14 @@
         11 billion in year 2100, and will then remain stable.
         Virtually all the population growth will be in Africa, where
         the population will grow by 3 billion from 1.3 to 4.3 billion.
-        <div onclick="accordion('sourcesWorldPopulation')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesWorldPopulation" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotWorldPopulation"></canvas>
-        <script>
-          plotWorldPopulation("plotWorldPopulation", "sourcesWorldPopulation");
-        </script>
-      </div>
+      <script>
+        plotWorldPopulation("plotWorldPopulation");
+      </script>
     </div>
 
     <!-- Global Oil Production -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotOil">
       <div class="w3-container w3-col m6 l7">
         <h2>Global oil production: 100 million barrels per day, steadily increasing</h2>
         According to the US Energy Information Administration EIA,
@@ -330,22 +270,14 @@
         peak oil is nowhere in sight,
         with the sharp growth in US shale oil leading the growth in the coming years.
         Other countries representing growth are Brazil, Norway and Guyana.
-        <div onclick="accordion('sourcesOil')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesOil" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotOil"></canvas>
-        <script>
-          plotGlobalOilProduction("plotOil", "sourcesOil");
-        </script>
-      </div>
+      <script>
+        plotGlobalOilProduction("plotOil");
+      </script>
     </div>
 
     <!-- Global Gas Production -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotGlobalGas">
       <div class="w3-container w3-col m6 l7">
         <h2>Global gas production is accelerating</h2>
         The chart uses data from the US Energy Information Administration EIA,
@@ -353,22 +285,14 @@
         natural gas globally.
         Production numbers are in Bcf - Billions of cubic feet.
         Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
-        <div onclick="accordion('sourcesGas')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesGas" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotGlobalGasProduction"></canvas>
-        <script>
-          plotGlobalGasProduction("plotGlobalGasProduction", "sourcesGas");
-        </script>
-      </div>
+      <script>
+        plotGlobalGasProduction("plotGlobalGas");
+      </script>
     </div>
 
     <!-- Global Coal Production -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotGlobalCoal">
       <div class="w3-container w3-col m6 l7">
         <h2>Coal production increasing again, but still below 2013 peak</h2>
         According to the US Energy Information Administration EIA,
@@ -383,18 +307,10 @@
         </a>
         <br>
         Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
-        <div onclick="accordion('sourcesCoal')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesCoal" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotGlobalCoalProduction"></canvas>
-        <script>
-          plotGlobalCoalProduction("plotGlobalCoalProduction", "sourcesCoal");
-        </script>
-      </div>
+      <script>
+        plotGlobalCoalProduction("plotGlobalCoal");
+      </script>
     </div>
 
     <!-- Emissions by fuel type -->
@@ -413,22 +329,14 @@
           Note that 2017 and 2018 data are preliminary.
           The chart will be updated as soon as final data become available.
         </p>
-        <div onclick="accordion('sourcesFuelType')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesFuelType" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotEmissionsByFuelType"></canvas>
-        <script>
-          plotEmissionsByFuelType("plotEmissionsByFuelType", "sourcesFuelType");
-        </script>
-      </div>
+      <script>
+        plotEmissionsByFuelType("LatestNews");
+      </script>
     </div>
 
     <!-- Ozone Hole -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotOzone">
       <div class="w3-container w3-col m6 l7">
         <h2>And now some good news: The ozone hole is shrinking</h2>
         Ozone is a colorless gas present in the upper atmosphere which absorbs UV radiation from the sun.
@@ -447,22 +355,14 @@
           The chart shows the mean size of
           the hole during this period, in millions of square km.
         </p>
-        <div onclick="accordion('sourcesOzone')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesOzone" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotOzoneHole"></canvas>
-        <script>
-          plotOzoneHole("plotOzoneHole", "sourcesOzone");
-        </script>
-      </div>
+      <script>
+        plotOzoneHole("plotOzone");
+      </script>
     </div>
 
     <!-- Global Temperature Anomaly -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotGlobalTemp">
       <div class="w3-container w3-col m6 l7">
         <h2>The earth is more than 1&deg;C hotter than in pre-industrial times, the increase is
           accelerating</h2>
@@ -476,27 +376,20 @@
         <a href="https://en.wikipedia.org/wiki/Industrial_Revolution" target="_blank" rel="noopener">
           industrial revolution.
         </a>
-        <div onclick="accordion('sourcesGlobalTemp')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesGlobalTemp" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotGlobalTemp"></canvas>
-        <script>
-          plotGlobalTemp("plotGlobalTemp", "sourcesGlobalTemp");
-        </script>
-      </div>
+      <script>
+        plotGlobalTemp("plotGlobalTemp");
+      </script>
     </div>
 
     <!-- Svalbard Temperature Anomaly -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotSvalbardTemp">
       <div class="w3-container w3-col m6 l7">
         <h2>Arctic temperatures increasing dramatically: +5&deg; since 1900</h2>
         Data from The Norwegian Meteorological Institute and
         The Norwegian Centre for Climate Services indicate that temperatures in the Arctic,
-        as measured at Svalbard Airport (78.24 degrees North), are now at least 5&deg;C higher than 50-100 years ago.
+        as measured at Svalbard Airport (78.24 degrees North), are now at least 5&deg;C higher than 50-100 years
+        ago.
         The increased temperature in the Arctic leads to thawing of the permafrost,
         which in turn releases CO2 and methane currently trapped in the permafrost.
         The report
@@ -505,22 +398,14 @@
           Climate in Svalbard 2100 by NCCS
         </a>
         is an excellent overview of future climate impact in the Arctic.
-        <div onclick="accordion('sourcesSvalbardTemp')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesSvalbardTemp" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotSvalbardTemp"></canvas>
-        <script>
-          plotSvalbardTemp("plotSvalbardTemp", "sourcesSvalbardTemp");
-        </script>
-      </div>
+      <script>
+        plotSvalbardTemp("plotSvalbardTemp");
+      </script>
     </div>
 
     <!-- Brazil Forest Fire Activity -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotBrazil">
       <div class="w3-container w3-col m6 l7">
         <h2>Forest fire activity in the Amazon: 2019 was below average</h2>
         This chart is based on public data from
@@ -537,49 +422,33 @@
           there might actually be more than one fire within that image pixel.
           Also, a single forest fire may span several pixels.
         </p>
-        <div onclick="accordion('sourcesBrazil')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesBrazil" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotBrazil"></canvas>
-        <script>
-          plotBrazilFires("plotBrazil", "sourcesBrazil");
-        </script>
-      </div>
+      <script>
+        plotBrazilFires("plotBrazil");
+      </script>
     </div>
 
     <!-- Global Sea Level Rise -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotSeaLevel">
       <div class="w3-container w3-col m6 l7">
         <h2>Sea levels have increased 250mm since 1880, current rate of increase: 50mm per decade</h2>
         Global mean sea levels have increased by over 200mm since the late 1800's.
         Data from Commonwealth Scientific and
         Industrial Research Organisation (CSIRO) is updated continously and show a statistically significant
-        acceleration since
-        measurements started.
-        The dataset covering 1880-2009 is based on measurements from a large number of stations (38
-        stations in 1900, 235 stations in the 1980s).
-        The dataset from 1993 and onwards uses satellite technology.
-        Units in mm (millimeters).
-        <div onclick="accordion('sourcesSeaLevel')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesSeaLevel" class="w3-hide">
+        acceleration since measurements started.
+        <p>The dataset covering 1880-2009 is based on measurements from a large number of stations (38
+          stations in 1900, 235 stations in the 1980s).
+          The dataset from 1993 and onwards uses satellite technology.
+          Units in mm (millimeters).
         </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotSeaLevel"></canvas>
-        <script>
-          plotGlobalSeaLevel("plotSeaLevel", "sourcesSeaLevel");
-        </script>
-      </div>
+      <script>
+        plotGlobalSeaLevel("plotSeaLevel");
+      </script>
     </div>
 
     <!-- CCS Carbon Capture -->
-    <div class="w3-row w3-padding-32">
+    <div class="w3-row w3-padding-32" id="plotCCS">
       <div class="w3-container w3-col m6 l7">
         <h2>Carbon Capture and Storage: CCS creates more CO2 than it captures</h2>
         According to
@@ -601,18 +470,10 @@
           In other words, CCS generates an extra 40 million tons of CO2 emissions annually.
         </p>
         The chart lists all CCS projects as of 2019. Those in red color use captured CO2 for EOR.
-        <div onclick="accordion('sourcesCCS')" class="w3-button w3-block w3-stretch w3-left-align">
-          Sources &nbsp; <i class="fa fa-angle-down"></i>
-        </div>
-        <p id="sourcesCCS" class="w3-hide">
-        </p>
       </div>
-      <div class="w3-container w3-col m6 l5">
-        <canvas id="plotCCS"></canvas>
-        <script>
-          plotCCS("plotCCS", "sourcesCCS");
-        </script>
-      </div>
+      <script>
+        plotCCS("plotCCS");
+      </script>
     </div>
 
     <!---------- NEWS  ---------->
@@ -698,17 +559,6 @@
     }
   </script>
 
-  <!-- OPEN/CLOSE ACCORDION -->
-  <script>
-    function accordion(id) {
-      var x = document.getElementById(id);
-      if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-      } else {
-        x.className = x.className.replace(" w3-show", "");
-      }
-    }
-  </script>
 </body>
 
 </html>
