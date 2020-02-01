@@ -198,7 +198,7 @@ function plotLawDome(elmt) {
 //
 function plotEmissionsByRegion(elmt) {
   let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://probably.one:4438/annual-co-emissions-by-region';
+  let url = 'https://api.dashboard.eco/emissions-by-region';
   fetch(url)
     .then(status)
     .then(json)
@@ -208,66 +208,65 @@ function plotEmissionsByRegion(elmt) {
       var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
+          responsive: true,
           aspectRatio: 1,
-          tooltips: {
-            intersect: false,
-            mode: 'index'
-          },
           legend: {
-            position: 'right',
             reverse: true,
+            position: 'right',
             labels: {
-              boxWidth: 10,
-              padding: 6
+              boxWidth: 10
             },
           },
+          tooltips: {
+            intersect: false,
+            mode: 'nearest'
+          },
           scales: {
-            xAxes: [{
-              type: 'time',
-              time: {
-                unit: 'year'
-              },
-              ticks: {
-                autoSkip: true,
-                maxTicksLimit: 8
-              }
-            }],
             yAxes: [{
               stacked: true,
               ticks: {
-                callback: function (value, index, values) {
-                  return value / 1000 + " Gt";
-                }
+                callback: (value) => (value / 1000) + ' Gt'
+              }
+            }],
+            xAxes: [{
+              type: 'linear',
+              ticks: {
+                min: 1960
               }
             }]
           }
         }
       });
-      let regions = [
-        'EU-28', 'Europe (other)', 'United States', 'Americas (other)',
-        'China', 'India', 'Asia and Pacific (other)', 'Africa',
-        'Middle East', 'International transport'
-      ];
-      let regionLabels = [
-        'EU-28', 'Eur(rest)', 'USA', 'Americas',
-        'China', 'India', 'AsiaPac', 'Africa',
-        'Mid East', 'Transport'
-      ];
-      for (let i = 0; i < results.data.length; i++) {
-        let idx = regions.indexOf(results.data[i].country);
-        if (idx !== -1) {
-          // region found, plot it
-          let xy = results.data[i].data.map(d => {
-            return { x: d.year + "-12-31", y: d.tonnes }
-          });
-          // console.log(results.data[i].country, xy[xy.length - 1], xy);
-          myChart.data.datasets.push({
-            data: xy.slice(-160),
-            label: regionLabels[idx]
-          });
-          myChart.update();
+
+      while (results.data.length) {
+        let d = results.data.pop();
+        switch (d.country) {
+          case 'EU28':
+            continue;
+          case 'World':
+            if (myChart.options.scales.yAxes[0].stacked)
+              continue;
+          case 'Central America':
+            d.country = 'C America';
+            break;
+          case 'South America':
+            d.country = 'S America';
+            break;
+          case 'North America':
+            d.country = 'N America';
+            break;
+          case 'Middle East':
+            d.country = 'Midl East';
+            break;
         }
+        myChart.data.datasets.push({
+          label: d.country,
+          fill: true,
+          borderWidth: 3,
+          data: d.data
+        });
       }
+      myChart.update();
     })
     .catch(err => console.log(err));
 }
@@ -745,7 +744,7 @@ function plotEmissionsByFuelType(elmt) {
           label: d.fuel,
           fill: false,
           borderWidth: 3,
-          data: d.data.map(d => ({ x: parseInt(d.x), y: d.y }))
+          data: d.data
         });
       }
       myChart.update();
