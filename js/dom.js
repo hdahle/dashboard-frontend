@@ -47,6 +47,9 @@ function insertSourceAndLink(res, elmtId, url) {
   if (res.source !== undefined && res.source !== null) {
     s = "<p>" + res.source + "</p>"; // yes, intentional overwrite of str
   }
+  if (res.accessed !== undefined && res.accessed !== null) {
+    s += "<p>Data retrieved: " + res.accessed + "</p>"; // yes, intentional overwrite of str
+  }
   if (l !== undefined && l !== null) {
     s += "<p><a target='_blank' rel='noopener' href='" + l + "'>" + l + "</a></p>";
   }

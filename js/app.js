@@ -231,7 +231,9 @@ function plotEmissionsByRegion(elmt) {
             xAxes: [{
               type: 'linear',
               ticks: {
-                min: 1960
+                min: 1959,
+                max: 2018,
+                callback: (x) => x === 1960 ? null : x
               }
             }]
           }
@@ -725,7 +727,9 @@ function plotEmissionsByFuelType(elmt) {
         xAxes: [{
           type: 'linear',
           ticks: {
-            min: 1960
+            min: 1959,
+            max: 2018,
+            callback: (x) => x === 1960 ? null : x
           }
         }]
       }
