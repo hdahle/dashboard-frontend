@@ -46,19 +46,19 @@ function plotAtmosphericCO2(elmt /*elementId, elementSource*/) {
       }
     }
   });
-  let url = 'https://api.dashboard.eco/maunaloaco2';
+  let url = 'https://api.dashboard.eco/maunaloaco2-sm';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
       console.log('Atmospheric CO2:', results.data.length);
       insertSourceAndLink(results, id.accordionId, url);
-      let values = results.data.map(x => ({
+/*      let values = results.data.map(x => ({
         x: x.date,
         y: x.interpolated
       }));
-      myChart.data.datasets.push({
-        data: values,
+*/      myChart.data.datasets.push({
+        data: results.data,
         fill: false,
         borderWidth: 2,
         label: 'Mauna Loa, Hawaii'
@@ -821,6 +821,7 @@ function plotGlobalTemp(elmt) {
       },
       scales: {
         xAxes: [{
+          type: 'linear',
           ticks: {
             autoSkip: true,
             maxTicksLimit: 8
@@ -840,37 +841,20 @@ function plotGlobalTemp(elmt) {
       }
     }
   });
-  let url = 'https://probably.one:4438/temperature-anomaly';
+  let url = 'https://api.dashboard.eco/global-temperature-anomaly';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
       console.log('Results:', results.data.length);
       insertSourceAndLink(results, id.accordionId, url);
-      let regions = [
-        'Global',
-        'Northern Hemisphere',
-        'Southern Hemisphere'
-      ];
-      let country = [];
-      for (let i = 0; i < regions.length; i++) {
-        let c = results.data.filter(x => {
-          return x.country === regions[i]
-        });
-        country[i] = c[0];
-        let d1 = country[i].data.map(x => x.median);
-        let l1 = country[i].data.map(x => x.year);
-        myChart.data.datasets.push({
-          data: d1,
-          label: regions[i],
-          borderWidth: 2,
-          fill: false
-        });
-        if (i === 0) {
-          myChart.data.labels = l1.slice();
-        }
-        myChart.update();
-      }
+      myChart.data.datasets.push({
+        data: results.data.map(x => ({ x: x.year, y: x.mean })),
+        label: 'Global Mean Temperature Change',
+        borderWidth: 3,
+        fill: false
+      });
+      myChart.update();
     })
     .catch(err => console.log(err));
 }
