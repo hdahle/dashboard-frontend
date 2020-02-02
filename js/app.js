@@ -823,15 +823,15 @@ function plotGlobalTemp(elmt) {
         xAxes: [{
           type: 'linear',
           ticks: {
+            max: 2020,
             autoSkip: true,
-            maxTicksLimit: 8
+            maxTicksLimit: 9
           },
           gridLines: {
             display: false
           }
         }],
         yAxes: [{
-          stacked: false,
           ticks: {
             callback: function (value, index, values) {
               return Math.round(value * 10) / 10 + "\u00b0" + "C";
@@ -850,11 +850,31 @@ function plotGlobalTemp(elmt) {
       insertSourceAndLink(results, id.accordionId, url);
       myChart.data.datasets.push({
         data: results.data.map(x => ({ x: x.year, y: x.mean })),
-        label: 'Global Mean Temperature Change',
-        borderWidth: 3,
+        label: 'NASA Dataset',
+        borderWidth: 2,
         fill: false
       });
       myChart.update();
+
+      url = 'https://api.dashboard.eco/global-temperature-hadcrut';
+      fetch(url)
+        .then(status)
+        .then(json)
+        .then(results => {
+          console.log('Results:', results.data.length);
+          addSourceAndLink(results, id.accordionId, url);
+          myChart.data.datasets.push({
+            data: results.data,//.map(x => ({ x: x.x, y: x.y + 0.14 })),
+            label: 'UK HadCRUT Dataset',
+            borderWidth: 2,
+            fill: false
+          });
+          myChart.update();
+        })
+        .catch(err => console.log(err));
+
+
+
     })
     .catch(err => console.log(err));
 }
