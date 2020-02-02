@@ -451,7 +451,7 @@ function plotArcticIce(elmt) {
 //
 function plotWorldPopulation(elmt) {
   let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://probably.one:4438/WPP2019_TotalPopulationByRegion';
+  let url = 'https://api.dashboard.eco/WPP2019_TotalPopulationByRegion';
   fetch(url)
     .then(status)
     .then(json)
@@ -486,6 +486,7 @@ function plotWorldPopulation(elmt) {
               }
             }],
             xAxes: [{
+              type: 'linear',
               ticks: {
                 maxTicksLimit: 8,
                 autoSkip: true,
@@ -494,11 +495,9 @@ function plotWorldPopulation(elmt) {
           }
         }
       });
-      myChart.data.labels = results.data[0].data.map(x => x.t);
       while (results.data.length) {
         let x = results.data.pop();
         if (x.region === 'World') continue;
-        //console.log('Population region', x);
         if (x.region === 'Latin America and the Caribbean') {
           x.region = 'S America';
         } else if (x.region === 'Northern America') {
@@ -506,7 +505,7 @@ function plotWorldPopulation(elmt) {
         }
         myChart.data.datasets.push({
           label: x.region,
-          data: x.data.map(y => y.y),
+          data: x.data,
           fill: true
         });
       }
