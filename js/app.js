@@ -993,7 +993,7 @@ function plotBrazilFires(elmt) {
 //
 function plotGlobalSeaLevel(elmt) {
   let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://api.dashboard.eco/CSIRO_Recons';
+  let url = 'https://api.dashboard.eco/CSIRO_Recons_2015';
   fetch(url)
     .then(status)
     .then(json)
@@ -1035,8 +1035,8 @@ function plotGlobalSeaLevel(elmt) {
 
       myChart.data.datasets.push({
         label: 'Land based measurements',
-        data: results.data[0].data.map(d => ({
-          x: d.year,
+        data: results.data.map(d => ({
+          t: d.t,
           y: d.data
         })),
         borderWidth: 2,
