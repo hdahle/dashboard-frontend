@@ -1,6 +1,13 @@
 //
 // dom.js
 //
+// Functions for manipulating DOM
+// 
+// insertAccordionAndCanvas: inserts a DIV for an 'accordion', opening and closing on click
+// openAccordion: opens the accordion, and changes the direction of the arrow, indicating it can be closed
+// insertSourceAndLink: based on information from api.dashboard.eco, adds references to the accordion
+//   also adds a button which opens a new window and displays the data from api.dashboard.eco
+//
 // H. Dahle
 //
 
