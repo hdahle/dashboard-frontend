@@ -1050,7 +1050,7 @@ function plotGlobalSeaLevel(elmt) {
         .then(json)
         .then(results => {
           console.log('SeaLevelNew:', results.data.length);
-          console.log(results)
+          //console.log(results)
           insertSourceAndLink(results, id.accordionId, url);
           let xd = results.data[0].data.map(d => ({
             x: d.year,
