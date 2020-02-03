@@ -1005,12 +1005,11 @@ function plotGlobalSeaLevel(elmt) {
         options: {
           tooltips: {
             intersect: false,
-            mode: 'x'
+            mode: 'nearest'
           },
           responsive: true,
           aspectRatio: 1,
           legend: {
-            display: true,
             labels: {
               boxWidth: 10
             },
@@ -1024,7 +1023,7 @@ function plotGlobalSeaLevel(elmt) {
               }
             }],
             xAxes: [{
-              type: 'linear',
+              type: 'time',
               ticks: {
                 maxTicksLimit: 8,
                 autoSkip: true,
@@ -1033,32 +1032,30 @@ function plotGlobalSeaLevel(elmt) {
           }
         }
       });
-      let xd = results.data[0].data.map(d => ({
-        x: d.year,
-        y: d.data + 150
-      }));
+
       myChart.data.datasets.push({
         label: 'Land based measurements',
-        data: xd,
+        data: results.data[0].data.map(d => ({
+          x: d.year,
+          y: d.data
+        })),
         borderWidth: 2,
         fill: false
       });
       myChart.update();
-      url = 'https://api.dashboard.eco/CSIRO_Alt_yearly';
+      url = 'https://api.dashboard.eco/CSIRO_Alt';
       fetch(url)
         .then(status)
         .then(json)
         .then(results => {
           console.log('SeaLevelNew:', results.data.length);
-          //console.log(results)
           insertSourceAndLink(results, id.accordionId, url);
-          let xd = results.data[0].data.map(d => ({
-            x: d.year,
-            y: d.data + 150
-          }));
           myChart.data.datasets.push({
             label: 'Satellite measurements',
-            data: xd,
+            data: results.data[0].data.map(d => ({
+              t: d.t,
+              y: d.y + 45
+            })),
             borderWidth: 2,
             fill: false
           });
