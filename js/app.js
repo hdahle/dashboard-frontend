@@ -1071,7 +1071,7 @@ function plotGlobalSeaLevel(elmt) {
 //
 function plotCCS(elmt) {
   let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://probably.one:4438/operational-ccs';
+  let url = 'https://api.dashboard.eco/operational-ccs';
   fetch(url)
     .then(status)
     .then(json)
