@@ -506,7 +506,7 @@ function plotWorldPopulation(elmt) {
         } else if (x.region === 'Northern America') {
           x.region = 'N America';
         }
-        console.log('region', x.region, x.data)
+        //console.log('region', x.region, x.data)
         myChart.data.datasets.push({
           label: x.region,
           data: x.data,
