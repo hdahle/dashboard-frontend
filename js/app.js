@@ -1077,10 +1077,6 @@ function plotPlannedCCS(elmt) {
 }
 function plotBothCCS(elmt, url) {
   let id = insertAccordionAndCanvas(elmt);
-<<<<<<< HEAD
-=======
-  let url = 'https://api.dashboard.eco/operational-ccs';
->>>>>>> 80319fdf8d5e8a53f4476dfab35ecb242d526279
   fetch(url)
     .then(status)
     .then(json)
