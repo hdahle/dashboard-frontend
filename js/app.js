@@ -1070,8 +1070,13 @@ function plotGlobalSeaLevel(elmt) {
 // CCS - Cabon Capture
 //
 function plotCCS(elmt) {
+  plotBothCCS(elmt, 'https://api.dashboard.eco/operational-ccs')
+}
+function plotPlannedCCS(elmt) {
+  plotBothCCS(elmt, 'https://api.dashboard.eco/planned-ccs')
+}
+function plotBothCCS(elmt, url) {
   let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://probably.one:4438/operational-ccs';
   fetch(url)
     .then(status)
     .then(json)
@@ -1113,8 +1118,16 @@ function plotCCS(elmt) {
       }
       let names = d.map(x => x.project + ", " + x.country);
       let data = d.map(x => x.capacity);
-      let bgColor = d.map(x => (x.type === 'EOR') ? 'rgba(200,40,30,0.2)' : 'rgba(40,200,30,0.2)');
-      let lineColor = d.map(x => (x.type === 'EOR') ? 'rgba(200,40,30,0.8)' : 'rgba(40,200,30,0.8)');
+      let bgColor = d.map(x => {
+        if (x.type === 'EOR') return 'rgba(200,40,30,0.2)';
+        if (x.type === 'Storage') return 'rgba(40,200,30,0.2)';
+        return 'rgba(90,90,90,0.2)'
+      });
+      let lineColor = d.map(x => {
+        if (x.type === 'EOR') return 'rgba(200,40,30,0.8)';
+        if (x.type === 'Storage') return 'rgba(40,200,30,0.8)';
+        return 'rgba(90,90,90,0.8)'
+      });
       myChart.data.datasets.push({
         data: data,
         backgroundColor: bgColor,
