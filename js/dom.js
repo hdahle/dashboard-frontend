@@ -42,10 +42,10 @@ function openAccordion(id) {
 // Print the sources for the data. Create a button for getting chart data.
 //
 function insertSourceAndLink(res, elmtId, url) {
-  let s = "<p>Source not defined</p>";
+  let s = document.getElementById(elmtId).innerHTML;
   let l = res.link;
   if (res.source !== undefined && res.source !== null) {
-    s = "<p>" + res.source + "</p>"; // yes, intentional overwrite of str
+    s += "<p>" + res.source + "</p>"; // yes, intentional overwrite of str
   }
   if (res.accessed !== undefined && res.accessed !== null) {
     s += "<p>Data retrieved: " + res.accessed + "</p>"; // yes, intentional overwrite of str
@@ -60,24 +60,3 @@ function insertSourceAndLink(res, elmtId, url) {
   document.getElementById(elmtId).innerHTML = s;
 }
 
-//
-// Print the sources for the data. Create a button for getting chart data.
-//
-function addSourceAndLink(res, elmtId, url) {
-  let s = document.getElementById(elmtId).innerHTML;
-  let l = res.link;
-  if (res.source !== undefined && res.source !== null) {
-    s += "<p>" + res.source + "</p>";
-  }
-  if (res.accessed !== undefined && res.accessed !== null) {
-    s += "<p>Data retrieved: " + res.accessed + "</p>";
-  }
-  if (l !== undefined && l !== null) {
-    s += "<p><a target='_blank' rel='noopener' href='" + l + "'>" + l + "</a></p>";
-  }
-  s += "<div class='w3-hide-small'>"
-    + "<p><button class='w3-button w3-dark-grey w3-round-small' "
-    + "onClick=\"tryUrl('" + url + "')\">Get chart data</button></p>"
-    + "</div>";
-  document.getElementById(elmtId).innerHTML = s;
-}

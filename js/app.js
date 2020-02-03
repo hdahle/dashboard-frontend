@@ -260,6 +260,9 @@ function plotEmissionsByRegion(elmt) {
           case 'Middle East':
             d.country = 'Midl East';
             break;
+          case 'Bunkers':
+            d.country = 'Transport';
+            break;
         }
         myChart.data.datasets.push({
           label: d.country,
@@ -862,7 +865,7 @@ function plotGlobalTemp(elmt) {
         .then(json)
         .then(results => {
           console.log('Results:', results.data.length);
-          addSourceAndLink(results, id.accordionId, url);
+          insertSourceAndLink(results, id.accordionId, url);
           myChart.data.datasets.push({
             data: results.data,//.map(x => ({ x: x.x, y: x.y + 0.14 })),
             label: 'UK HadCRUT Dataset',
@@ -872,9 +875,6 @@ function plotGlobalTemp(elmt) {
           myChart.update();
         })
         .catch(err => console.log(err));
-
-
-
     })
     .catch(err => console.log(err));
 }
@@ -1024,10 +1024,7 @@ function plotGlobalSeaLevel(elmt) {
               }
             }],
             xAxes: [{
-              type: 'time',
-              time: {
-                unit: 'year'
-              },
+              type: 'linear',
               ticks: {
                 maxTicksLimit: 8,
                 autoSkip: true,
@@ -1037,7 +1034,7 @@ function plotGlobalSeaLevel(elmt) {
         }
       });
       let xd = results.data[0].data.map(d => ({
-        x: d.year + "-06-30",
+        x: d.year,
         y: d.data + 150
       }));
       myChart.data.datasets.push({
@@ -1047,13 +1044,16 @@ function plotGlobalSeaLevel(elmt) {
         fill: false
       });
       myChart.update();
-      fetch('https://api.dashboard.eco/CSIRO_Alt_yearly')
+      url = 'https://api.dashboard.eco/CSIRO_Alt_yearly';
+      fetch(url)
         .then(status)
         .then(json)
         .then(results => {
           console.log('SeaLevelNew:', results.data.length);
+          console.log(results)
+          insertSourceAndLink(results, id.accordionId, url);
           let xd = results.data[0].data.map(d => ({
-            x: d.year + "-06-30",
+            x: d.year,
             y: d.data + 150
           }));
           myChart.data.datasets.push({
