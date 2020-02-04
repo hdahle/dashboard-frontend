@@ -26,7 +26,7 @@ Chart.defaults.global.plugins.colorschemes.scheme = 'brewer.SetTwo8';
 // 
 // Atmospheric CO2
 // 
-function plotAtmosphericCO2(elmt /*elementId, elementSource*/) {
+function plotAtmosphericCO2(elmt, url, ticksConfig) {
   let id = insertAccordionAndCanvas(elmt);
   let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'line',
@@ -36,28 +36,29 @@ function plotAtmosphericCO2(elmt /*elementId, elementSource*/) {
       },
       aspectRatio: 1,
       scales: {
+        yAxes: [{
+          ticks: ticksConfig
+        }],
         xAxes: [{
           ticks: {
             autoSkip: true,
             maxTicksLimit: 8
           },
-          type: 'time'
+          type: 'time',
+          time: {
+            unit: 'year'
+          }
         }]
       }
     }
   });
-  let url = 'https://api.dashboard.eco/maunaloaco2-sm';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
       console.log('Atmospheric CO2:', results.data.length);
       insertSourceAndLink(results, id.accordionId, url);
-/*      let values = results.data.map(x => ({
-        x: x.date,
-        y: x.interpolated
-      }));
-*/      myChart.data.datasets.push({
+      myChart.data.datasets.push({
         data: results.data,
         fill: false,
         borderWidth: 2,
@@ -69,128 +70,50 @@ function plotAtmosphericCO2(elmt /*elementId, elementSource*/) {
 }
 
 // 
-// Atmospheric CO2 over 420.000 years
-// 
-function plotVostok(elmt) {
-  let id = insertAccordionAndCanvas(elmt);
-  let myChart = new Chart(document.getElementById(id.canvasId), {
-    type: 'scatter',
-    options: {
-      legend: {
-        display: true
-      },
-      aspectRatio: 1,
-      scales: {
-        xAxes: [{
-          ticks: {
-            min: -420000,
-            max: 2020,
-            autoSkip: true,
-            maxTicksLimit: 8,
-            callback: function (value, index, values) {
-              if (value == 0) return null;
-              if (value == -420000) return null;
-              return value
-            }
-          },
-        }]
-      }
-    }
-  });
-  let url = 'https://api.dashboard.eco/vostok';
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('Vostok:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
-      myChart.data.datasets.push({
-        data: results.data,
-        fill: false,
-        borderWidth: 2,
-        showLine: true,
-        label: 'CO2 in ppm'
-      });
-      myChart.update();
-      fetch('https://api.dashboard.eco/maunaloa-annual-mean')
-        .then(status)
-        .then(json)
-        .then(results => {
-          console.log('MaunaLoaAnnual:', results.data.length);
-          myChart.data.datasets.push({
-            data: results.data,
-            fill: false,
-            borderWidth: 3,
-            showLine: true,
-            label: 'Mauna Loa CO2'
-          });
-          myChart.update();
-        })
-        .catch(err => console.log(err));
-    })
-    .catch(err => console.log(err));
-}
-
-// 
-// Law Dome: Atmospheric CO2 over 2000 years
-// 
-function plotLawDome(elmt) {
+// Plot CO2 data. Used by several sections in HTML
+//
+function plotScatter(elmt, urls, labels, xTicks, yTicks) {
   let id = insertAccordionAndCanvas(elmt);
   var myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'scatter',
     options: {
       legend: {
-        display: true
+        display: true,
+        labels: {
+          boxWidth: 10
+        }
       },
       aspectRatio: 1,
       scales: {
         xAxes: [{
-          ticks: {
-            max: 2020,
-            autoSkip: true,
-            maxTicksLimit: 8,
-            callback: function (value, index, values) {
-              if (value == 2000) return null;
-              return value
-            }
-          },
+          ticks: xTicks
+        }],
+        yAxes: [{
+          ticks: yTicks
         }]
       }
     }
   });
-  let url = 'https://api.dashboard.eco/law2018co2';
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('LawDome:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
-      myChart.data.datasets.push({
-        data: results.data,
-        fill: false,
-        borderWidth: 2,
-        showLine: true,
-        label: 'Law Dome CO2'
-      });
-      myChart.update();
-
-      fetch('https://api.dashboard.eco/maunaloa-annual-mean')
-        .then(status)
-        .then(json)
-        .then(results => {
-          console.log('MaunaLoaAnnual:', results.data.length);
-          myChart.data.datasets.push({
-            data: results.data,
-            fill: false,
-            borderWidth: 2,
-            showLine: true,
-            label: 'Mauna Loa CO2'
-          });
-          myChart.update();
-        })
-        .catch(err => console.log(err));
-    })
-    .catch(err => console.log(err));
+  while (urls.length && labels.length) {
+    let url = urls.shift();
+    let lbl = labels.shift();
+    fetch(url)
+      .then(status)
+      .then(json)
+      .then(results => {
+        console.log('plotUrls:', url, results.data.length);
+        insertSourceAndLink(results, id.accordionId, url);
+        myChart.data.datasets.push({
+          data: results.data,
+          fill: false,
+          borderWidth: 2,
+          showLine: true,
+          label: lbl
+        });
+        myChart.update();
+      })
+      .catch(err => console.log(err));
+  }
 }
 
 //
@@ -277,54 +200,6 @@ function plotEmissionsByRegion(elmt) {
 }
 
 //
-// Atmospheric CH4 Methane
-//
-function plotAtmosphericCH4(elmt) {
-  let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://api.dashboard.eco/maunaloach4';
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('Atmospheric CH4:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
-      var myChart = new Chart(document.getElementById(id.canvasId), {
-        type: 'line',
-        options: {
-          aspectRatio: 1,
-          legend: {
-            display: false
-          },
-          tooltips: {
-            intersect: false,
-            mode: 'nearest'
-          },
-          scales: {
-            xAxes: [{
-              ticks: {
-                autoSkip: true,
-                maxTicksLimit: 8
-              },
-              type: 'time',
-            }]
-          }
-        }
-      });
-      let dates = results.data.map(x => x.date);
-      let values = results.data.map(x => x.average);
-      myChart.data.datasets.push({
-        label: "CH4 monthly",
-        fill: false,
-        borderWidth: 2,
-        data: values
-      });
-      myChart.data.labels = dates;
-      myChart.update();
-    })
-    .catch(err => console.log(err));
-}
-
-//
 // Norway Annual GHG Emissions
 //
 function plotEmissionsNorway(elmt) {
@@ -353,9 +228,7 @@ function plotEmissionsNorway(elmt) {
             yAxes: [{
               stacked: true,
               ticks: {
-                callback: function (value, index, values) {
-                  return Math.trunc(value / 1000) + " Mt";
-                }
+                callback: (value) => Math.trunc(value / 1000) + " Mt"
               }
             }],
             xAxes: [{
@@ -483,9 +356,7 @@ function plotWorldPopulation(elmt) {
             yAxes: [{
               stacked: true,
               ticks: {
-                callback: function (value) {
-                  return value / 1000
-                }
+                callback: (value) => value / 1000
               }
             }],
             xAxes: [{
@@ -548,9 +419,7 @@ function plotEiaFossilFuelProduction(elmt, url) {
             yAxes: [{
               stacked: true,
               ticks: {
-                callback: function (value) {
-                  return value / 1000
-                }
+                callback: (value) => value / 1000
               }
             }],
             xAxes: [{
@@ -714,9 +583,7 @@ function plotGlobalTemp(elmt) {
         }],
         yAxes: [{
           ticks: {
-            callback: function (value, index, values) {
-              return Math.round(value * 10) / 10 + "\u00b0" + "C";
-            }
+            callback: (value) => Math.round(value * 10) / 10 + "\u00b0" + "C"
           }
         }]
       }
@@ -783,9 +650,7 @@ function plotSvalbardTemp(elmt) {
         yAxes: [{
           stacked: false,
           ticks: {
-            callback: function (value, index, values) {
-              return Math.round(value * 10) / 10 + "\u00b0" + "C";
-            }
+            callback: (value) => Math.round(value * 10) / 10 + "\u00b0" + "C"
           }
         }]
       }
@@ -895,9 +760,7 @@ function plotGlobalSeaLevel(elmt) {
           scales: {
             yAxes: [{
               ticks: {
-                callback: function (value, index, values) {
-                  return value + "mm";
-                }
+                callback: (value) => value + 'mm'
               }
             }],
             xAxes: [{
@@ -969,9 +832,7 @@ function plotBothCCS(elmt, url) {
           scales: {
             xAxes: [{
               ticks: {
-                callback: function (value, index, values) {
-                  return value + " Mt";
-                }
+                callback: (value) => value + 'Mt'
               }
             }],
             yAxes: [{

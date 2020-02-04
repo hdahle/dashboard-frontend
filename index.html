@@ -108,7 +108,9 @@
         </p>
       </div>
       <script>
-        plotAtmosphericCO2("plotAtmosphericCO2")
+        plotAtmosphericCO2("plotAtmosphericCO2", "https://api.dashboard.eco/maunaloaco2-sm", {
+          callback: (value) => value = value + 'ppm'
+        });
       </script>
     </div>
 
@@ -127,7 +129,17 @@
         when fossil fuels started powering the industrial revolution.
       </div>
       <script>
-        plotLawDome("plotLawDome");
+        plotScatter("plotLawDome",
+          ["https://api.dashboard.eco/maunaloa-annual-mean", "https://api.dashboard.eco/law2018co2"],
+          ["Mauna Loa", "Law Dome"],
+          {
+            autoSkip: true,
+            maxTicksLimit: 8,
+            max: 2020,
+            callback: (x) => x == 2000 ? null : x
+          }, {
+          callback: (y) => y += "ppm"
+        });
       </script>
     </div>
 
@@ -146,7 +158,17 @@
         100 years.
       </div>
       <script>
-        plotVostok("plotVostok");
+        plotScatter("plotVostok",
+          ["https://api.dashboard.eco/maunaloa-annual-mean", "https://api.dashboard.eco/law2018co2", "https://api.dashboard.eco/vostok"],
+          ["Mauna Loa", "Law Dome", "Vostok"],
+          {
+            autoSkip: true,
+            maxTicksLimit: 8,
+            max: 2020,
+            callback: (x) => (x == 2000 || x == 0) ? null : x
+          }, {
+          callback: (y) => y += "ppm"
+        });
       </script>
     </div>
 
@@ -222,7 +244,9 @@
         has a good overview of the various greehouse gases and their impact.
       </div>
       <script>
-        plotAtmosphericCH4("plotAtmosphericCH4");
+        plotAtmosphericCO2("plotAtmosphericCH4", "https://api.dashboard.eco/maunaloach4-sm", {
+          callback: (value) => value = value + 'ppb'
+        });
       </script>
     </div>
 
@@ -230,7 +254,8 @@
     <div class="w3-row w3-padding-32" id="plotArcticIce">
       <div class="w3-container w3-col m6 l7">
         <h2>Ice extent in the Arctic is steadily decreasing, now 38&percnt; less than 1979</h2>
-        NSIDC (National Snow and Ice Data Center at University of Colorado, Boulder)
+        <a href="https://nsidc.org" target="_blank" rel="noopener">NSIDC</a>
+        (National Snow and Ice Data Center at University of Colorado, Boulder)
         provides imagery and data to help understand
         how sea ice is retreating in the Arctic and Antarctic regions.
         Sea ice extent is defined as areas of the sea with at least 15% ice cover.
@@ -288,7 +313,7 @@
         The chart uses data from the US Energy Information Administration EIA,
         and shows the increased production of
         natural gas globally.
-        Production numbers are in Bcf - Billions of cubic feet.
+        Production numbers are in 1000 Bcf - Billion cubic feet.
         Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
       </div>
       <script>
