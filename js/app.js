@@ -306,7 +306,9 @@ function plotArcticIce(elmt) {
         }
       });
       myChart.data.labels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
-      for (let year = 2019; year > 1978; year -= 5) {
+      let yrs = [2020, 2019, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979]
+      while (yrs.length) {
+        let year = yrs.shift();
         // Extract a subset of data for a particular year
         let tmp = results.data.filter(x => x.year === year);
         // Then create a table that only contains the datapoints
@@ -314,7 +316,8 @@ function plotArcticIce(elmt) {
         myChart.data.datasets.push({
           data: resval,
           label: year,
-          fill: false
+          fill: false,
+          pointRadius: year == 2020 ? 2 : 0,
         });
         myChart.update();
       }

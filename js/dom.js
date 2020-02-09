@@ -23,11 +23,11 @@ function insertAccordionAndCanvas(id) {
   }
   // Insert the button and accordion for the sources and links
   d.innerHTML += "<div onclick='openAccordion(\"" + id + "\")' "
-    + "class='w3-button w3-block w3-stretch w3-left-align w3-hover-white'>"
-    + "Sources &nbsp; "
+    + "class='w3-button w3-block w3-stretch w3-left-align w3-hover-white w3-text-theme'>"
+    + "SOURCES &nbsp; "
     + "<i class='fa fa-angle-down' id='" + ids.arrowId + "'></i>"
     + "</div>"
-    + "<div id='" + ids.accordionId + "' class='w3-hide'></div>";
+    + "<div id='" + ids.accordionId + "' class='w3-hide' style='font-size:small' ></div>";
   // Insert the canvas for the chart            
   x.innerHTML += "<div class='w3-col m6 l5'>"
     + "<canvas id='" + ids.canvasId + "'></canvas>"
@@ -58,12 +58,9 @@ function insertSourceAndLink(res, elmtId, url) {
     s += "<p>Data retrieved: " + res.accessed + "</p>"; // yes, intentional overwrite of str
   }
   if (l !== undefined && l !== null) {
-    s += "<p><i class='fa fa-angle-right'></i> &nbsp; <a target='_blank' rel='noopener' href='" + l + "'>" + l + "</a></p>";
+    s += "<p><i class='fa fa-link w3-text-theme-l1'></i> &nbsp; <a target='_blank' rel='noopener' href='" + l + "'>" + l + "</a></p>";
   }
-  s += "<div class='w3-hide-small'>"
-    + "<p><button class='w3-button w3-dark-grey w3-round-small' "
-    + "onClick=\"tryUrl('" + url + "')\">Get chart data</button></p>"
-    + "</div>";
+  s += "<p><i class='fa fa-link w3-text-theme-l1'></i> &nbsp; <a target='_blank' rel='noopener' href='" + url + "'>" + url + "</a></p>";
   document.getElementById(elmtId).innerHTML = s;
 }
 

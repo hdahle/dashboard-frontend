@@ -9,6 +9,103 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed:100,400,700&display=swap">
 
 <style>
+  .w3-theme-l5 {
+    color: #000 !important;
+    background-color: #eff2f6 !important
+  }
+
+  .w3-theme-l4 {
+    color: #000 !important;
+    background-color: #c9d2e1 !important
+  }
+
+  .w3-theme-l3 {
+    color: #fff !important;
+    background-color: #94a6c3 !important
+  }
+
+  .w3-theme-l2 {
+    color: #fff !important;
+    background-color: #5e79a5 !important
+  }
+
+  .w3-theme-l1 {
+    color: #fff !important;
+    background-color: #3f5270 !important
+  }
+
+  .w3-theme-d1 {
+    color: #fff !important;
+    background-color: #1e2735 !important
+  }
+
+  .w3-theme-d2 {
+    color: #fff !important;
+    background-color: #1a222f !important
+  }
+
+  .w3-theme-d3 {
+    color: #fff !important;
+    background-color: #171e29 !important
+  }
+
+  .w3-theme-d4 {
+    color: #fff !important;
+    background-color: #141a23 !important
+  }
+
+  .w3-theme-d5 {
+    color: #fff !important;
+    background-color: #11151d !important
+  }
+
+  .w3-theme-light {
+    color: #000 !important;
+    background-color: #eff2f6 !important
+  }
+
+  .w3-theme-dark {
+    color: #fff !important;
+    background-color: #11151d !important
+  }
+
+  .w3-theme-action {
+    color: #fff !important;
+    background-color: #11151d !important
+  }
+
+  .w3-theme {
+    color: #fff !important;
+    background-color: #222c3c !important
+  }
+
+  .w3-text-theme {
+    color: #222c3c !important
+  }
+
+  .w3-text-theme-l1 {
+    color: #3f5270 !important
+  }
+
+  .w3-border-theme {
+    border-color: #222c3c !important
+  }
+
+  .w3-hover-theme:hover {
+    color: #fff !important;
+    background-color: #222c3c !important
+  }
+
+  .w3-hover-text-theme:hover {
+    color: #222c3c !important
+  }
+
+  .w3-hover-border-theme:hover {
+    border-color: #222c3c !important
+  }
+</style>
+
+<style>
   body,
   html {
     font-family: 'Roboto', sans-serif;
@@ -57,7 +154,7 @@
 
 <body>
   <div class="w3-top" id="top-menu-bar">
-    <div class="w3-bar w3-black my-font">
+    <div class="w3-bar w3-theme my-font">
       <div class="w3-content" style="max-width:920px">
         <a href="#Top" class="w3-bar-item w3-button">dashboard.eco</a>
         <a href="#About" class="w3-bar-item w3-button w3-hide-small w3-right">About</a>
@@ -75,7 +172,7 @@
     </div>
   </div>
 
-  <div id="burger" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-black my-font w3-top"
+  <div id="burger" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-theme my-font w3-top"
     style="margin-top:38px">
     <a href="#API" class="w3-bar-item w3-button" onClick="clickBurger()">API</a>
     <a href="#About" class="w3-bar-item w3-button" onClick="clickBurger()">About</a>
@@ -86,7 +183,7 @@
 
     <!-- Placeholder DIV for Latest News -->
     <div class="w3-section">
-      <span class="w3-tag w3-dark-grey w3-round-small w3-container" style="font-family: 'Roboto Condensed';">
+      <span class="w3-tag w3-theme w3-round-small w3-container" style="font-family: 'Roboto Condensed';">
         Latest update
       </span>
       <br>
@@ -194,11 +291,9 @@
           Emissions from international transport such as shipping and air travel is counted as a separate
           region.
         </p>
-        <p>
-          This chart is based on December 2019 data from
-          <a href="https://www.globalcarbonproject.org/carbonbudget/" target="_blank" rel="noopener">
-            Global Carbon Project</a>
-        </p>
+        This chart is based on December 2019 data from
+        <a href="https://www.globalcarbonproject.org/carbonbudget/" target="_blank" rel="noopener">
+          Global Carbon Project</a>
       </div>
       <script>
         plotEmissionsByRegion("LatestNews");
@@ -227,8 +322,8 @@
           be reduced in the future at the cost of higher global emissions,
           when on-shore hydroelectric power replaces off-shore gas turbines
           for powering oil and gas extraction.
-          Numbers are in millions of tons of CO2 equivalents.
         </p>
+        Numbers are in million tons CO2 equivalents.
       </div>
       <script>
         plotEmissionsNorway("plotEmissionsNorway");
@@ -244,11 +339,12 @@
         About two thirds of methane emissions are from human activities.
         Using a global network of monitoring sites, the NOAA tracks the atmospheric levels of methane.
         <p>
-          Methane levels are measured in ppb (parts per billion). The
+          The
           <a href="https://www.epa.gov/ghgemissions/overview-greenhouse-gases" target="_blank" rel="noopener">
             US Environmental Protection Agency EPA</a>
           has a good overview of the various greehouse gases and their impact.
         </p>
+        Methane levels are measured in ppb (parts per billion).
       </div>
       <script>
         plotAtmosphericCO2("plotAtmosphericCH4", "https://api.dashboard.eco/maunaloach4-sm", {
@@ -272,6 +368,7 @@
         <p>
           The NSIDC dataset contains ice extent data since 1979
         </p>
+        This chart is updated monthly.
       </div>
       <script>
         plotArcticIce("plotArcticIce");
@@ -322,8 +419,8 @@
         Other charts on our site confirm this, and show that gas is in fact
         the main driver of increased CO2 emissions globally, ahead of coal and oil.
         <p>Production numbers are in 1000 BCM - Billion cubic meters
-          Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
         </p>
+        Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
       </div>
       <script>
         plotEiaFossilFuelProduction("plotGlobalGas", "https://api.dashboard.eco/eia-global-gas");
@@ -345,7 +442,8 @@
             target="_blank" rel="noopener">
             Forbes article on coal demand
           </a>
-        </p> Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
+        </p>
+        Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
       </div>
       <script>
         plotEiaFossilFuelProduction("plotGlobalCoal", "https://api.dashboard.eco/eia-global-coal");
@@ -366,8 +464,8 @@
         Coal is the number one source of CO2 with 37&percnt; oil 34&percnt; and gas 20&percnt;.
         <p>
           Note that 2017 and 2018 data are preliminary.
-          The chart will be updated as soon as final data become available.
         </p>
+        The chart will be updated as soon as final data become available.
       </div>
       <script>
         plotEmissionsByFuelType("plotEmissionsByFuelType");
@@ -390,10 +488,10 @@
         <p>
           NASA Ozone Watch tracks the size of the ozone hole over the Antarctic
           and the Arctic.
-          The Antarctic ozone hole reaches its peak size in September/October.
-          The chart shows the mean size of
-          the hole during this period, in millions of square km.
         </p>
+        The Antarctic ozone hole reaches its peak size in September/October.
+        The chart shows the mean size of
+        the hole during this period, in millions of square km.
       </div>
       <script>
         plotOzoneHole("plotOzone");
@@ -418,10 +516,10 @@
           shows the same thing. Note that the HadCRUT dataset refers to the average of 1961-1990,
           so it is slightly offset compared to the NASA dataset.
         </p>
-        <p>
-          This chart is updated monthly based on fresh data from NASA and
-          University of East Anglia.
-        </p>
+
+        This chart is updated monthly based on fresh data from NASA and
+        University of East Anglia.
+
       </div>
       <script>
         plotGlobalTemp("plotGlobalTemp");
