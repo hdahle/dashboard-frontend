@@ -43,6 +43,10 @@
     color: black;
     text-decoration: none;
   }
+
+  .w3-row {
+    padding-bottom: 72px;
+  }
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
@@ -54,18 +58,20 @@
 <body>
   <div class="w3-top" id="top-menu-bar">
     <div class="w3-bar w3-black my-font">
-      <a href="#Top" class="w3-bar-item w3-button">dashboard.eco</a>
-      <a href="#About" class="w3-bar-item w3-button w3-hide-small w3-right">About</a>
-      <a href="#API" class="w3-bar-item w3-button w3-hide-small w3-right">API</a>
-      <!-- 
+      <div class="w3-content" style="max-width:920px">
+        <a href="#Top" class="w3-bar-item w3-button">dashboard.eco</a>
+        <a href="#About" class="w3-bar-item w3-button w3-hide-small w3-right">About</a>
+        <a href="#API" class="w3-bar-item w3-button w3-hide-small w3-right">API</a>
+        <!-- 
       <a href="#FossilFuels" class="w3-bar-item w3-button w3-hide-small w3-right">Oil/gas/coal</a>
       <a href="#Warming" class="w3-bar-item w3-button w3-hide-small w3-right">Warming</a>
       <a href="#Emissions" class="w3-bar-item w3-button w3-hide-small w3-right">Emissions</a>
       <a href="#SeaAndIce" class="w3-bar-item w3-button w3-hide-small w3-right">Sea and ice</a>
       <a href="#Forests" class="w3-bar-item w3-button w3-hide-small w3-right">Forests</a>
       -->
-      <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
-        onclick="clickBurger()">&#9776;</a>
+        <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
+          onclick="clickBurger()">&#9776;</a>
+      </div>
     </div>
   </div>
 
@@ -76,19 +82,20 @@
   </div>
 
   <!-- Limit content width to 920px -->
-  <div class="w3-content w3-padding-32" id="Top" style="max-width:920px">
+  <div class="w3-content w3-padding-48" id="Top" style="max-width:920px;">
 
     <!-- Placeholder DIV for Latest News -->
-    <div class="w3-section w3-light-grey">
-      <div class="w3-row w3-margin-left">
-        <h4>Latest update</h4>
-      </div>
-      <div class="w3-row" id="NewsPlaceholder">
+    <div class="w3-section">
+      <span class="w3-tag w3-dark-grey w3-round-small w3-container" style="font-family: 'Roboto Condensed';">
+        Latest update
+      </span>
+      <br>
+      <div id="NewsPlaceholder">
       </div>
     </div>
 
     <!-- Plot CO2 -->
-    <div class="w3-row w3-padding-32" id="plotAtmosphericCO2">
+    <div class="w3-row" id="plotAtmosphericCO2">
       <div class="w3-container w3-col m6 l7">
         <h2>Atmospheric CO2 levels are increasing</h2>
         The <a href="https://www.esrl.noaa.gov/gmd/obop/mlo/" target="_blank" rel="noopener">
@@ -116,7 +123,7 @@
     </div>
 
     <!-- Plot Law Dome 2000 years of CO2 -->
-    <div class="w3-row w3-padding-32" id="plotLawDome">
+    <div class="w3-row" id="plotLawDome">
       <div class="w3-container w3-col m6 l7">
         <h2>CO2 levels over the last 2000 years</h2>
         This chart contains data from the
@@ -145,7 +152,7 @@
     </div>
 
     <!-- Plot Vostok 420.000 years of CO2 -->
-    <div class="w3-row w3-padding-32" id="plotVostok">
+    <div class="w3-row " id="plotVostok">
       <div class="w3-container w3-col m6 l7">
         <h2>CO2 levels over the last 420.000 years</h2>
         This chart contains data from the "Vostok" ice core drilled in Antarctica in 1998
@@ -174,7 +181,7 @@
     </div>
 
     <!-- Plot CO2 by region -->
-    <div class="w3-row w3-padding-32" id="LatestNews">
+    <div class="w3-row" id="LatestNews">
       <div class="w3-container w3-col m6 l7">
         <h2>CO2 emissions by region - Asia is driving the growth</h2>
         While emissions are declining in Europe and North America, Asia is driving the growth in global emissions.
@@ -199,7 +206,7 @@
     </div>
 
     <!-- Emissions Norway -->
-    <div class="w3-row w3-padding-32" id="plotEmissionsNorway">
+    <div class="w3-row" id="plotEmissionsNorway">
       <div class="w3-container w3-col m6 l7">
         <h2>Greenhouse gas emissions Norway</h2>
         While CO2 emissions have increased from 35 to almost 44
@@ -229,20 +236,19 @@
     </div>
 
     <!-- Methane CH4 -->
-    <div class="w3-row w3-padding-32" id="plotAtmosphericCH4">
+    <div class="w3-row" id="plotAtmosphericCH4">
       <div class="w3-container w3-col m6 l7">
         <h2>Atmospheric methane levels are increasing</h2>
         Methane (CH4) is a powerful greenhouse gas, with a global heating potential 25 times that of CO2.
         Sources of methane are natural gas manufacturing, agriculture, waste management, coal mining and more.
         About two thirds of methane emissions are from human activities.
-        <br>
         Using a global network of monitoring sites, the NOAA tracks the atmospheric levels of methane.
-        Methane levels are measured in ppb (parts per billion).
-        The
-        <a href="https://www.epa.gov/ghgemissions/overview-greenhouse-gases" target="_blank" rel="noopener">
-          US Environmental Protection Agency
-        </a>
-        has a good overview of the various greehouse gases and their impact.
+        <p>
+          Methane levels are measured in ppb (parts per billion). The
+          <a href="https://www.epa.gov/ghgemissions/overview-greenhouse-gases" target="_blank" rel="noopener">
+            US Environmental Protection Agency EPA</a>
+          has a good overview of the various greehouse gases and their impact.
+        </p>
       </div>
       <script>
         plotAtmosphericCO2("plotAtmosphericCH4", "https://api.dashboard.eco/maunaloach4-sm", {
@@ -252,7 +258,7 @@
     </div>
 
     <!-- Arctic Ice Extent -->
-    <div class="w3-row w3-padding-32" id="plotArcticIce">
+    <div class="w3-row" id="plotArcticIce">
       <div class="w3-container w3-col m6 l7">
         <h2>Ice extent in the Arctic is steadily decreasing, now 38&percnt; less than 1979</h2>
         <a href="https://nsidc.org" target="_blank" rel="noopener">NSIDC</a>
@@ -273,7 +279,7 @@
     </div>
 
     <!-- World Population -->
-    <div class="w3-row w3-padding-32" id="plotWorldPopulation">
+    <div class="w3-row" id="plotWorldPopulation">
       <div class="w3-container w3-col m6 l7">
         <h2>World population will stabilize at about 11 billion in 2100</h2>
         World population is currently 7.7 billion.
@@ -288,7 +294,7 @@
     </div>
 
     <!-- Global Oil Production -->
-    <div class="w3-row w3-padding-32" id="plotOil">
+    <div class="w3-row" id="plotOil">
       <div class="w3-container w3-col m6 l7">
         <h2>Global oil production: 100 million barrels per day, steadily increasing</h2>
         According to January 2020 data from the US Energy Information Administration EIA,
@@ -308,7 +314,7 @@
     </div>
 
     <!-- Global Gas Production -->
-    <div class="w3-row w3-padding-32" id="plotGlobalGas">
+    <div class="w3-row" id="plotGlobalGas">
       <div class="w3-container w3-col m6 l7">
         <h2>Global gas production is accelerating</h2>
         According to November 2019 data from the US Energy Information Administration EIA,
@@ -325,7 +331,7 @@
     </div>
 
     <!-- Global Coal Production -->
-    <div class="w3-row w3-padding-32" id="plotGlobalCoal">
+    <div class="w3-row" id="plotGlobalCoal">
       <div class="w3-container w3-col m6 l7">
         <h2>Coal production increasing again</h2>
         According to February 2019 data from the US Energy Information Administration EIA,
@@ -347,7 +353,7 @@
     </div>
 
     <!-- Emissions by fuel type -->
-    <div class="w3-row w3-padding-32" id="plotEmissionsByFuelType">
+    <div class="w3-row" id="plotEmissionsByFuelType">
       <div class="w3-container w3-col m6 l7">
         <h2>CO2 emissions from fossil fuels increased by 2&percnt; in 2018.
           Natural Gas was the biggest contributor to this increase</h2>
@@ -369,7 +375,7 @@
     </div>
 
     <!-- Ozone Hole -->
-    <div class="w3-row w3-padding-32" id="plotOzone">
+    <div class="w3-row" id="plotOzone">
       <div class="w3-container w3-col m6 l7">
         <h2>And now some good news: The ozone hole is shrinking</h2>
         Ozone is a colorless gas present in the upper atmosphere which absorbs UV radiation from the sun.
@@ -395,7 +401,7 @@
     </div>
 
     <!-- Global Temperature Anomaly -->
-    <div class="w3-row w3-padding-32" id="plotGlobalTemp">
+    <div class="w3-row" id="plotGlobalTemp">
       <div class="w3-container w3-col m6 l7">
         <h2>The global mean temperature in 2019 was 1&deg;C higher than the average of 1951-1980.</h2>
         The <a href="https://data.giss.nasa.gov/gistemp/" target="_blank" rel="noopener">
@@ -423,7 +429,7 @@
     </div>
 
     <!-- Svalbard Temperature Anomaly -->
-    <div class="w3-row w3-padding-32" id="plotSvalbardTemp">
+    <div class="w3-row" id="plotSvalbardTemp">
       <div class="w3-container w3-col m6 l7">
         <h2>Arctic temperatures increasing dramatically: +5&deg; since 1900</h2>
         Data from The Norwegian Meteorological Institute and
@@ -445,7 +451,7 @@
     </div>
 
     <!-- Brazil Forest Fire Activity -->
-    <div class="w3-row w3-padding-32" id="plotBrazil">
+    <div class="w3-row" id="plotBrazil">
       <div class="w3-container w3-col m6 l7">
         <h2>Forest fire activity in the Amazon: 2019 was below average</h2>
         This chart is based on public data from
@@ -470,7 +476,7 @@
     </div>
 
     <!-- Global Sea Level Rise -->
-    <div class="w3-row w3-padding-32" id="plotSeaLevel">
+    <div class="w3-row" id="plotSeaLevel">
       <div class="w3-container w3-col m6 l7">
         <h2>Sea levels have increased 250mm since 1880, current rate of increase: 50mm per decade</h2>
         Global mean sea levels have increased by over 200mm since the late 1800's.
@@ -489,7 +495,7 @@
     </div>
 
     <!-- CCS Carbon Capture -->
-    <div class="w3-row w3-padding-32" id="plotCCS">
+    <div class="w3-row" id="plotCCS">
       <div class="w3-container w3-col m6 l7">
         <h2>Carbon Capture and Storage: CCS creates more CO2 than it captures</h2>
         According to
@@ -542,11 +548,7 @@
     <div class="w3-container w3-section">
       <h2>About</h2>
       This website collects and visualizes publicly available data on the state of the earth.
-      The intent is to provide factual data on what is happening to our environment.
-      <p>
-        There are many public and private environmental data providers with vast amounts of relevant data.
-        This site aims to make open data useful and understandable for anyone with a mobile device or computer.
-      </p>
+      We use fact-based data from reliable sources.
       <p>H&aring;kon Dahle, Oslo, Norway, 2020</p>
     </div>
     <hr>
@@ -555,16 +557,15 @@
   <!-- FOOTER -->
 
   <div class="w3-container w3-center my-font w3-section">
-    <p> design by dashboard.eco </p>
+    <p> design by futureplanet.eco </p>
     &nbsp;
     <!--    <a href="https://twitter.com/probably_one" class="fa fa-twitter" target="_blank" rel="noopener"></a>
     &nbsp; 
 -->
     <a href="https://www.instagram.com/dashboard.eco/" class="fa fa-instagram" target="_blank" rel="noopener"></a>
     &nbsp;
-    <a href="https://profiles.eco/dashboard?ref=tm" rel="noopener">
-      <img style="width:16px" class="eco-trustmark" alt=".eco profile for dashboard.eco"
-        src="https://trust.profiles.eco/dashboard/eco-mark.svg?color=%23000000">
+    <a href="https://profiles.eco/dashboard" ref="noreferrer" target="_blank" rel="noopener">
+      <img style="width:16px" src="eco-mark.svg">
     </a>
   </div>
   <div class="w3-container w3-center w3-section">
