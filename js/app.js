@@ -363,7 +363,7 @@ function plotWorldPopulation(elmt) {
               type: 'linear',
               ticks: {
                 maxTicksLimit: 8,
-                autoSkip: true,
+                autoSkip: true
               }
             }]
           }
@@ -398,7 +398,7 @@ function plotEiaFossilFuelProduction(elmt, url) {
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Oil production:', results.data.length);
+      console.log('EIA:', results.series.length);
       insertSourceAndLink(results, id.accordionId, url);
       var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
@@ -411,34 +411,32 @@ function plotEiaFossilFuelProduction(elmt, url) {
           aspectRatio: 1,
           legend: {
             display: true,
+            //            position: 'right',
             labels: {
               boxWidth: 10
             },
           },
           scales: {
             yAxes: [{
-              stacked: true,
               ticks: {
                 callback: (value) => value / 1000
               }
             }],
             xAxes: [{
-              ticks: {
-                maxTicksLimit: 8,
-                autoSkip: true,
-              }
+              type: 'linear'
             }]
           }
         }
       });
-      myChart.data.labels = results.data[0].data.map(x => x.year);
-      while (results.data.length) {
-        let x = results.data.pop();
-        if (x.region === 'World') continue
+      while (results.series.length) {
+        let x = results.series.pop();
+        console.log(x.region)
+        if (x.region === 'EU28') continue;
         myChart.data.datasets.push({
           label: x.region,
-          data: x.data.map(y => y.data),
-          fill: true
+          data: x.data,
+          borderWidth: 3,
+          fill: false
         });
       }
       myChart.update();

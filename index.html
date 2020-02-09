@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="css/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/fontawesome.min.css">-->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed:100,400,700&display=swap">
 
 <style>
@@ -173,7 +174,7 @@
     </div>
 
     <!-- Plot CO2 by region -->
-    <div class="w3-row w3-padding-32" id="plotCO2ByRegion">
+    <div class="w3-row w3-padding-32" id="LatestNews">
       <div class="w3-container w3-col m6 l7">
         <h2>CO2 emissions by region - Asia is driving the growth</h2>
         While emissions are declining in Europe and North America, Asia is driving the growth in global emissions.
@@ -189,11 +190,11 @@
         <p>
           This chart is based on December 2019 data from
           <a href="https://www.globalcarbonproject.org/carbonbudget/" target="_blank" rel="noopener">
-            Glocal Carbon Project</a>
+            Global Carbon Project</a>
         </p>
       </div>
       <script>
-        plotEmissionsByRegion("plotCO2ByRegion");
+        plotEmissionsByRegion("LatestNews");
       </script>
     </div>
 
@@ -290,8 +291,8 @@
     <div class="w3-row w3-padding-32" id="plotOil">
       <div class="w3-container w3-col m6 l7">
         <h2>Global oil production: 100 million barrels per day, steadily increasing</h2>
-        According to the US Energy Information Administration EIA,
-        global oil production is now above 100 million
+        According to January 2020 data from the US Energy Information Administration EIA,
+        global oil production is now around 100 million
         barrels of oil
         per day. Production is not slowing down. According to the
         <a href="https://www.iea.org/news/united-states-to-lead-global-oil-supply-growth-while-no-peak-in-oil-demand-in-sight"
@@ -299,10 +300,10 @@
         </a>,
         peak oil is nowhere in sight,
         with the sharp growth in US shale oil leading the growth in the coming years.
-        Other countries representing growth are Brazil, Norway and Guyana.
+        Other countries representing future growth are Brazil, Norway and Guyana.
       </div>
       <script>
-        plotEiaFossilFuelProduction("plotOil", "https://probably.one:4438/eia-international-data-oil-production");
+        plotEiaFossilFuelProduction("plotOil", "https://api.dashboard.eco/eia-global-oil");
       </script>
     </div>
 
@@ -310,41 +311,43 @@
     <div class="w3-row w3-padding-32" id="plotGlobalGas">
       <div class="w3-container w3-col m6 l7">
         <h2>Global gas production is accelerating</h2>
-        The chart uses data from the US Energy Information Administration EIA,
-        and shows the increased production of
-        natural gas globally.
-        Production numbers are in 1000 Bcf - Billion cubic feet.
-        Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
+        According to November 2019 data from the US Energy Information Administration EIA,
+        global production of natural gas is accelerating.
+        Other charts on our site confirm this, and show that gas is in fact
+        the main driver of increased CO2 emissions globally, ahead of coal and oil.
+        <p>Production numbers are in 1000 BCM - Billion cubic meters
+          Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
+        </p>
       </div>
       <script>
-        plotEiaFossilFuelProduction("plotGlobalGas", "https://probably.one:4438/eia-international-data-dry-natural-gas-production");
+        plotEiaFossilFuelProduction("plotGlobalGas", "https://api.dashboard.eco/eia-global-gas");
       </script>
     </div>
 
     <!-- Global Coal Production -->
     <div class="w3-row w3-padding-32" id="plotGlobalCoal">
       <div class="w3-container w3-col m6 l7">
-        <h2>Coal production increasing again, but still below 2013 peak</h2>
-        According to the US Energy Information Administration EIA,
-        global coal production hit a peak in 2013.
-        Other sources such as BP confirm this.
-        While coal production in 2018 was higher than 2017, it is still below 2013 levels.
-        The chart shows annual coal production in millions of short tons since 1980.
-        For more on peak coal, read
-        <a href="https://www.forbes.com/sites/rrapier/2019/06/28/coal-demand-rises-but-remains-below-peak-levels/#4a629bc42646"
-          target="_blank" rel="noopener">
-          Forbes article on coal demand
-        </a>
-        <br>
-        Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
+        <h2>Coal production increasing again</h2>
+        According to February 2019 data from the US Energy Information Administration EIA,
+        global coal production is rising again after declining since the 2013 peak.
+        China and USA are increasing coal production again. China alone represents 45&percnt;
+        of total global coal production.
+        <p>
+          The chart shows annual coal production in million metric tons since 1980.
+          For more on peak coal, read
+          <a href="https://www.forbes.com/sites/rrapier/2019/06/28/coal-demand-rises-but-remains-below-peak-levels/#4a629bc42646"
+            target="_blank" rel="noopener">
+            Forbes article on coal demand
+          </a>
+        </p> Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
       </div>
       <script>
-        plotEiaFossilFuelProduction("plotGlobalCoal", "https://probably.one:4438/eia-international-data-coal");
+        plotEiaFossilFuelProduction("plotGlobalCoal", "https://api.dashboard.eco/eia-global-coal");
       </script>
     </div>
 
     <!-- Emissions by fuel type -->
-    <div class="w3-row w3-padding-32" id="LatestNews">
+    <div class="w3-row w3-padding-32" id="plotEmissionsByFuelType">
       <div class="w3-container w3-col m6 l7">
         <h2>CO2 emissions from fossil fuels increased by 2&percnt; in 2018.
           Natural Gas was the biggest contributor to this increase</h2>
@@ -361,7 +364,7 @@
         </p>
       </div>
       <script>
-        plotEmissionsByFuelType("LatestNews");
+        plotEmissionsByFuelType("plotEmissionsByFuelType");
       </script>
     </div>
 

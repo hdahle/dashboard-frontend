@@ -58,7 +58,7 @@ function insertSourceAndLink(res, elmtId, url) {
     s += "<p>Data retrieved: " + res.accessed + "</p>"; // yes, intentional overwrite of str
   }
   if (l !== undefined && l !== null) {
-    s += "<p><a target='_blank' rel='noopener' href='" + l + "'>" + l + "</a></p>";
+    s += "<p><i class='fa fa-angle-right'></i> &nbsp; <a target='_blank' rel='noopener' href='" + l + "'>" + l + "</a></p>";
   }
   s += "<div class='w3-hide-small'>"
     + "<p><button class='w3-button w3-dark-grey w3-round-small' "
