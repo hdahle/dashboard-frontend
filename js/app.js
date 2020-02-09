@@ -850,12 +850,9 @@ function plotBothCCS(elmt, url) {
           }
         }
       });
-      // sort results and stick it into array 'd' for ease of use
-      let d = results.data.sort((a, b) => b.capacity - a.capacity);
-      // If last element of results.data has "project" === null, drop it
-      if (d[d.length - 1].project === null) {
-        d.pop();
-      }
+      // remove any null projects, then sort it
+      let d = results.data.filter(x => x.project != null).sort((a, b) => b.capacity - a.capacity);
+
       let names = d.map(x => x.project + ", " + x.country);
       let data = d.map(x => x.capacity);
       let bgColor = d.map(x => {
