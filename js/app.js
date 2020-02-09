@@ -101,7 +101,7 @@ function plotScatter(elmt, urls, labels, xTicks, yTicks) {
       .then(status)
       .then(json)
       .then(results => {
-        console.log('plotUrls:', url, results.data.length);
+        //console.log('plotUrls:', url, results.data.length);
         insertSourceAndLink(results, id.accordionId, url);
         myChart.data.datasets.push({
           data: results.data,
@@ -430,7 +430,7 @@ function plotEiaFossilFuelProduction(elmt, url) {
       });
       while (results.series.length) {
         let x = results.series.pop();
-        console.log(x.region)
+        //console.log(x.region)
         if (x.region === 'EU28') continue;
         myChart.data.datasets.push({
           label: x.region,
