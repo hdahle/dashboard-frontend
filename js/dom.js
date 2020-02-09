@@ -23,11 +23,11 @@ function insertAccordionAndCanvas(id) {
   }
   // Insert the button and accordion for the sources and links
   d.innerHTML += "<div onclick='openAccordion(\"" + id + "\")' "
-    + "class='w3-button w3-block w3-stretch w3-left-align w3-hover-white w3-text-theme'>"
+    + "class='w3-button w3-block w3-stretch w3-left-align w3-hover-white w3-text-theme' style='font-size:small'>"
     + "SOURCES &nbsp; "
     + "<i class='fa fa-angle-down' id='" + ids.arrowId + "'></i>"
     + "</div>"
-    + "<div id='" + ids.accordionId + "' class='w3-hide' style='font-size:small' ></div>";
+    + "<div id='" + ids.accordionId + "' class='w3-hide' style='font-size:small'></div>";
   // Insert the canvas for the chart            
   x.innerHTML += "<div class='w3-col m6 l5'>"
     + "<canvas id='" + ids.canvasId + "'></canvas>"
