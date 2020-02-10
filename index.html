@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="css/w3.css">
 <link rel="stylesheet" href="css/w3-custom-colors.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed:100,400,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400|Roboto+Condensed&display=swap">
 
 <style>
   body,
@@ -37,6 +37,12 @@
     font-weight: 700;
   }
 
+  .thin-font {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: xx-large;
+  }
+
   .fa-twitter,
   .fa-instagram {
     background: white;
@@ -45,7 +51,7 @@
   }
 
   .w3-row {
-    padding-bottom: 72px;
+    padding-bottom: 76px;
   }
 </style>
 
@@ -57,7 +63,7 @@
 
 <body>
   <div class="w3-top" id="top-menu-bar">
-    <div class="w3-bar w3-theme-d5 my-font">
+    <div class="w3-bar w3-theme-d5">
       <div class="w3-content" style="max-width:920px">
         <a href="#Top" class="w3-bar-item w3-button">futureplanet.eco</a>
         <a href="#About" class="w3-bar-item w3-button w3-hide-small w3-right">ABOUT</a>
@@ -75,8 +81,7 @@
     </div>
   </div>
 
-  <div id="burger" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-theme-d5 w3-top my-font"
-    style="margin-top:38px">
+  <div id="burger" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-theme-d5 w3-top" style="margin-top:38px">
     <a href="#API" class="w3-bar-item w3-button" onClick="clickBurger()">API</a>
     <a href="#About" class="w3-bar-item w3-button" onClick="clickBurger()">ABOUT</a>
   </div>
@@ -84,9 +89,21 @@
   <!-- Limit content width to 920px -->
   <div class="w3-content w3-padding-48" id="Top" style="max-width:920px;">
 
+    <!-- For tagline -->
+    <div class="w3-row w3-hide-small">
+      <div class="w3-container w3-col w3-quarter w3-margin-top">
+        <div class="w3-text-theme thin-font w3-margin-top">
+          We<br>probably<br>only have <br>one earth
+        </div>
+      </div>
+      <div class="w3-container w3-col w3-rest">
+      </div>
+    </div>
+
+
     <!-- Placeholder DIV for Latest News -->
     <div class="w3-section">
-      <div>
+      <div class="w3-container">
         <span class="w3-tag w3-theme w3-round-small w3-container" style="font-size:small;">
           LATEST<br>UPDATE</span>
       </div>
