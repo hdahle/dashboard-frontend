@@ -42,7 +42,9 @@ function plotAtmosphericCO2(elmt, url, ticksConfig) {
         xAxes: [{
           ticks: {
             autoSkip: true,
-            maxTicksLimit: 8
+            min: "1960-01-01",
+            max: "2020-06-01",
+            maxTicksLimit: 11
           },
           type: 'time',
           time: {
