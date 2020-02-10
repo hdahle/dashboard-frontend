@@ -19,18 +19,28 @@ function insertAccordionAndCanvas(id) {
   let ids = {
     canvasId: id + "-canvas",
     accordionId: id + "-accordion",
-    arrowId: id + "-arrow"
+    accordionIdMobile: id + "-accordion-mob",
+    arrowId: id + "-arrow",
+    arrowIdMobile: id + "-arrow-mob"
   }
   // Insert the button and accordion for the sources and links
-  d.innerHTML += "<div onclick='openAccordion(\"" + id + "\")' "
-    + "class='w3-button w3-block w3-stretch w3-left-align w3-hover-white w3-text-theme' style='font-size:small'>"
+  d.innerHTML += "<div onclick='openAccordion(\"" + ids.accordionId + "\",\"" + ids.arrowId + "\")' "
+    + "class='w3-hide-small w3-button w3-block w3-stretch w3-left-align w3-hover-white w3-text-theme' style='font-size:small'>"
     + "SOURCES &nbsp; "
     + "<i class='fa fa-angle-down' id='" + ids.arrowId + "'></i>"
     + "</div>"
-    + "<div id='" + ids.accordionId + "' class='w3-hide' style='font-size:small'></div>";
-  // Insert the canvas for the chart            
-  x.innerHTML += "<div class='w3-col m6 l5'>"
+    + "<div id='" + ids.accordionId + "' class='w3-hide w3-hide-small' style='font-size:small'></div>";
+  // Insert the canvas for the chart , and button and accordion for mobile          
+  x.innerHTML += "<div class='w3-col m6 l5 w3-container'>"
+    + "<div id='" + ids.canvasId + "-wrap'>"
     + "<canvas id='" + ids.canvasId + "'></canvas>"
+    + "</div>"
+    + "<div onclick='openAccordion(\"" + ids.accordionIdMobile + "\",\"" + ids.arrowIdMobile + "\")' "
+    + "class='w3-hide-large w3-hide-medium w3-button w3-block w3-stretch w3-left-align w3-hover-white w3-text-theme' style='font-size:small'>"
+    + "SOURCES &nbsp; "
+    + "<i class='fa fa-angle-down' id='" + ids.arrowIdMobile + "'></i>"
+    + "</div>"
+    + "<div id='" + ids.accordionIdMobile + "' class='w3-hide w3-hide-large w3-hide-medium' style='font-size:small'></div>"
     + "</div>";
   return ids;
 }
@@ -38,10 +48,17 @@ function insertAccordionAndCanvas(id) {
 //
 // Toggle accordion show/hide state. Toggle arrow up/down.
 //
-function openAccordion(id) {
-  let y = document.getElementById(id + "-accordion");
-  y.className = (y.className === "w3-show") ? "w3-hide" : "w3-show";
-  y = document.getElementById(id + "-arrow");
+function openAccordion(id, arrowId) {
+  let y = document.getElementById(id);
+
+  // toggle 'show' state of accordion
+  if (y.className.indexOf("w3-show") === -1) {
+    y.className += " w3-show";
+  } else {
+    y.className = y.className.replace("w3-show", "");
+  }
+  // toggle arrow up/down
+  y = document.getElementById(arrowId);
   y.className = (y.className === "fa fa-angle-down") ? "fa fa-angle-up" : "fa fa-angle-down";
 }
 
@@ -49,18 +66,22 @@ function openAccordion(id) {
 // Print the sources for the data. Create a button for getting chart data.
 //
 function insertSourceAndLink(res, elmtId, url) {
-  let s = document.getElementById(elmtId).innerHTML;
-  let l = res.link;
-  if (res.source !== undefined && res.source !== null) {
-    s += "<p>" + res.source + "</p>"; // yes, intentional overwrite of str
+  let accordions = [elmtId.accordionId, elmtId.accordionIdMobile];
+  while (accordions.length) {
+    let acc = accordions.pop();
+    let s = document.getElementById(acc).innerHTML;
+    let l = res.link;
+    if (res.source !== undefined && res.source !== null) {
+      s += "<p>" + res.source + "</p>"; // yes, intentional overwrite of str
+    }
+    if (res.accessed !== undefined && res.accessed !== null) {
+      s += "<p>Data retrieved: " + res.accessed + "</p>"; // yes, intentional overwrite of str
+    }
+    if (l !== undefined && l !== null) {
+      s += "<p><i class='fa fa-link w3-text-theme-l1'></i> &nbsp; <a target='_blank' rel='noopener' href='" + l + "'>" + l + "</a></p>";
+    }
+    s += "<p><i class='fa fa-link w3-text-theme-l1'></i> &nbsp; <a target='_blank' rel='noopener' href='" + url + "'>" + url + "</a></p>";
+    document.getElementById(acc).innerHTML = s;
   }
-  if (res.accessed !== undefined && res.accessed !== null) {
-    s += "<p>Data retrieved: " + res.accessed + "</p>"; // yes, intentional overwrite of str
-  }
-  if (l !== undefined && l !== null) {
-    s += "<p><i class='fa fa-link w3-text-theme-l1'></i> &nbsp; <a target='_blank' rel='noopener' href='" + l + "'>" + l + "</a></p>";
-  }
-  s += "<p><i class='fa fa-link w3-text-theme-l1'></i> &nbsp; <a target='_blank' rel='noopener' href='" + url + "'>" + url + "</a></p>";
-  document.getElementById(elmtId).innerHTML = s;
 }
 

@@ -4,106 +4,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
 <link rel="stylesheet" href="css/w3.css">
+<link rel="stylesheet" href="css/w3-custom-colors.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
-<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/fontawesome.min.css">-->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed:100,400,700&display=swap">
-
-<style>
-  .w3-theme-l5 {
-    color: #000 !important;
-    background-color: #eff2f6 !important
-  }
-
-  .w3-theme-l4 {
-    color: #000 !important;
-    background-color: #c9d2e1 !important
-  }
-
-  .w3-theme-l3 {
-    color: #fff !important;
-    background-color: #94a6c3 !important
-  }
-
-  .w3-theme-l2 {
-    color: #fff !important;
-    background-color: #5e79a5 !important
-  }
-
-  .w3-theme-l1 {
-    color: #fff !important;
-    background-color: #3f5270 !important
-  }
-
-  .w3-theme-d1 {
-    color: #fff !important;
-    background-color: #1e2735 !important
-  }
-
-  .w3-theme-d2 {
-    color: #fff !important;
-    background-color: #1a222f !important
-  }
-
-  .w3-theme-d3 {
-    color: #fff !important;
-    background-color: #171e29 !important
-  }
-
-  .w3-theme-d4 {
-    color: #fff !important;
-    background-color: #141a23 !important
-  }
-
-  .w3-theme-d5 {
-    color: #fff !important;
-    background-color: #11151d !important
-  }
-
-  .w3-theme-light {
-    color: #000 !important;
-    background-color: #eff2f6 !important
-  }
-
-  .w3-theme-dark {
-    color: #fff !important;
-    background-color: #11151d !important
-  }
-
-  .w3-theme-action {
-    color: #fff !important;
-    background-color: #11151d !important
-  }
-
-  .w3-theme {
-    color: #fff !important;
-    background-color: #222c3c !important
-  }
-
-  .w3-text-theme {
-    color: #222c3c !important
-  }
-
-  .w3-text-theme-l1 {
-    color: #3f5270 !important
-  }
-
-  .w3-border-theme {
-    border-color: #222c3c !important
-  }
-
-  .w3-hover-theme:hover {
-    color: #fff !important;
-    background-color: #222c3c !important
-  }
-
-  .w3-hover-text-theme:hover {
-    color: #222c3c !important
-  }
-
-  .w3-hover-border-theme:hover {
-    border-color: #222c3c !important
-  }
-</style>
 
 <style>
   body,
@@ -172,7 +75,7 @@
     </div>
   </div>
 
-  <div id="burger" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-theme my-font w3-top"
+  <div id="burger" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-theme w3-top my-font"
     style="margin-top:38px">
     <a href="#API" class="w3-bar-item w3-button" onClick="clickBurger()">API</a>
     <a href="#About" class="w3-bar-item w3-button" onClick="clickBurger()">ABOUT</a>
@@ -183,12 +86,10 @@
 
     <!-- Placeholder DIV for Latest News -->
     <div class="w3-section">
-      <div class="w3-container">
+      <div>
         <span class="w3-tag w3-theme w3-round-small w3-container" style="font-size:small;">
-          Latest update
-        </span>
+          LATEST<br>UPDATE</span>
       </div>
-
       <div id="NewsPlaceholder">
       </div>
     </div>
@@ -212,6 +113,8 @@
           northern winter, the forests release CO2 to the atmospere.
           When spring comes in the north, forests starts consuming CO2 as part of photosynthesis
           and this reduces the level in the atmosphere.
+          <br>
+          The chart is updated monthly.
         </p>
       </div>
       <script>
@@ -231,9 +134,11 @@
         </a>
         drilled in East Antarctica.
         The CO2 data starts at year 154 and ends in 1996, and provides more detail than the "Vostok" dataset.
-        The Law Dome data set shows how atmospheric CO2 levels started rising sharply in the second half of the
-        1800's,
-        when fossil fuels started powering the industrial revolution.
+        <p>
+          The Law Dome data set shows how atmospheric CO2 levels started rising sharply
+          in the second half of the 1800's,
+          when fossil fuels started powering the industrial revolution.
+        </p>
       </div>
       <script>
         plotScatter("plotLawDome",
@@ -260,9 +165,11 @@
         The CO2 data goes back over 400.000 years,
         and shows how CO2 levels in the air has varied between 180 and 280ppm
         through four climate cycles.
-        By combining the "Vostok" dataset with the Mauna Loa dataset,
-        we clearly see the sharp increase in CO2 levels the last
-        100 years.
+        <p>
+          By combining the "Vostok" dataset with the Mauna Loa dataset,
+          we clearly see the sharp increase in CO2 levels the last
+          100 years.
+        </p>
       </div>
       <script>
         plotScatter("plotVostok",
@@ -293,9 +200,11 @@
           Emissions from international transport such as shipping and air travel is counted as a separate
           region.
         </p>
-        This chart is based on December 2019 data from
-        <a href="https://www.globalcarbonproject.org/carbonbudget/" target="_blank" rel="noopener">
-          Global Carbon Project</a>
+        <p>
+          This chart is based on December 2019 data from
+          <a href="https://www.globalcarbonproject.org/carbonbudget/" target="_blank" rel="noopener">
+            Global Carbon Project</a>
+        </p>
       </div>
       <script>
         plotEmissionsByRegion("LatestNews");
@@ -324,8 +233,8 @@
           be reduced in the future at the cost of higher global emissions,
           when on-shore hydroelectric power replaces off-shore gas turbines
           for powering oil and gas extraction.
+          Numbers are in million tons CO2 equivalents.
         </p>
-        Numbers are in million tons CO2 equivalents.
       </div>
       <script>
         plotEmissionsNorway("plotEmissionsNorway");
@@ -346,7 +255,9 @@
             US Environmental Protection Agency EPA</a>
           has a good overview of the various greehouse gases and their impact.
         </p>
-        Methane levels are measured in ppb (parts per billion).
+        <p>
+          Methane levels are measured in ppb (parts per billion). The chart is updated monthly.
+        </p>
       </div>
       <script>
         plotAtmosphericCO2("plotAtmosphericCH4", "https://api.dashboard.eco/maunaloach4-sm", {
@@ -368,9 +279,8 @@
         The chart shows the annual cycle for several years.
         In the Arctic, sea ice cover is at its lowest in September, before the onset of winter.
         <p>
-          The NSIDC dataset contains ice extent data since 1979
+          The NSIDC dataset contains ice extent data since 1979. This chart is updated monthly.
         </p>
-        This chart is updated monthly.
       </div>
       <script>
         plotArcticIce("plotArcticIce");
@@ -384,8 +294,10 @@
         World population is currently 7.7 billion.
         The UN projects that the number of people on earth will reach about
         11 billion in year 2100, and will then remain stable.
-        Virtually all the population growth will be in Africa, where
-        the population will grow by 3 billion from 1.3 to 4.3 billion.
+        <p>
+          Virtually all the population growth will be in Africa, where
+          the population will grow by 3 billion from 1.3 to 4.3 billion.
+        </p>
       </div>
       <script>
         plotWorldPopulation("plotWorldPopulation");
@@ -398,14 +310,15 @@
         <h2>Global oil production: 100 million barrels per day, steadily increasing</h2>
         According to January 2020 data from the US Energy Information Administration EIA,
         global oil production is now around 100 million
-        barrels of oil
-        per day. Production is not slowing down. According to the
-        <a href="https://www.iea.org/news/united-states-to-lead-global-oil-supply-growth-while-no-peak-in-oil-demand-in-sight"
-          target="_blank" rel="noopener">International Energy Agency IEA
-        </a>,
-        peak oil is nowhere in sight,
-        with the sharp growth in US shale oil leading the growth in the coming years.
-        Other countries representing future growth are Brazil, Norway and Guyana.
+        barrels of oil per day. Production is not slowing down.
+        <p>According to the
+          <a href="https://www.iea.org/news/united-states-to-lead-global-oil-supply-growth-while-no-peak-in-oil-demand-in-sight"
+            target="_blank" rel="noopener">International Energy Agency IEA
+          </a>,
+          peak oil is nowhere in sight,
+          with the sharp growth in US shale oil leading the growth in the coming years.
+          Other countries representing future growth are Brazil, Norway and Guyana.
+        </p>
       </div>
       <script>
         plotEiaFossilFuelProduction("plotOil", "https://api.dashboard.eco/eia-global-oil");
@@ -422,7 +335,9 @@
         the main driver of increased CO2 emissions globally, ahead of coal and oil.
         <p>Production numbers are in 1000 BCM - Billion cubic meters
         </p>
-        Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
+        <p>
+          Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
+        </p>
       </div>
       <script>
         plotEiaFossilFuelProduction("plotGlobalGas", "https://api.dashboard.eco/eia-global-gas");
@@ -445,7 +360,8 @@
             Forbes article on coal demand
           </a>
         </p>
-        Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
+        <p> Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
+        </p>
       </div>
       <script>
         plotEiaFossilFuelProduction("plotGlobalCoal", "https://api.dashboard.eco/eia-global-coal");
@@ -466,8 +382,8 @@
         Coal is the number one source of CO2 with 37&percnt; oil 34&percnt; and gas 20&percnt;.
         <p>
           Note that 2017 and 2018 data are preliminary.
+          The chart will be updated as soon as final data become available.
         </p>
-        The chart will be updated as soon as final data become available.
       </div>
       <script>
         plotEmissionsByFuelType("plotEmissionsByFuelType");
@@ -490,10 +406,10 @@
         <p>
           NASA Ozone Watch tracks the size of the ozone hole over the Antarctic
           and the Arctic.
+          The Antarctic ozone hole reaches its peak size in September/October.
+          The chart shows the mean size of
+          the hole during this period, in millions of square km.
         </p>
-        The Antarctic ozone hole reaches its peak size in September/October.
-        The chart shows the mean size of
-        the hole during this period, in millions of square km.
       </div>
       <script>
         plotOzoneHole("plotOzone");
@@ -517,9 +433,8 @@
           </a>
           shows the same thing. Note that the HadCRUT dataset refers to the average of 1961-1990,
           so it is slightly offset compared to the NASA dataset.
+          This chart is updated monthly.
         </p>
-        This chart is updated monthly based on fresh data from NASA and
-        University of East Anglia.
       </div>
       <script>
         plotGlobalTemp("plotGlobalTemp");
@@ -532,16 +447,18 @@
         <h2>Arctic temperatures increasing dramatically: +5&deg; since 1900</h2>
         Data from The Norwegian Meteorological Institute and
         The Norwegian Centre for Climate Services indicate that temperatures in the Arctic,
-        as measured at Svalbard Airport (78.24 degrees North), are now at least 5&deg;C higher than 50-100 years
-        ago.
+        as measured at Svalbard Airport (78.24 degrees North),
+        are now at least 5&deg;C higher than 50-100 years ago.
         The increased temperature in the Arctic leads to thawing of the permafrost,
         which in turn releases CO2 and methane currently trapped in the permafrost.
-        The report
-        <a href="https://cms.met.no/site/2/klimaservicesenteret/climate-in-svalbard-2100/_attachment/14428?_ts=169fd13ff23"
-          target="_blank" rel="noopener">
-          Climate in Svalbard 2100 by NCCS
-        </a>
-        is an excellent overview of future climate impact in the Arctic.
+        <p>
+          The report
+          <a href="https://cms.met.no/site/2/klimaservicesenteret/climate-in-svalbard-2100/_attachment/14428?_ts=169fd13ff23"
+            target="_blank" rel="noopener">
+            Climate in Svalbard 2100 by NCCS
+          </a>
+          is an excellent overview of future climate impact in the Arctic.
+        </p>
       </div>
       <script>
         plotSvalbardTemp("plotSvalbardTemp");
@@ -552,21 +469,22 @@
     <div class="w3-row" id="plotBrazil">
       <div class="w3-container w3-col m6 l7">
         <h2>Forest fire activity in the Amazon: 2019 was below average</h2>
-        This chart is based on public data from
+        Brazil's
         <a href="http://queimadas.dgi.inpe.br/queimadas/portal" target="_blank" rel="noopener">
-          INPE, Brazil's National Institute for Space Research.
+          National Institute for Space Research (INPE)
         </a>
-        INPE monitors forest fire activity in Latin America on a daily basis using satellite imagery.
+        monitors forest fire activity in Latin America daily using satellites.
         This chart shows each month of 2019 plotted against
         the monthly averages in the period 1999 to 2018.
         2019 has seen less than average fire activity.
         <p>
-          The data is a measure of fire activity, but not the exact number of fires per month.
+          The data is a measure of fire activity, and not the number of fires per month.
           When a satellite image indicates an area with fire activity,
           there might actually be more than one fire within that image pixel.
           Also, a single forest fire may span several pixels.
         </p>
-        This chart is updated daily.
+        <p> This chart is updated daily.
+        </p>
       </div>
       <script>
         plotBrazilFires("plotBrazil");
@@ -584,7 +502,7 @@
         <p>The dataset covering 1880-2009 is based on measurements from a large number of stations (38
           stations in 1900, 235 stations in the 1980s).
           The dataset from 1993 and onwards uses satellite technology.
-          Units in mm (millimeters).
+          Units in mm (millimeters). Chart is updated monthly.
         </p>
       </div>
       <script>
@@ -600,7 +518,7 @@
         <a href="https://www.globalccsinstitute.com/" target="_blank" rel="noopener">
           Global CCS Institute
         </a>
-        there are 19 large-scale CCS projects in operation as of end-of-2019,
+        there are 19 large-scale CCS projects in operation at end-of-2019,
         capturing 38 million tons CO2 annually
         (less than 0.1&percnt; of global CO2 emissions).
         <p>
@@ -614,7 +532,9 @@
           This equals 78 million tons CO2 emissions per year.
           In other words, CCS generates an extra 40 million tons of CO2 emissions annually.
         </p>
-        The chart lists all CCS projects as of 2019. Those in red color use captured CO2 for EOR.
+        <p>
+          The chart lists all CCS projects as of 2019. Those in red color use captured CO2 for EOR.
+        </p>
       </div>
       <script>
         plotCCS("plotCCS");
@@ -636,7 +556,7 @@
     <div class="w3-container w3-section">
       <h2>API</h2>
       A basic API providing JSON-formatted data for all the visualizations on this web site is coming.
-      For now, the Get chart data buttons offers a preview.
+      As a preview, use the links starting with https://api.dashboard.eco provided with eacth section
     </div>
 
     <!---------- ABOUT ---------->
@@ -646,10 +566,9 @@
     <div class="w3-container w3-section">
       <h2>About</h2>
       This website collects and visualizes publicly available data on the state of the earth.
-      We use fact-based data from reliable sources.
+      All data is fact-based and from reliable sources.
       <p>H&aring;kon Dahle, Oslo, Norway, 2020</p>
     </div>
-    <hr>
   </div>
 
   <!-- FOOTER -->
@@ -671,6 +590,7 @@
   </div>
 
   <!-- BURGER MENU -->
+
   <script>
     function clickBurger() {
       var x = document.getElementById("burger");
@@ -683,6 +603,7 @@
   </script>
 
   <!-- API BUTTONS -->
+
   <script>
     function tryUrl(url) {
       var myWindow = window.open();

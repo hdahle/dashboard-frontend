@@ -57,7 +57,7 @@ function plotAtmosphericCO2(elmt, url, ticksConfig) {
     .then(json)
     .then(results => {
       console.log('Atmospheric CO2:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       myChart.data.datasets.push({
         data: results.data,
         fill: false,
@@ -102,7 +102,7 @@ function plotScatter(elmt, urls, labels, xTicks, yTicks) {
       .then(json)
       .then(results => {
         //console.log('plotUrls:', url, results.data.length);
-        insertSourceAndLink(results, id.accordionId, url);
+        insertSourceAndLink(results, id, url);
         myChart.data.datasets.push({
           data: results.data,
           fill: false,
@@ -127,7 +127,7 @@ function plotEmissionsByRegion(elmt) {
     .then(json)
     .then(results => {
       console.log('CO2 Emissions by region:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
@@ -210,7 +210,7 @@ function plotEmissionsNorway(elmt) {
     .then(json)
     .then(results => {
       console.log('Norway:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
@@ -269,7 +269,7 @@ function plotArcticIce(elmt) {
     .then(json)
     .then(results => {
       console.log('ICE NSIDC:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       let myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
@@ -336,7 +336,7 @@ function plotWorldPopulation(elmt) {
     .then(json)
     .then(results => {
       console.log('Population:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
@@ -402,7 +402,7 @@ function plotEiaFossilFuelProduction(elmt, url) {
     .then(json)
     .then(results => {
       console.log('EIA:', results.series.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
@@ -491,7 +491,7 @@ function plotEmissionsByFuelType(elmt) {
     .then(json)
     .then(results => {
       console.log('Emissions by type:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       while (results.data.length) {
         let d = results.data.pop();
         if (d.fuel === 'Per Capita') continue;
@@ -518,7 +518,7 @@ function plotOzoneHole(elmt) {
     .then(json)
     .then(results => {
       console.log('Ozone results:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       let myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
@@ -596,7 +596,7 @@ function plotGlobalTemp(elmt) {
     .then(json)
     .then(results => {
       console.log('Results:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       myChart.data.datasets.push({
         data: results.data.map(x => ({ x: x.year, y: x.mean })),
         label: 'NASA Dataset',
@@ -611,7 +611,7 @@ function plotGlobalTemp(elmt) {
         .then(json)
         .then(results => {
           console.log('Results:', results.data.length);
-          insertSourceAndLink(results, id.accordionId, url);
+          insertSourceAndLink(results, id, url);
           myChart.data.datasets.push({
             data: results.data,//.map(x => ({ x: x.x, y: x.y + 0.14 })),
             label: 'UK HadCRUT Dataset',
@@ -663,7 +663,7 @@ function plotSvalbardTemp(elmt) {
     .then(json)
     .then(results => {
       console.log('Svalbard:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       let d1 = results.data[0].data.map(x => x.temperature);
       let l1 = results.data[0].data.map(x => x.year);
       myChart.data.datasets.push({
@@ -689,7 +689,7 @@ function plotBrazilFires(elmt) {
     .then(json)
     .then(results => {
       console.log('Brazil:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
@@ -743,7 +743,7 @@ function plotGlobalSeaLevel(elmt) {
     .then(json)
     .then(results => {
       console.log('SeaLevelRecons:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       let myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'line',
         options: {
@@ -791,7 +791,7 @@ function plotGlobalSeaLevel(elmt) {
         .then(json)
         .then(results => {
           console.log('SeaLevelNew:', results.data.length);
-          insertSourceAndLink(results, id.accordionId, url);
+          insertSourceAndLink(results, id, url);
           myChart.data.datasets.push({
             label: 'Satellite measurements',
             data: results.data[0].data.map(d => ({
@@ -824,7 +824,7 @@ function plotBothCCS(elmt, url) {
     .then(json)
     .then(results => {
       console.log('CCS:', results.data.length);
-      insertSourceAndLink(results, id.accordionId, url);
+      insertSourceAndLink(results, id, url);
       var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'horizontalBar',
         options: {
