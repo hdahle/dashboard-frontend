@@ -22,6 +22,83 @@ Chart.defaults.global.elements.line.borderWidth = 1;
 Chart.defaults.global.animation.duration = 0;
 Chart.defaults.global.plugins.colorschemes.fillAlpha = 0.8;
 Chart.defaults.global.plugins.colorschemes.scheme = 'brewer.SetTwo8';
+Chart.plugins.unregister(ChartDataLabels);
+
+
+function plotCircularity(elmt, url) {
+  let id = insertAccordionAndCanvas(elmt);
+  let myChart = new Chart(document.getElementById(id.canvasId), {
+    type: 'doughnut',
+    plugins: [ChartDataLabels],
+    options: {
+      title: {
+        display: true,
+        fontSize: 14,
+        position: 'bottom',
+        fontColor: '#222',
+        fontStyle: 'normal',
+        padding: 0
+      },
+      plugins: {
+        datalabels: {
+          labels: {
+            title: {
+              align: 'top', offset: 8,
+              color: '#444',
+              font: {
+                size: 14,
+              },
+              formatter: (value, ctx) => ctx.dataset.label[ctx.dataIndex],
+            },
+            value: {
+              color: '#333',
+              font: {
+                size: 18,
+                weight: 'bold'
+              },
+              formatter: (val) => val + ' Gt',
+            }
+          }
+        }
+      },
+      aspectRatio: 0.8,
+      responsive: true,
+      legend: {
+        display: false,
+        position: 'top'
+      }
+    }
+  });
+
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Circularity:', results.data.length);
+      insertSourceAndLink(results, id, url);
+      let d = results.data.pop();
+      myChart.data.datasets.push({
+        label: d.data[0].legend,
+        data: d.data[0].values,
+        //backgroundColor: bgc,
+      });
+      myChart.data.labels = d.data[0].legend;
+      myChart.options.title.text = 'Resources consumed: 100.6 Gt (billion tons)';//d.data[0].title;
+      myChart.update();
+      /*
+              myCharts[1].data.datasets.push({
+                label: d.data[2].legend,
+                data: d.data[2].values,
+                backgroundColor: bgc2,
+              });
+              myCharts[1].data.labels = d.data[2].legend;
+              myCharts[1].options.title.text = 'Where it ends up';//d.data[2].title;
+              myCharts[1].update();
+            })
+            .catch(err => console.log(err));
+            */
+    })
+}
 
 // 
 // Atmospheric CO2
