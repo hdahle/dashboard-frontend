@@ -42,7 +42,7 @@ function plotAtmosphericCO2(elmt, url, ticksConfig) {
         xAxes: [{
           ticks: {
             autoSkip: true,
-            min: "1960-01-01",
+            //            min: "1960-01-01",
             max: "2020-06-01",
             maxTicksLimit: 11
           },
@@ -64,6 +64,7 @@ function plotAtmosphericCO2(elmt, url, ticksConfig) {
         data: results.data,
         fill: false,
         borderWidth: 2,
+        borderColor: '#5c7f7f',
         label: 'Mauna Loa, Hawaii'
       });
       myChart.update();
