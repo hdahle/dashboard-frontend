@@ -31,7 +31,7 @@ function insertAccordionAndCanvas(id) {
     + "</div>"
     + "<div id='" + ids.accordionId + "' class='w3-hide w3-hide-small' style='font-size:small'></div>";
   // Insert the canvas for the chart , and button and accordion for mobile          
-  x.innerHTML += "<div class='w3-col m6 l5 w3-container'>"
+  x.innerHTML += "<div class='w3-rest w3-container'>"
     + "<div id='" + ids.canvasId + "-wrap'>"
     + "<canvas id='" + ids.canvasId + "'></canvas>"
     + "</div>"

@@ -112,7 +112,7 @@
     </div>
 
     <!-- Plot Resource Consumption -->
-    <div class="w3-row" id="LatestNews">
+    <div class="w3-row" id="plotCircularity">
       <div class="w3-container w3-col m6 l7">
         <h2>We use 100 billion tons of resources per year. Half of it goes straight to waste.</h2>
         According to the
@@ -120,7 +120,7 @@
           Circularity Gap Report 2020</a>
         we now (2017) use more thn 100 billion tons (Gt) of resources every year.
         That's about 13 tons per person on earth.
-        We use 24 Gt of biomass (plants, fish, animals), 15 Gt of fossil fuels,
+        We use 24 Gt of biomass (plants and trees, seafoods and animals), 15 Gt of fossil fuels,
         and over 60 Gt of metal ores and minerals.
         <p>
           38&percnt; of resources are used for buildings,
@@ -136,9 +136,26 @@
       </div>
 
       <script>
-        plotCircularity("LatestNews", "https://api.dashboard.eco/circularity-2020");
+        plotCircularity("plotCircularity", "https://api.dashboard.eco/circularity-2020");
       </script>
     </div>
+
+    <!-- Plot Glaciers -->
+    <div class="w3-row" id="LatestNews">
+      <div class="w3-container">
+        <h2>Glaciers in Norway are shrinking</h2>
+        All glaciers tracked by
+        <a href="" target="_blank" rel="noopener">NVE - Norwegian Water Resources and Energy Directorate
+        </a>
+        over the last 100 years are shrinking.
+        The chart shows how the position of the front edge of the glaciers have retreated
+        by between 600 meters and 3.1 kilometers (2 miles).
+      </div>
+      <script>
+        plotGlaciers("LatestNews");
+      </script>
+    </div>
+
 
     <!-- Plot CO2 -->
     <div class="w3-row" id="plotAtmosphericCO2">

@@ -100,6 +100,94 @@ function plotCircularity(elmt, url) {
     })
 }
 
+//
+// Glacier length
+//
+function plotGlaciers(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
+
+  function mkColorArray(color, num) {
+    let c = d3.hsl(color);
+    let r = [];
+    for (i = 0; i < num; i++) {
+      r.push(c + "");
+      c.h += (360 / num);
+    }
+    return r;
+  }
+  // Color array for #222c3c: Use #db7f67 (coolors red in the palette)
+  // Alternatively a little bit darker c8745e
+  let c = '#db7f67'; //'#c8745e';
+  let glaciers = ['Styggedalsbreen', 'Bondhusbrea', 'Boyabreen', 'Buerbreen',
+    'Hellstugubreen', 'Storbreen', 'Stigaholtbreen', 'Briksdalsbreen',
+    'Rembesdalskaaka', 'Engabreen', 'Faabergstolsbreen', 'Nigardsbreen', 'Lodalsbreen'
+  ];
+  //  let colors = mkColorArray(c, glaciers.length);
+  let colors = [
+    "rgb(219, 127, 103)", "rgb(219, 181, 103)", "rgb(204, 219, 103)", "rgb(150, 219, 103)",
+    "rgb(103, 219, 109)", "rgb(103, 219, 163)", "rgb(103, 219, 216)", "rgb(103, 168, 219)",
+    "rgb(103, 115, 219)", "rgb(145, 103, 219)", "rgb(198, 103, 219)", "rgb(219, 103, 186)", "rgb(219, 103, 133)"
+  ];
+  console.log(colors);
+  var myChart = new Chart(document.getElementById(id.canvasId), {
+    type: 'scatter',
+    options: {
+      legend: {
+        display: true,
+        position: 'right',
+        fontSize: 8,
+        reverse: true,
+        labels: {
+          boxWidth: 6
+        }
+      },
+      aspectRatio: 2,
+      scales: {
+        yAxes: [{
+          ticks: {
+            callback: function (value) {
+              return value ? value + 'm' : value;
+            }
+          }
+        }],
+        xAxes: [{
+          ticks: {
+            max: 2020,
+            min: 1900,
+            //autoSkip: true,
+            //maxTicksLimit: 8,
+          },
+        }]
+      }
+    }
+  });
+  while (glaciers.length) {
+    let url = 'https://api.dashboard.eco/glacier-length-nor-' + glaciers.pop();
+    fetch(url)
+      .then(status)
+      .then(json)
+      .then(results => {
+        console.log('Glaciers:', results.data.length);
+        insertSourceAndLink(results, id, url);
+        let c = colors.pop();
+        myChart.data.datasets.push({
+          data: results.data,
+          fill: false,
+          borderWidth: 2,
+          borderColor: c,
+          fillColor: c,
+          pointColor: c,
+          pointRadius: 0, //3,
+          showLine: true,
+          label: results.glacier
+        });
+        myChart.update();
+      })
+      .catch(err => console.log(err));
+  }
+}
+
+
 // 
 // Atmospheric CO2
 // 
