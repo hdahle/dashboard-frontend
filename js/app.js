@@ -79,24 +79,11 @@ function plotCircularity(elmt, url) {
       let d = results.data.pop();
       myChart.data.datasets.push({
         label: d.data[0].legend,
-        data: d.data[0].values,
-        //backgroundColor: bgc,
+        data: d.data[0].values
       });
       myChart.data.labels = d.data[0].legend;
       myChart.options.title.text = 'Resources consumed: 100.6 Gt (billion tons)';//d.data[0].title;
       myChart.update();
-      /*
-              myCharts[1].data.datasets.push({
-                label: d.data[2].legend,
-                data: d.data[2].values,
-                backgroundColor: bgc2,
-              });
-              myCharts[1].data.labels = d.data[2].legend;
-              myCharts[1].options.title.text = 'Where it ends up';//d.data[2].title;
-              myCharts[1].update();
-            })
-            .catch(err => console.log(err));
-            */
     })
 }
 
@@ -104,7 +91,7 @@ function plotCircularity(elmt, url) {
 // Glacier length
 //
 function plotGlaciers(elmt) {
-  let id = insertAccordionAndCanvas(elmt);
+  let id = insertAccordionAndCanvas(elmt, true);
 
   function mkColorArray(color, num) {
     let c = d3.hsl(color);
@@ -128,7 +115,6 @@ function plotGlaciers(elmt) {
     "rgb(103, 219, 109)", "rgb(103, 219, 163)", "rgb(103, 219, 216)", "rgb(103, 168, 219)",
     "rgb(103, 115, 219)", "rgb(145, 103, 219)", "rgb(198, 103, 219)", "rgb(219, 103, 186)", "rgb(219, 103, 133)"
   ];
-  console.log(colors);
   var myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'scatter',
     options: {
@@ -161,30 +147,57 @@ function plotGlaciers(elmt) {
       }
     }
   });
-  while (glaciers.length) {
-    let url = 'https://api.dashboard.eco/glacier-length-nor-' + glaciers.pop();
+  var myChartMobile = new Chart(document.getElementById(id.canvasIdMobile), {
+    type: 'scatter',
+    options: {
+      legend: {
+        display: false
+      },
+      aspectRatio: 1,
+      scales: {
+        yAxes: [{
+          ticks: {
+            callback: function (value) {
+              return value ? value + 'm' : value;
+            }
+          }
+        }],
+        xAxes: [{
+          ticks: {
+            max: 2020,
+            min: 1900,
+            //autoSkip: true,
+            //maxTicksLimit: 8,
+          },
+        }]
+      }
+    }
+  });
+  glaciers.forEach(x => {
+    console.log(x)
+    let url = 'https://api.dashboard.eco/glacier-length-nor-' + x;
     fetch(url)
       .then(status)
       .then(json)
       .then(results => {
         console.log('Glaciers:', results.data.length);
         insertSourceAndLink(results, id, url);
-        let c = colors.pop();
-        myChart.data.datasets.push({
+        let dataset = {
           data: results.data,
           fill: false,
           borderWidth: 2,
-          borderColor: c,
-          fillColor: c,
-          pointColor: c,
+          borderColor: colors.pop(),
           pointRadius: 0, //3,
           showLine: true,
           label: results.glacier
-        });
+        };
+        myChart.data.datasets.push(dataset);
+        myChartMobile.data.datasets.push(dataset);
         myChart.update();
+        myChartMobile.update();
       })
       .catch(err => console.log(err));
-  }
+  })
 }
 
 
