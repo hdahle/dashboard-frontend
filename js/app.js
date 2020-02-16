@@ -4,6 +4,22 @@
 // H. Dahle
 //
 
+// Create color array for charts
+// 'color' is base color, 'num' is how many colors to create
+// Resulting colors have hues evenly spaced in HSL color space
+function mkColorArray(num, color) {
+  // Color array for #222c3c: Use #db7f67 (coolors red in the palette)
+  // Alternatively a little bit darker c8745e
+  let c = d3.hsl(color === undefined ? '#c8745e' : color);
+  let r = [];
+  for (i = 0; i < num; i++) {
+    r.push(c + "");
+    c.h += (360 / num);
+  }
+  return r;
+}
+
+// Helpers for fetch() 
 function status(response) {
   if (response.status >= 200 && response.status < 300) {
     return Promise.resolve(response)
@@ -16,15 +32,16 @@ function json(response) {
   return response.json()
 }
 
+// Chart.js global settings
 Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif";
 Chart.defaults.global.elements.point.radius = 0;
 Chart.defaults.global.elements.line.borderWidth = 1;
 Chart.defaults.global.animation.duration = 0;
-Chart.defaults.global.plugins.colorschemes.fillAlpha = 0.8;
-Chart.defaults.global.plugins.colorschemes.scheme = 'brewer.SetTwo8';
 Chart.plugins.unregister(ChartDataLabels);
 
-
+//
+// Circularity
+//
 function plotCircularity(elmt, url) {
   let id = insertAccordionAndCanvas(elmt);
   let myChart = new Chart(document.getElementById(id.canvasId), {
@@ -69,7 +86,6 @@ function plotCircularity(elmt, url) {
       }
     }
   });
-
   fetch(url)
     .then(status)
     .then(json)
@@ -77,9 +93,11 @@ function plotCircularity(elmt, url) {
       console.log('Circularity:', results.data.length);
       insertSourceAndLink(results, id, url);
       let d = results.data.pop();
+      let c = mkColorArray(d.data[0].values.length);
       myChart.data.datasets.push({
         label: d.data[0].legend,
-        data: d.data[0].values
+        data: d.data[0].values,
+        backgroundColor: c,
       });
       myChart.data.labels = d.data[0].legend;
       myChart.options.title.text = 'Resources consumed: 100.6 Gt (billion tons)';//d.data[0].title;
@@ -92,29 +110,11 @@ function plotCircularity(elmt, url) {
 //
 function plotGlaciers(elmt) {
   let id = insertAccordionAndCanvas(elmt, true);
-
-  function mkColorArray(color, num) {
-    let c = d3.hsl(color);
-    let r = [];
-    for (i = 0; i < num; i++) {
-      r.push(c + "");
-      c.h += (360 / num);
-    }
-    return r;
-  }
-  // Color array for #222c3c: Use #db7f67 (coolors red in the palette)
-  // Alternatively a little bit darker c8745e
-  let c = '#db7f67'; //'#c8745e';
   let glaciers = ['Styggedalsbreen', 'Bondhusbrea', 'Boyabreen', 'Buerbreen',
     'Hellstugubreen', 'Storbreen', 'Stigaholtbreen', 'Briksdalsbreen',
     'Rembesdalskaaka', 'Engabreen', 'Faabergstolsbreen', 'Nigardsbreen', 'Lodalsbreen'
   ];
-  //  let colors = mkColorArray(c, glaciers.length);
-  let colors = [
-    "rgb(219, 127, 103)", "rgb(219, 181, 103)", "rgb(204, 219, 103)", "rgb(150, 219, 103)",
-    "rgb(103, 219, 109)", "rgb(103, 219, 163)", "rgb(103, 219, 216)", "rgb(103, 168, 219)",
-    "rgb(103, 115, 219)", "rgb(145, 103, 219)", "rgb(198, 103, 219)", "rgb(219, 103, 186)", "rgb(219, 103, 133)"
-  ];
+  let colors = mkColorArray(glaciers.length);
   var myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'scatter',
     options: {
@@ -139,10 +139,8 @@ function plotGlaciers(elmt) {
         xAxes: [{
           ticks: {
             max: 2020,
-            min: 1900,
-            //autoSkip: true,
-            //maxTicksLimit: 8,
-          },
+            min: 1900
+          }
         }]
       }
     }
@@ -165,16 +163,13 @@ function plotGlaciers(elmt) {
         xAxes: [{
           ticks: {
             max: 2020,
-            min: 1900,
-            //autoSkip: true,
-            //maxTicksLimit: 8,
-          },
+            min: 1900
+          }
         }]
       }
     }
   });
   glaciers.forEach(x => {
-    console.log(x)
     let url = 'https://api.dashboard.eco/glacier-length-nor-' + x;
     fetch(url)
       .then(status)
@@ -187,7 +182,6 @@ function plotGlaciers(elmt) {
           fill: false,
           borderWidth: 2,
           borderColor: colors.pop(),
-          pointRadius: 0, //3,
           showLine: true,
           label: results.glacier
         };
@@ -199,7 +193,6 @@ function plotGlaciers(elmt) {
       .catch(err => console.log(err));
   })
 }
-
 
 // 
 // Atmospheric CO2
@@ -242,7 +235,7 @@ function plotAtmosphericCO2(elmt, url, ticksConfig) {
         data: results.data,
         fill: false,
         borderWidth: 2,
-        borderColor: '#5c7f7f',
+        borderColor: mkColorArray(1)[0],
         label: 'Mauna Loa, Hawaii'
       });
       myChart.update();
@@ -275,6 +268,7 @@ function plotScatter(elmt, urls, labels, xTicks, yTicks) {
       }
     }
   });
+  let c = mkColorArray(urls.length);
   while (urls.length && labels.length) {
     let url = urls.shift();
     let lbl = labels.shift();
@@ -288,6 +282,7 @@ function plotScatter(elmt, urls, labels, xTicks, yTicks) {
           data: results.data,
           fill: false,
           borderWidth: 2,
+          borderColor: c.pop(),
           showLine: true,
           label: lbl
         });
@@ -344,6 +339,7 @@ function plotEmissionsByRegion(elmt) {
         }
       });
 
+      let c = mkColorArray(results.data.length);
       while (results.data.length) {
         let d = results.data.pop();
         switch (d.country) {
@@ -368,10 +364,13 @@ function plotEmissionsByRegion(elmt) {
             d.country = 'Transport';
             break;
         }
+        col = c.pop();
         myChart.data.datasets.push({
           label: d.country,
           fill: true,
           borderWidth: 3,
+          borderColor: col,
+          backgroundColor: col,
           data: d.data
         });
       }
@@ -413,26 +412,25 @@ function plotEmissionsNorway(elmt) {
               }
             }],
             xAxes: [{
-              type: 'time',
-              time: {
-                unit: 'year'
-              },
-              ticks: {
-                maxTicksLimit: 8,
-                autoSkip: true,
-              }
+              type: 'linear'
+
             }]
           }
         }
       });
+      let c = mkColorArray(results.data.length - 1);
+
       // Plot all datasets except 0 which is the Total
       for (let i = 1; i < results.data.length; i++) {
         myChart.data.datasets.push({
-          data: results.data[i].values.map(x => {
-            return { t: x.t + "-12-31", y: x.y }
-          }),
+          data: results.data[i].values.map(x => ({ x: x.t, /* + "-12-31"*/ y: x.y })),
+          backgroundColor: c[0],
+          borderWidth: 2,
+          borderColor: c[0],
+          showLine: true,
           label: results.data[i].name
         })
+        c.shift();
       }
       myChart.update();
     })
@@ -487,7 +485,8 @@ function plotArcticIce(elmt) {
         }
       });
       myChart.data.labels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
-      let yrs = [2020, 2019, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979]
+      let yrs = [2020, 2019, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979];
+      let c = mkColorArray(yrs.length);
       while (yrs.length) {
         let year = yrs.shift();
         // Extract a subset of data for a particular year
@@ -498,8 +497,11 @@ function plotArcticIce(elmt) {
           data: resval,
           label: year,
           fill: false,
+          borderColor: c[0],
+          pointColor: c[0],
           pointRadius: year == 2020 ? 2 : 0,
         });
+        c.shift();
         myChart.update();
       }
     })
@@ -553,6 +555,7 @@ function plotWorldPopulation(elmt) {
           }
         }
       });
+      let c = mkColorArray(results.data.length);
       while (results.data.length) {
         let x = results.data.pop();
         if (x.region === 'World') continue;
@@ -565,8 +568,11 @@ function plotWorldPopulation(elmt) {
         myChart.data.datasets.push({
           label: x.region,
           data: x.data,
+          backgroundColor: c[0],
+          borderColor: c[0],
           fill: true
         });
+        c.shift();
       }
       myChart.update();
     })
@@ -612,6 +618,7 @@ function plotEiaFossilFuelProduction(elmt, url) {
           }
         }
       });
+      let c = mkColorArray(results.series.length);
       while (results.series.length) {
         let x = results.series.pop();
         //console.log(x.region)
@@ -620,6 +627,7 @@ function plotEiaFossilFuelProduction(elmt, url) {
           label: x.region,
           data: x.data,
           borderWidth: 3,
+          borderColor: c.pop(),
           fill: false
         });
       }
@@ -673,6 +681,7 @@ function plotEmissionsByFuelType(elmt) {
     .then(results => {
       console.log('Emissions by type:', results.data.length);
       insertSourceAndLink(results, id, url);
+      let c = mkColorArray(results.data.length);
       while (results.data.length) {
         let d = results.data.pop();
         if (d.fuel === 'Per Capita') continue;
@@ -680,6 +689,7 @@ function plotEmissionsByFuelType(elmt) {
           label: d.fuel,
           fill: false,
           borderWidth: 3,
+          borderColor: c.pop(),
           data: d.data
         });
       }
@@ -723,6 +733,7 @@ function plotOzoneHole(elmt) {
           }
         }
       });
+      let c = mkColorArray(1);
       myChart.data.datasets.push({
         label: 'Ozone hole (millions of sq.km)',
         data: results.data.map(x => {
@@ -730,7 +741,8 @@ function plotOzoneHole(elmt) {
         }),
         fill: false,
         pointRadius: 3,
-        pointBackgroundColor: 'rgba(20,200,40,0.1)',
+        pointBackgroundColor: c[0],
+        borderColor: c[0],
         borderWidth: 2
       });
       myChart.update();
@@ -771,6 +783,7 @@ function plotGlobalTemp(elmt) {
       }
     }
   });
+  let c = mkColorArray(2);
   let url = 'https://api.dashboard.eco/global-temperature-anomaly';
   fetch(url)
     .then(status)
@@ -782,6 +795,7 @@ function plotGlobalTemp(elmt) {
         data: results.data.map(x => ({ x: x.year, y: x.mean })),
         label: 'NASA Dataset',
         borderWidth: 2,
+        borderColor: c.pop(),
         fill: false
       });
       myChart.update();
@@ -797,6 +811,7 @@ function plotGlobalTemp(elmt) {
             data: results.data,//.map(x => ({ x: x.x, y: x.y + 0.14 })),
             label: 'UK HadCRUT Dataset',
             borderWidth: 2,
+            borderColor: c.pop(),
             fill: false
           });
           myChart.update();
@@ -838,6 +853,7 @@ function plotSvalbardTemp(elmt) {
       }
     }
   });
+  let c = mkColorArray(1);
   let url = 'https://api.dashboard.eco/temperature-svalbard';
   fetch(url)
     .then(status)
@@ -851,6 +867,7 @@ function plotSvalbardTemp(elmt) {
         data: d1,
         label: results.data[0].country,
         borderWidth: 2,
+        borderColor: c.pop(),
         fill: false
       });
       myChart.data.labels = l1;
@@ -892,6 +909,7 @@ function plotBrazilFires(elmt) {
           }
         }
       });
+      let c = mkColorArray(3);
       while (results.data.length) {
         let x = results.data.pop();
         let values = x.data;
@@ -899,11 +917,14 @@ function plotBrazilFires(elmt) {
         if (x.year != 2019 && x.year != 2020 && x.year != "Average") { // && x.year != "Maximum" && x.year != "Minimum") 
           continue;
         }
+        let col = c.pop();
         myChart.data.datasets.push({
           data: values,
           label: x.year,
           borderWidth: 2,
           pointRadius: x.year == 2020 ? 3 : 0,
+          borderColor: col,
+          pointBackgroundColor: col,
           fill: false
         });
       }
@@ -955,7 +976,7 @@ function plotGlobalSeaLevel(elmt) {
           }
         }
       });
-
+      let c = mkColorArray(2);
       myChart.data.datasets.push({
         label: 'Land based measurements',
         data: results.data.map(d => ({
@@ -963,6 +984,7 @@ function plotGlobalSeaLevel(elmt) {
           y: d.data
         })),
         borderWidth: 2,
+        borderColor: c.pop(),
         fill: false
       });
       myChart.update();
@@ -980,6 +1002,7 @@ function plotGlobalSeaLevel(elmt) {
               y: d.y + 45
             })),
             borderWidth: 2,
+            borderColor: c.pop(),
             fill: false
           });
           myChart.update();
