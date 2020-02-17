@@ -131,9 +131,7 @@ function plotGlaciers(elmt) {
       scales: {
         yAxes: [{
           ticks: {
-            callback: function (value) {
-              return value ? value + 'm' : value;
-            }
+            callback: (value) => value ? value + 'm' : value
           }
         }],
         xAxes: [{
@@ -155,9 +153,7 @@ function plotGlaciers(elmt) {
       scales: {
         yAxes: [{
           ticks: {
-            callback: function (value) {
-              return value ? value + 'm' : value;
-            }
+            callback: (value) => value ? value + 'm' : value
           }
         }],
         xAxes: [{
@@ -338,7 +334,6 @@ function plotEmissionsByRegion(elmt) {
           }
         }
       });
-
       let c = mkColorArray(results.data.length);
       while (results.data.length) {
         let d = results.data.pop();
@@ -413,7 +408,6 @@ function plotEmissionsNorway(elmt) {
             }],
             xAxes: [{
               type: 'linear'
-
             }]
           }
         }
@@ -453,11 +447,6 @@ function plotArcticIce(elmt) {
         type: 'line',
         options: {
           aspectRatio: 1,
-          plugins: {
-            colorschemes: {
-              scheme: 'brewer.Spectral10'
-            }
-          },
           responsive: true,
           legend: {
             display: true,
@@ -792,7 +781,7 @@ function plotGlobalTemp(elmt) {
       console.log('Results:', results.data.length);
       insertSourceAndLink(results, id, url);
       myChart.data.datasets.push({
-        data: results.data.map(x => ({ x: x.year, y: x.mean })),
+        data: results.data,//.map(x => ({ x: x.year, y: x.mean })),
         label: 'NASA Dataset',
         borderWidth: 2,
         borderColor: c.pop(),
