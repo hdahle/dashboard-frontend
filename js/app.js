@@ -743,80 +743,22 @@ function plotOzoneHole(elmt) {
 // Global Temperature Anomaly
 //
 function plotGlobalTemp(elmt) {
-  let id = insertAccordionAndCanvas(elmt);
-  let myChart = new Chart(document.getElementById(id.canvasId), {
-    type: 'line',
-    options: {
-      aspectRatio: 1,
-      tooltips: {
-        mode: 'index',
-        intersect: false,
-      },
-      scales: {
-        xAxes: [{
-          type: 'linear',
-          ticks: {
-            max: 2020,
-            autoSkip: true,
-            maxTicksLimit: 9
-          },
-          gridLines: {
-            display: false
-          }
-        }],
-        yAxes: [{
-          ticks: {
-            callback: (value) => Math.round(value * 10) / 10 + "\u00b0" + "C"
-          }
-        }]
-      }
-    }
-  });
-  let c = mkColorArray(2);
-  let url = 'https://api.dashboard.eco/global-temperature-anomaly';
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('Results:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      myChart.data.datasets.push({
-        data: results.data,//.map(x => ({ x: x.year, y: x.mean })),
-        label: 'NASA Dataset',
-        borderWidth: 2,
-        borderColor: c.pop(),
-        fill: false
-      });
-      myChart.update();
-
-      url = 'https://api.dashboard.eco/global-temperature-hadcrut';
-      fetch(url)
-        .then(status)
-        .then(json)
-        .then(results => {
-          console.log('Results:', results.data.length);
-          insertSourceAndLink(results, id, url);
-          myChart.data.datasets.push({
-            data: results.data,//.map(x => ({ x: x.x, y: x.y + 0.14 })),
-            label: 'UK HadCRUT Dataset',
-            borderWidth: 2,
-            borderColor: c.pop(),
-            fill: false
-          });
-          myChart.update();
-        })
-        .catch(err => console.log(err));
-    })
-    .catch(err => console.log(err));
+  plotScatter(elmt,
+    ["https://api.dashboard.eco/global-temperature-anomaly", "https://api.dashboard.eco/global-temperature-hadcrut"],
+    ["NASA", "HadCRUT"],
+    { max: 2020 },
+    { callback: value => Math.round(value * 10) / 10 + "\u00b0" + "C" }
+  );
 }
 
 //
 // Svalbard - Arctic Temperature Development
 //
 function plotSvalbardTemp(elmt) {
+  let url = 'https://api.dashboard.eco/temperature-svalbard';
   let id = insertAccordionAndCanvas(elmt);
   let myChart = new Chart(document.getElementById(id.canvasId), {
-    type: 'line',
+    type: 'scatter',
     options: {
       aspectRatio: 1,
       tooltips: {
@@ -843,23 +785,21 @@ function plotSvalbardTemp(elmt) {
     }
   });
   let c = mkColorArray(1);
-  let url = 'https://api.dashboard.eco/temperature-svalbard';
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
       console.log('Svalbard:', results.data.length);
       insertSourceAndLink(results, id, url);
-      let d1 = results.data[0].data.map(x => x.temperature);
-      let l1 = results.data[0].data.map(x => x.year);
+
       myChart.data.datasets.push({
-        data: d1,
+        data: results.data[0].data.map(x => ({ x: x.year, y: x.temperature })),
         label: results.data[0].country,
         borderWidth: 2,
         borderColor: c.pop(),
+        showLine: true,
         fill: false
       });
-      myChart.data.labels = l1;
       myChart.update();
     })
     .catch(err => console.log(err));
