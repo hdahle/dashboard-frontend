@@ -746,75 +746,11 @@ function plotBrazilFires(elmt) {
 // Global Sea Level Rise
 //
 function plotGlobalSeaLevel(elmt) {
-  let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://api.dashboard.eco/CSIRO_Recons_2015';
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('SeaLevelRecons:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      let myChart = new Chart(document.getElementById(id.canvasId), {
-        type: 'line',
-        options: {
-          tooltips: {
-            intersect: false,
-            mode: 'nearest'
-          },
-          responsive: true,
-          aspectRatio: 1,
-          legend: {
-            labels: {
-              boxWidth: 10
-            },
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                callback: (value) => value + 'mm'
-              }
-            }],
-            xAxes: [{
-              type: 'time',
-              ticks: {
-                maxTicksLimit: 8,
-                autoSkip: true,
-              }
-            }]
-          }
-        }
-      });
-      let c = mkColorArray(2);
-      myChart.data.datasets.push({
-        label: 'Land based measurements',
-        data: results.data,
-        borderWidth: 2,
-        borderColor: c.pop(),
-        fill: false
-      });
-      myChart.update();
-      url = 'https://api.dashboard.eco/CSIRO_Alt';
-      fetch(url)
-        .then(status)
-        .then(json)
-        .then(results => {
-          console.log('SeaLevelNew:', results.data.length);
-          insertSourceAndLink(results, id, url);
-          myChart.data.datasets.push({
-            label: 'Satellite measurements',
-            data: results.data.map(d => ({
-              t: d.t,
-              y: d.y + 45
-            })),
-            borderWidth: 2,
-            borderColor: c.pop(),
-            fill: false
-          });
-          myChart.update();
-        })
-        .catch(err => console.log(err))
-    })
-    .catch(err => console.log(err));
+  plotScatter(elmt,
+    ['https://api.dashboard.eco/CSIRO_Recons_2015', 'https://api.dashboard.eco/CSIRO_Alt_yearly'],
+    ['Land-based measurements', 'Satellite measurements'],
+    { autoSkip: true, maxTicksLimit: 8 },
+    { callback: value => value ? value + 'mm' : value });
 }
 
 //
