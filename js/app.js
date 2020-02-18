@@ -196,7 +196,7 @@ function plotGlaciers(elmt) {
 function plotAtmosphericCO2(elmt, url, ticksConfig) {
   let id = insertAccordionAndCanvas(elmt);
   let myChart = new Chart(document.getElementById(id.canvasId), {
-    type: 'line',
+    type: 'scatter',
     options: {
       legend: {
         display: false
@@ -209,9 +209,8 @@ function plotAtmosphericCO2(elmt, url, ticksConfig) {
         xAxes: [{
           ticks: {
             autoSkip: true,
-            //            min: "1960-01-01",
             max: "2020-06-01",
-            maxTicksLimit: 11
+            maxTicksLimit: 7
           },
           type: 'time',
           time: {
@@ -232,6 +231,7 @@ function plotAtmosphericCO2(elmt, url, ticksConfig) {
         fill: false,
         borderWidth: 2,
         borderColor: mkColorArray(1)[0],
+        showLine: true,
         label: 'Mauna Loa, Hawaii'
       });
       myChart.update();
@@ -691,52 +691,12 @@ function plotEmissionsByFuelType(elmt) {
 // Ozone Hole Southern Hemisphere
 //
 function plotOzoneHole(elmt) {
-  let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://api.dashboard.eco/ozone-nasa';
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('Ozone results:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      let myChart = new Chart(document.getElementById(id.canvasId), {
-        type: 'line',
-        options: {
-          tooltips: {
-            intersect: false,
-            mode: 'x'
-          },
-          aspectRatio: 1,
-          responsive: true,
-          scales: {
-            xAxes: [{
-              ticks: {
-                autoSkip: true,
-                maxTicksLimit: 8
-              },
-              type: 'time',
-              time: {
-                unit: 'year'
-              }
-            }]
-          }
-        }
-      });
-      let c = mkColorArray(1);
-      myChart.data.datasets.push({
-        label: 'Ozone hole (millions of sq.km)',
-        data: results.data.map(x => {
-          return { t: x.date, y: x.meanOzoneHoleSize }
-        }),
-        fill: false,
-        pointRadius: 3,
-        pointBackgroundColor: c[0],
-        borderColor: c[0],
-        borderWidth: 2
-      });
-      myChart.update();
-    })
-    .catch(err => console.log(err));
+  plotScatter(elmt,
+    ['https://api.dashboard.eco/ozone-nasa'],
+    ["Ozone hole in million sq km"],
+    { max: 2019, autoSkip: true, maxTicksLimit: 8 },
+    {}
+  );
 }
 
 //
@@ -745,8 +705,8 @@ function plotOzoneHole(elmt) {
 function plotGlobalTemp(elmt) {
   plotScatter(elmt,
     ["https://api.dashboard.eco/global-temperature-anomaly", "https://api.dashboard.eco/global-temperature-hadcrut"],
-    ["NASA", "HadCRUT"],
-    { max: 2020 },
+    ["NASA dataset", "HadCRUT dataset"],
+    { max: 2020, autoSkip: true, maxTicksLimit: 8 },
     { callback: value => Math.round(value * 10) / 10 + "\u00b0" + "C" }
   );
 }
@@ -755,54 +715,12 @@ function plotGlobalTemp(elmt) {
 // Svalbard - Arctic Temperature Development
 //
 function plotSvalbardTemp(elmt) {
-  let url = 'https://api.dashboard.eco/temperature-svalbard';
-  let id = insertAccordionAndCanvas(elmt);
-  let myChart = new Chart(document.getElementById(id.canvasId), {
-    type: 'scatter',
-    options: {
-      aspectRatio: 1,
-      tooltips: {
-        mode: 'index',
-        intersect: false,
-      },
-      scales: {
-        xAxes: [{
-          ticks: {
-            autoSkip: true,
-            maxTicksLimit: 8
-          },
-          gridLines: {
-            display: false
-          }
-        }],
-        yAxes: [{
-          stacked: false,
-          ticks: {
-            callback: (value) => Math.round(value * 10) / 10 + "\u00b0" + "C"
-          }
-        }]
-      }
-    }
-  });
-  let c = mkColorArray(1);
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('Svalbard:', results.data.length);
-      insertSourceAndLink(results, id, url);
-
-      myChart.data.datasets.push({
-        data: results.data[0].data.map(x => ({ x: x.year, y: x.temperature })),
-        label: results.data[0].country,
-        borderWidth: 2,
-        borderColor: c.pop(),
-        showLine: true,
-        fill: false
-      });
-      myChart.update();
-    })
-    .catch(err => console.log(err));
+  plotScatter(elmt,
+    ['https://api.dashboard.eco/temperature-svalbard'],
+    ["Svalbard Airport annual mean temperature"],
+    { min: 1900, max: 2020, autoSkip: true, maxTicksLimit: 8 },
+    { callback: (value) => Math.round(value * 10) / 10 + "\u00b0" + "C" }
+  );
 }
 
 //
@@ -821,11 +739,6 @@ function plotBrazilFires(elmt) {
         type: 'line',
         options: {
           aspectRatio: 1,
-          plugins: {
-            colorschemes: {
-              scheme: 'tableau.Tableau10'
-            },
-          },
           scales: {
             xAxes: [{
               gridLines: {

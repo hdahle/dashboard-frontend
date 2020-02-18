@@ -205,7 +205,7 @@
         </p>
       </div>
       <script>
-        plotScatter("plotLawDome",
+        plotScatter(document.currentScript.parentNode.getAttribute('id'),/*"plotLawDome",*/
           ["https://api.dashboard.eco/maunaloa-annual-mean", "https://api.dashboard.eco/law2018co2"],
           ["Mauna Loa", "Law Dome"],
           {
