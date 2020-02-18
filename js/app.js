@@ -787,10 +787,7 @@ function plotGlobalSeaLevel(elmt) {
       let c = mkColorArray(2);
       myChart.data.datasets.push({
         label: 'Land based measurements',
-        data: results.data.map(d => ({
-          t: d.t,
-          y: d.data
-        })),
+        data: results.data,
         borderWidth: 2,
         borderColor: c.pop(),
         fill: false
@@ -805,7 +802,7 @@ function plotGlobalSeaLevel(elmt) {
           insertSourceAndLink(results, id, url);
           myChart.data.datasets.push({
             label: 'Satellite measurements',
-            data: results.data[0].data.map(d => ({
+            data: results.data.map(d => ({
               t: d.t,
               y: d.y + 45
             })),
