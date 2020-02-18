@@ -35,7 +35,7 @@ function json(response) {
 // Chart.js global settings
 Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif";
 Chart.defaults.global.elements.point.radius = 0;
-Chart.defaults.global.elements.line.borderWidth = 1;
+Chart.defaults.global.elements.line.borderWidth = 3;
 Chart.defaults.global.animation.duration = 0;
 Chart.plugins.unregister(ChartDataLabels);
 
@@ -115,56 +115,8 @@ function plotGlaciers(elmt) {
     'Rembesdalskaaka', 'Engabreen', 'Faabergstolsbreen', 'Nigardsbreen', 'Lodalsbreen'
   ];
   let colors = mkColorArray(glaciers.length);
-  var myChart = new Chart(document.getElementById(id.canvasId), {
-    type: 'scatter',
-    options: {
-      legend: {
-        display: true,
-        position: 'right',
-        fontSize: 8,
-        reverse: true,
-        labels: {
-          boxWidth: 6
-        }
-      },
-      aspectRatio: 2,
-      scales: {
-        yAxes: [{
-          ticks: {
-            callback: (value) => value ? value + 'm' : value
-          }
-        }],
-        xAxes: [{
-          ticks: {
-            max: 2020,
-            min: 1900
-          }
-        }]
-      }
-    }
-  });
-  var myChartMobile = new Chart(document.getElementById(id.canvasIdMobile), {
-    type: 'scatter',
-    options: {
-      legend: {
-        display: false
-      },
-      aspectRatio: 1,
-      scales: {
-        yAxes: [{
-          ticks: {
-            callback: (value) => value ? value + 'm' : value
-          }
-        }],
-        xAxes: [{
-          ticks: {
-            max: 2020,
-            min: 1900
-          }
-        }]
-      }
-    }
-  });
+  let myChart = makeMultiLineChart(id.canvasId, { callback: (v) => v ? v + 'm' : v }, {}, true, 'right', 'linear', 2);
+  let myChartMobile = makeMultiLineChart(id.canvasIdMobile, { callback: (v) => v ? v + 'm' : v }, {}, false);
   glaciers.forEach(x => {
     let url = 'https://api.dashboard.eco/glacier-length-nor-' + x;
     fetch(url)
@@ -176,7 +128,6 @@ function plotGlaciers(elmt) {
         let dataset = {
           data: results.data,
           fill: false,
-          borderWidth: 2,
           borderColor: colors.pop(),
           showLine: true,
           label: results.glacier
@@ -204,7 +155,7 @@ function plotAtmosphericCO2(elmt, url, ticksConfig) {
 }
 
 // 
-// Plot CO2 data. Used by several sections in HTML
+// Plot scatter data. Used by several sections in HTML
 //
 function plotScatter(elmt, urls, labels, xTicks, yTicks, timeUnit) {
   let id = insertAccordionAndCanvas(elmt);
@@ -243,7 +194,6 @@ function plotScatter(elmt, urls, labels, xTicks, yTicks, timeUnit) {
         myChart.data.datasets.push({
           data: results.data,
           fill: false,
-          borderWidth: 2,
           borderColor: c.pop(),
           showLine: true,
           label: lbl
@@ -254,6 +204,37 @@ function plotScatter(elmt, urls, labels, xTicks, yTicks, timeUnit) {
   }
 }
 
+
+function makeStackedLineChart(canvas, xTicks, yTicks) {
+  return new Chart(document.getElementById(canvas), {
+    type: 'line',
+    options: {
+      responsive: true,
+      aspectRatio: 1,
+      legend: {
+        reverse: true,
+        position: 'right',
+        labels: {
+          boxWidth: 10
+        },
+      },
+      tooltips: {
+        intersect: false,
+        mode: 'nearest'
+      },
+      scales: {
+        yAxes: [{
+          stacked: true,
+          ticks: yTicks // { callback: (v) => (v / 1000) + ' Gt' }
+        }],
+        xAxes: [{
+          type: 'linear',
+          ticks: xTicks // { min: 1959, max: 2018, callback: (x) => x === 1960 ? null : x}
+        }]
+      }
+    }
+  });
+}
 //
 // CO2 by region
 //
@@ -266,40 +247,10 @@ function plotEmissionsByRegion(elmt) {
     .then(results => {
       console.log('CO2 Emissions by region:', results.data.length);
       insertSourceAndLink(results, id, url);
-      var myChart = new Chart(document.getElementById(id.canvasId), {
-        type: 'line',
-        options: {
-          responsive: true,
-          aspectRatio: 1,
-          legend: {
-            reverse: true,
-            position: 'right',
-            labels: {
-              boxWidth: 10
-            },
-          },
-          tooltips: {
-            intersect: false,
-            mode: 'nearest'
-          },
-          scales: {
-            yAxes: [{
-              stacked: true,
-              ticks: {
-                callback: (value) => (value / 1000) + ' Gt'
-              }
-            }],
-            xAxes: [{
-              type: 'linear',
-              ticks: {
-                min: 1959,
-                max: 2018,
-                callback: (x) => x === 1960 ? null : x
-              }
-            }]
-          }
-        }
-      });
+      let myChart = makeStackedLineChart(id.canvasId,
+        { min: 1959, max: 2018, callback: (x) => x === 1960 ? null : x },
+        { callback: (v) => (v / 1000) + ' Gt' }
+      );
       let c = mkColorArray(results.data.length);
       while (results.data.length) {
         let d = results.data.pop();
@@ -329,7 +280,6 @@ function plotEmissionsByRegion(elmt) {
         myChart.data.datasets.push({
           label: d.country,
           fill: true,
-          borderWidth: 3,
           borderColor: col,
           backgroundColor: col,
           data: d.data
@@ -352,42 +302,17 @@ function plotEmissionsNorway(elmt) {
     .then(results => {
       console.log('Norway:', results.data.length);
       insertSourceAndLink(results, id, url);
-      var myChart = new Chart(document.getElementById(id.canvasId), {
-        type: 'line',
-        options: {
-          responsive: true,
-          aspectRatio: 1,
-          legend: {
-            display: true,
-            reverse: true,
-            position: 'right',
-            labels: {
-              boxWidth: 10
-            },
-          },
-          scales: {
-            yAxes: [{
-              stacked: true,
-              ticks: {
-                callback: (value) => Math.trunc(value / 1000) + " Mt"
-              }
-            }],
-            xAxes: [{
-              type: 'linear'
-            }]
-          }
-        }
-      });
+      let myChart = makeStackedLineChart(id.canvasId,
+        { max: 2018 },
+        { callback: (value) => Math.trunc(value / 1000) + " Mt" }
+      );
       let c = mkColorArray(results.data.length - 1);
-
       // Plot all datasets except 0 which is the Total
       for (let i = 1; i < results.data.length; i++) {
         myChart.data.datasets.push({
           data: results.data[i].values.map(x => ({ x: x.t, /* + "-12-31"*/ y: x.y })),
           backgroundColor: c[0],
-          borderWidth: 2,
           borderColor: c[0],
-          showLine: true,
           label: results.data[i].name
         })
         c.shift();
@@ -409,36 +334,7 @@ function plotArcticIce(elmt) {
     .then(results => {
       console.log('ICE NSIDC:', results.data.length);
       insertSourceAndLink(results, id, url);
-      let myChart = new Chart(document.getElementById(id.canvasId), {
-        type: 'line',
-        options: {
-          aspectRatio: 1,
-          responsive: true,
-          legend: {
-            display: true,
-            position: 'right',
-            align: 'middle',
-            reverse: true,
-            labels: {
-              boxWidth: 10,
-              padding: 4
-            },
-          },
-          tooltips: {
-            enabled: false
-          },
-          scales: {
-            xAxes: [{
-              gridLines: {
-                display: false
-              }
-            }],
-            yAxes: [{
-              stacked: false
-            }]
-          }
-        }
-      });
+      let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'right', 'category');
       myChart.data.labels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
       let yrs = [2020, 2019, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979];
       let c = mkColorArray(yrs.length);
@@ -475,63 +371,55 @@ function plotWorldPopulation(elmt) {
     .then(results => {
       console.log('Population:', results.data.length);
       insertSourceAndLink(results, id, url);
-      var myChart = new Chart(document.getElementById(id.canvasId), {
-        type: 'line',
-        options: {
-          tooltips: {
-            intersect: false,
-            mode: 'index'
-          },
-          responsive: true,
-          aspectRatio: 1,
-          legend: {
-            display: true,
-            reverse: true,
-            position: 'right',
-            align: 'middle',
-            labels: {
-              boxWidth: 10
-            },
-          },
-          scales: {
-            yAxes: [{
-              stacked: true,
-              ticks: {
-                callback: (value) => value / 1000
-              }
-            }],
-            xAxes: [{
-              type: 'linear',
-              ticks: {
-                maxTicksLimit: 8,
-                autoSkip: true
-              }
-            }]
-          }
-        }
-      });
+      let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 }, true, 'right');
       let c = mkColorArray(results.data.length);
       while (results.data.length) {
         let x = results.data.pop();
-        if (x.region === 'World') continue;
-        if (x.region === 'Latin America and the Caribbean') {
-          x.region = 'S America';
-        } else if (x.region === 'Northern America') {
-          x.region = 'N America';
-        }
-        //console.log('region', x.region, x.data)
+        x.region = x.region.replace('Latin America and the Caribbean', 'S America');
+        x.region = x.region.replace('Northern America', 'N America');
         myChart.data.datasets.push({
           label: x.region,
           data: x.data,
-          backgroundColor: c[0],
           borderColor: c[0],
-          fill: true
+          backgroundColor: c[0],
+          fill: false
         });
         c.shift();
       }
       myChart.update();
     })
     .catch(err => console.log(err));
+}
+
+
+function makeMultiLineChart(canvas, xTicks, yTicks, showLegend, pos, category, aspect) {
+  return new Chart(document.getElementById(canvas), {
+    type: 'line',
+    options: {
+      tooltips: {
+        intersect: false,
+        mode: 'index'
+      },
+      responsive: true,
+      aspectRatio: aspect === undefined ? 1 : aspect,
+      legend: {
+        display: showLegend === undefined ? true : showLegend,
+        position: pos === undefined ? 'top' : pos,
+        labels: {
+          boxWidth: 10
+        },
+      },
+      scales: {
+        yAxes: [{
+          ticks: yTicks
+        }],
+        xAxes: [{
+          type: category === undefined ? 'linear' : category,
+          ticks: xTicks
+        }]
+      }
+    }
+  });
 }
 
 //
@@ -545,44 +433,17 @@ function plotEiaFossilFuelProduction(elmt, url) {
     .then(results => {
       console.log('EIA:', results.series.length);
       insertSourceAndLink(results, id, url);
-      var myChart = new Chart(document.getElementById(id.canvasId), {
-        type: 'line',
-        options: {
-          tooltips: {
-            intersect: false,
-            mode: 'index'
-          },
-          responsive: true,
-          aspectRatio: 1,
-          legend: {
-            display: true,
-            //            position: 'right',
-            labels: {
-              boxWidth: 10
-            },
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                callback: (value) => value / 1000
-              }
-            }],
-            xAxes: [{
-              type: 'linear'
-            }]
-          }
-        }
-      });
+      let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 }, true);
       let c = mkColorArray(results.series.length);
       while (results.series.length) {
-        let x = results.series.pop();
-        //console.log(x.region)
-        if (x.region === 'EU28') continue;
+        let d = results.series.pop();
+        if (d.region === 'EU28') continue;
+        let col = c.pop();
         myChart.data.datasets.push({
-          label: x.region,
-          data: x.data,
-          borderWidth: 3,
-          borderColor: c.pop(),
+          label: d.region,
+          data: d.data,
+          borderColor: col,
+          backgroundColor: col,
           fill: false
         });
       }
@@ -597,39 +458,13 @@ function plotEiaFossilFuelProduction(elmt, url) {
 function plotEmissionsByFuelType(elmt) {
   let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/emissions-by-fuel-type';
-  let myChart = new Chart(document.getElementById(id.canvasId), {
-    type: 'line',
-    options: {
-      responsive: true,
-      aspectRatio: 1,
-      legend: {
-        reverse: true,
-        position: 'right',
-        labels: {
-          boxWidth: 10
-        },
-      },
-      tooltips: {
-        intersect: false,
-        mode: 'nearest'
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            callback: (value) => (value / 1000) + ' Gt'
-          }
-        }],
-        xAxes: [{
-          type: 'linear',
-          ticks: {
-            min: 1959,
-            max: 2018,
-            callback: (x) => x === 1960 ? null : x
-          }
-        }]
-      }
-    }
-  });
+  let myChart = makeMultiLineChart(id.canvasId, {
+    min: 1959,
+    max: 2018,
+    callback: x => x === 1960 ? null : x
+  }, {
+    callback: v => (v / 1000) + ' Gt'
+  }, true);
   fetch(url)
     .then(status)
     .then(json)
@@ -638,13 +473,14 @@ function plotEmissionsByFuelType(elmt) {
       insertSourceAndLink(results, id, url);
       let c = mkColorArray(results.data.length);
       while (results.data.length) {
-        let d = results.data.pop();
+        let d = results.data.shift();
         if (d.fuel === 'Per Capita') continue;
+        let col = c.pop();
         myChart.data.datasets.push({
           label: d.fuel,
           fill: false,
-          borderWidth: 3,
-          borderColor: c.pop(),
+          borderColor: col,
+          backgroundColor: col,
           data: d.data
         });
       }
@@ -701,22 +537,7 @@ function plotBrazilFires(elmt) {
     .then(results => {
       console.log('Brazil:', results.data.length);
       insertSourceAndLink(results, id, url);
-      var myChart = new Chart(document.getElementById(id.canvasId), {
-        type: 'line',
-        options: {
-          aspectRatio: 1,
-          scales: {
-            xAxes: [{
-              gridLines: {
-                display: false
-              }
-            }],
-            yAxes: [{
-              stacked: false
-            }]
-          }
-        }
-      });
+      let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'right', 'category');
       let c = mkColorArray(3);
       while (results.data.length) {
         let x = results.data.pop();
@@ -729,7 +550,6 @@ function plotBrazilFires(elmt) {
         myChart.data.datasets.push({
           data: values,
           label: x.year,
-          borderWidth: 2,
           pointRadius: x.year == 2020 ? 3 : 0,
           borderColor: col,
           pointBackgroundColor: col,
@@ -797,26 +617,15 @@ function plotBothCCS(elmt, url) {
       });
       // remove any null projects, then sort it
       let d = results.data.filter(x => x.project != null).sort((a, b) => b.capacity - a.capacity);
-
-      let names = d.map(x => x.project + ", " + x.country);
-      let data = d.map(x => x.capacity);
-      let bgColor = d.map(x => {
-        if (x.type === 'EOR') return 'rgba(200,40,30,0.2)';
-        if (x.type === 'Storage') return 'rgba(40,200,30,0.2)';
-        return 'rgba(90,90,90,0.2)'
-      });
       let lineColor = d.map(x => {
-        if (x.type === 'EOR') return 'rgba(200,40,30,0.8)';
-        if (x.type === 'Storage') return 'rgba(40,200,30,0.8)';
-        return 'rgba(90,90,90,0.8)'
+        return x.type === 'EOR' ? '#c8745e' : (x.type == 'Storage' ? '#5ec874' : '#777');
       });
       myChart.data.datasets.push({
-        data: data,
-        backgroundColor: bgColor,
+        data: d.map(x => x.capacity),
+        backgroundColor: lineColor,
         borderColor: lineColor,
-        borderWidth: 1
       });
-      myChart.data.labels = names;
+      myChart.data.labels = d.map(x => x.project + ", " + x.country);
       myChart.update();
     })
     .catch(err => console.log(err));
