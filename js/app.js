@@ -194,55 +194,19 @@ function plotGlaciers(elmt) {
 // Atmospheric CO2
 // 
 function plotAtmosphericCO2(elmt, url, ticksConfig) {
-  let id = insertAccordionAndCanvas(elmt);
-  let myChart = new Chart(document.getElementById(id.canvasId), {
-    type: 'scatter',
-    options: {
-      legend: {
-        display: false
-      },
-      aspectRatio: 1,
-      scales: {
-        yAxes: [{
-          ticks: ticksConfig
-        }],
-        xAxes: [{
-          ticks: {
-            autoSkip: true,
-            max: "2020-06-01",
-            maxTicksLimit: 7
-          },
-          type: 'time',
-          time: {
-            unit: 'year'
-          }
-        }]
-      }
-    }
-  });
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('Atmospheric CO2:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      myChart.data.datasets.push({
-        data: results.data,
-        fill: false,
-        borderWidth: 2,
-        borderColor: mkColorArray(1)[0],
-        showLine: true,
-        label: 'Mauna Loa, Hawaii'
-      });
-      myChart.update();
-    })
-    .catch(err => console.log(err));
+  plotScatter(elmt,
+    [url],
+    ['Atmospheric CO2 in ppm'],
+    { max: '2020-06-01', autoSkip: true, maxTicksLimit: 8 },
+    { callback: value => value = value + 'ppm' },
+    'time');
+  return;
 }
 
 // 
 // Plot CO2 data. Used by several sections in HTML
 //
-function plotScatter(elmt, urls, labels, xTicks, yTicks) {
+function plotScatter(elmt, urls, labels, xTicks, yTicks, timeUnit) {
   let id = insertAccordionAndCanvas(elmt);
   var myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'scatter',
@@ -254,9 +218,11 @@ function plotScatter(elmt, urls, labels, xTicks, yTicks) {
         }
       },
       aspectRatio: 1,
+      responsive: true,
       scales: {
         xAxes: [{
-          ticks: xTicks
+          ticks: xTicks,
+          type: (timeUnit === undefined) ? 'linear' : timeUnit
         }],
         yAxes: [{
           ticks: yTicks
