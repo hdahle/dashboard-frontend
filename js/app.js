@@ -37,7 +37,11 @@ Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif";
 Chart.defaults.global.elements.point.radius = 0;
 Chart.defaults.global.elements.line.borderWidth = 2;
 Chart.defaults.global.animation.duration = 0;
+Chart.defaults.global.tooltips.backgroundColor = '#3f5270';// '#5e79a5';//'#222c3c';
+Chart.defaults.global.tooltips.intersect = false;
+Chart.defaults.global.tooltips.axis = 'x';
 Chart.plugins.unregister(ChartDataLabels);
+//Chart.defaults.global.plugins.crosshair.line.color = '#3f5270';
 
 //
 // Circularity
@@ -57,6 +61,7 @@ function plotCircularity(elmt, url) {
         padding: 0
       },
       plugins: {
+        crosshair: false,
         datalabels: {
           labels: {
             title: {
@@ -154,7 +159,8 @@ function plotScatter(elmt, urls, labels, xTicks = {}, yTicks = {}, xAxesType = '
       plugins: {
         crosshair: {
           sync: { enabled: false },
-          zoom: { enabled: false }
+          zoom: { enabled: false },
+          line: { color: '#3f5270' },
         }
       },
       legend: {
@@ -162,11 +168,6 @@ function plotScatter(elmt, urls, labels, xTicks = {}, yTicks = {}, xAxesType = '
         labels: {
           boxWidth: 10
         }
-      },
-      tooltips: {
-        intersect: false,
-        mode: 'nearest',
-        axis: 'x'
       },
       aspectRatio: 1,
       responsive: true,
@@ -214,7 +215,8 @@ function makeStackedLineChart(canvas, xTicks, yTicks) {
       plugins: {
         crosshair: {
           sync: { enabled: false },
-          zoom: { enabled: false }
+          zoom: { enabled: false },
+          line: { color: '#3f5270' }
         }
       },
       responsive: true,
@@ -225,11 +227,6 @@ function makeStackedLineChart(canvas, xTicks, yTicks) {
         labels: {
           boxWidth: 10
         },
-      },
-      tooltips: {
-        intersect: false,
-        mode: 'nearest',
-        axis: 'x'
       },
       scales: {
         yAxes: [{
@@ -407,15 +404,11 @@ function makeMultiLineChart(canvas, xTicks, yTicks, showLegend, pos, category, a
     type: 'line',
     options: {
       plugins: {
-        crosshair: {
+        crosshair: (category === 'category') ? false : {
           sync: { enabled: false },
-          zoom: { enabled: false }
+          zoom: { enabled: false },
+          line: { color: '#3f5270' }
         }
-      },
-      tooltips: {
-        intersect: false,
-        mode: 'nearest',
-        axis: 'x'
       },
       responsive: true,
       aspectRatio: aspect === undefined ? 1 : aspect,
@@ -586,7 +579,7 @@ function plotGlobalSeaLevel(elmt) {
   plotScatter(elmt,
     ['https://api.dashboard.eco/CSIRO_Recons_2015', 'https://api.dashboard.eco/CSIRO_Alt_yearly'],
     ['Land-based measurements', 'Satellite measurements'],
-    { autoSkip: true, maxTicksLimit: 8 },
+    { autoSkip: true, maxTicksLimit: 8, min: 1880, max: 2020 },
     { callback: value => value ? value + 'mm' : value });
 }
 
@@ -609,7 +602,11 @@ function plotBothCCS(elmt, url) {
       insertSourceAndLink(results, id, url);
       var myChart = new Chart(document.getElementById(id.canvasId), {
         type: 'horizontalBar',
+        plugins: [],
         options: {
+          plugins: {
+            crosshair: false
+          },
           responsive: true,
           aspectRatio: 0.8,
           scales: {
@@ -624,11 +621,11 @@ function plotBothCCS(elmt, url) {
               }
             }]
           },
+          tooltips: {
+            axis: 'y'
+          },
           legend: {
             display: false
-          },
-          tooltips: {
-            intersect: true
           }
         }
       });
