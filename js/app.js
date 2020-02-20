@@ -35,7 +35,7 @@ function json(response) {
 // Chart.js global settings
 Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif";
 Chart.defaults.global.elements.point.radius = 0;
-Chart.defaults.global.elements.line.borderWidth = 3;
+Chart.defaults.global.elements.line.borderWidth = 2;
 Chart.defaults.global.animation.duration = 0;
 Chart.plugins.unregister(ChartDataLabels);
 
@@ -125,10 +125,12 @@ function plotGlaciers(elmt) {
       .then(results => {
         console.log('Glaciers:', results.data.length);
         insertSourceAndLink(results, id, url);
+        let col = colors.pop();
         let dataset = {
           data: results.data,
           fill: false,
-          borderColor: colors.pop(),
+          borderColor: col,
+          backgroundColor: col,
           showLine: true,
           label: results.glacier
         };
@@ -142,38 +144,36 @@ function plotGlaciers(elmt) {
 }
 
 // 
-// Atmospheric CO2
-// 
-function plotAtmosphericCO2(elmt, url, ticksConfig) {
-  plotScatter(elmt,
-    [url],
-    ['Atmospheric CO2 in ppm'],
-    { max: '2020-06-01', autoSkip: true, maxTicksLimit: 8 },
-    { callback: value => value = value + 'ppm' },
-    'time');
-  return;
-}
-
-// 
 // Plot scatter data. Used by several sections in HTML
 //
-function plotScatter(elmt, urls, labels, xTicks, yTicks, timeUnit) {
+function plotScatter(elmt, urls, labels, xTicks = {}, yTicks = {}, xAxesType = 'linear') {
   let id = insertAccordionAndCanvas(elmt);
   var myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'scatter',
     options: {
+      plugins: {
+        crosshair: {
+          sync: { enabled: false },
+          zoom: { enabled: false }
+        }
+      },
       legend: {
         display: true,
         labels: {
           boxWidth: 10
         }
       },
+      tooltips: {
+        intersect: false,
+        mode: 'nearest',
+        axis: 'x'
+      },
       aspectRatio: 1,
       responsive: true,
       scales: {
         xAxes: [{
           ticks: xTicks,
-          type: (timeUnit === undefined) ? 'linear' : timeUnit
+          type: xAxesType
         }],
         yAxes: [{
           ticks: yTicks
@@ -191,10 +191,12 @@ function plotScatter(elmt, urls, labels, xTicks, yTicks, timeUnit) {
       .then(results => {
         //console.log('plotUrls:', url, results.data.length);
         insertSourceAndLink(results, id, url);
+        let col = c.pop();
         myChart.data.datasets.push({
           data: results.data,
           fill: false,
-          borderColor: c.pop(),
+          borderColor: col,
+          backgroundColor: col,
           showLine: true,
           label: lbl
         });
@@ -209,6 +211,12 @@ function makeStackedLineChart(canvas, xTicks, yTicks) {
   return new Chart(document.getElementById(canvas), {
     type: 'line',
     options: {
+      plugins: {
+        crosshair: {
+          sync: { enabled: false },
+          zoom: { enabled: false }
+        }
+      },
       responsive: true,
       aspectRatio: 1,
       legend: {
@@ -220,7 +228,8 @@ function makeStackedLineChart(canvas, xTicks, yTicks) {
       },
       tooltips: {
         intersect: false,
-        mode: 'nearest'
+        mode: 'nearest',
+        axis: 'x'
       },
       scales: {
         yAxes: [{
@@ -337,9 +346,9 @@ function plotArcticIce(elmt) {
       let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'right', 'category');
       myChart.data.labels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
       let yrs = [2020, 2019, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979];
-      let c = mkColorArray(yrs.length);
+      let c = mkColorArray(yrs.length * 2).reverse();
       while (yrs.length) {
-        let year = yrs.shift();
+        let year = yrs.pop();
         // Extract a subset of data for a particular year
         let tmp = results.data.filter(x => x.year === year);
         // Then create a table that only contains the datapoints
@@ -350,6 +359,7 @@ function plotArcticIce(elmt) {
           fill: false,
           borderColor: c[0],
           pointColor: c[0],
+          backgroundColor: c[0],
           pointRadius: year == 2020 ? 2 : 0,
         });
         c.shift();
@@ -371,7 +381,7 @@ function plotWorldPopulation(elmt) {
     .then(results => {
       console.log('Population:', results.data.length);
       insertSourceAndLink(results, id, url);
-      let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 }, true, 'right');
+      let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 + ' bn' }, true, 'right');
       let c = mkColorArray(results.data.length);
       while (results.data.length) {
         let x = results.data.pop();
@@ -396,9 +406,16 @@ function makeMultiLineChart(canvas, xTicks, yTicks, showLegend, pos, category, a
   return new Chart(document.getElementById(canvas), {
     type: 'line',
     options: {
+      plugins: {
+        crosshair: {
+          sync: { enabled: false },
+          zoom: { enabled: false }
+        }
+      },
       tooltips: {
         intersect: false,
-        mode: 'index'
+        mode: 'nearest',
+        axis: 'x'
       },
       responsive: true,
       aspectRatio: aspect === undefined ? 1 : aspect,
@@ -506,8 +523,8 @@ function plotOzoneHole(elmt) {
 //
 function plotGlobalTemp(elmt) {
   plotScatter(elmt,
-    ["https://api.dashboard.eco/global-temperature-anomaly", "https://api.dashboard.eco/global-temperature-hadcrut"],
-    ["NASA dataset", "HadCRUT dataset"],
+    ["https://api.dashboard.eco/global-temperature-anomaly", "https://api.dashboard.eco/global-temperature-hadcrut", "https://api.dashboard.eco/global-temperature-uah"],
+    ["NASA dataset", "HadCRUT dataset", "UAH dataset"],
     { max: 2020, autoSkip: true, maxTicksLimit: 8 },
     { callback: value => Math.round(value * 10) / 10 + "\u00b0" + "C" }
   );
