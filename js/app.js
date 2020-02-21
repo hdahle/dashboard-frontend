@@ -40,6 +40,11 @@ Chart.defaults.global.animation.duration = 0;
 Chart.defaults.global.tooltips.backgroundColor = '#3f5270';// '#5e79a5';//'#222c3c';
 Chart.defaults.global.tooltips.intersect = false;
 Chart.defaults.global.tooltips.axis = 'x';
+Chart.defaults.global.legend.labels.boxWidth = 10;
+Chart.defaults.global.legend.display = true;
+Chart.defaults.global.aspectRatio = 1;
+Chart.defaults.global.responsive = true;
+
 Chart.plugins.unregister(ChartDataLabels);
 //Chart.defaults.global.plugins.crosshair.line.color = '#3f5270';
 
@@ -56,7 +61,7 @@ function plotCircularity(elmt, url) {
         display: true,
         fontSize: 14,
         position: 'bottom',
-        fontColor: '#222',
+        fontColor: '#222c3c',
         fontStyle: 'normal',
         padding: 0
       },
@@ -66,14 +71,14 @@ function plotCircularity(elmt, url) {
           labels: {
             title: {
               align: 'top', offset: 8,
-              color: '#444',
+              color: '#3f5270',
               font: {
                 size: 14,
               },
               formatter: (value, ctx) => ctx.dataset.label[ctx.dataIndex],
             },
             value: {
-              color: '#333',
+              color: '#3f5270',
               font: {
                 size: 18,
                 weight: 'bold'
@@ -83,11 +88,8 @@ function plotCircularity(elmt, url) {
           }
         }
       },
-      aspectRatio: 0.8,
-      responsive: true,
       legend: {
-        display: false,
-        position: 'top'
+        display: false
       }
     }
   });
@@ -163,14 +165,6 @@ function plotScatter(elmt, urls, labels, xTicks = {}, yTicks = {}, xAxesType = '
           line: { color: '#3f5270' },
         }
       },
-      legend: {
-        display: true,
-        labels: {
-          boxWidth: 10
-        }
-      },
-      aspectRatio: 1,
-      responsive: true,
       scales: {
         xAxes: [{
           ticks: xTicks,
@@ -219,14 +213,9 @@ function makeStackedLineChart(canvas, xTicks, yTicks) {
           line: { color: '#3f5270' }
         }
       },
-      responsive: true,
-      aspectRatio: 1,
       legend: {
         reverse: true,
         position: 'right',
-        labels: {
-          boxWidth: 10
-        },
       },
       scales: {
         yAxes: [{
@@ -342,8 +331,10 @@ function plotArcticIce(elmt) {
       insertSourceAndLink(results, id, url);
       let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'right', 'category');
       myChart.data.labels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
-      let yrs = [2020, 2019, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979];
-      let c = mkColorArray(yrs.length * 2).reverse();
+      let yrs = [];
+      // for (let i = 1979; i < 2021; i++) yrs.push(i);
+      yrs = [2020, 2019, 2018, 2017, 2016, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979];
+      let c = mkColorArray(yrs.length).reverse();
       while (yrs.length) {
         let year = yrs.pop();
         // Extract a subset of data for a particular year
@@ -410,14 +401,10 @@ function makeMultiLineChart(canvas, xTicks, yTicks, showLegend, pos, category, a
           line: { color: '#3f5270' }
         }
       },
-      responsive: true,
       aspectRatio: aspect === undefined ? 1 : aspect,
       legend: {
         display: showLegend === undefined ? true : showLegend,
         position: pos === undefined ? 'top' : pos,
-        labels: {
-          boxWidth: 10
-        },
       },
       scales: {
         yAxes: [{
@@ -607,8 +594,6 @@ function plotBothCCS(elmt, url) {
           plugins: {
             crosshair: false
           },
-          responsive: true,
-          aspectRatio: 0.8,
           scales: {
             xAxes: [{
               ticks: {
@@ -638,6 +623,7 @@ function plotBothCCS(elmt, url) {
         data: d.map(x => x.capacity),
         backgroundColor: lineColor,
         borderColor: lineColor,
+        categoryPercentage: 0.5,
       });
       myChart.data.labels = d.map(x => x.project + ", " + x.country);
       myChart.update();
