@@ -78,17 +78,19 @@ function insertSourceAndLink(res, elmtId, url) {
   while (accordions.length) {
     let acc = accordions.pop();
     let s = document.getElementById(acc).innerHTML;
-    let l = res.link;
-    if (res.source !== undefined && res.source !== null) {
+    if (res.source !== undefined && res.source !== null && res.source !== "") {
       s += "<p>" + res.source + "</p>"; // yes, intentional overwrite of str
     }
-    if (res.accessed !== undefined && res.accessed !== null) {
+    if (res.accessed !== undefined && res.accessed !== null && res.accessed !== "") {
       s += "<p>Data retrieved: " + res.accessed + "</p>"; // yes, intentional overwrite of str
     }
-    if (l !== undefined && l !== null) {
-      s += "<p><i class='fa fa-link w3-text-theme-l1'></i> &nbsp; <a target='_blank' rel='noopener' href='" + l + "'>" + l + "</a></p>";
+    if (res.link !== undefined && res.link !== null && res.link !== "") {
+      s += "<p><i class='fa fa-link w3-text-theme-l1'></i> &nbsp; <a target='_blank' rel='noopener' href='";
+      s += res.link + "'>" + res.link + "</a></p>";
     }
-    s += "<p><i class='fa fa-link w3-text-theme-l1'></i> &nbsp; <a target='_blank' rel='noopener' href='" + url + "'>" + url + "</a></p>";
+    if (url != "") {
+      s += "<p><i class='fa fa-link w3-text-theme-l1'></i> &nbsp; <a target='_blank' rel='noopener' href='" + url + "'>" + url + "</a></p>";
+    }
     document.getElementById(acc).innerHTML = s;
   }
 }

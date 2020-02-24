@@ -579,6 +579,35 @@ function plotCCS(elmt) {
 function plotPlannedCCS(elmt) {
   plotBothCCS(elmt, 'https://api.dashboard.eco/planned-ccs')
 }
+function makeHorizontalBar(canvas, xTicks, yTicks) {
+  return new Chart(document.getElementById(canvas), {
+    type: 'horizontalBar',
+    plugins: [],
+    options: {
+      plugins: {
+        crosshair: false
+      },
+      scales: {
+        xAxes: [{
+          ticks: xTicks
+        }],
+        yAxes: [{
+          ticks: yTicks,
+          gridLines: {
+            display: false
+          }
+        }]
+      },
+      tooltips: {
+        axis: 'y'
+      },
+      legend: {
+        display: false
+      }
+    }
+  });
+}
+
 function plotBothCCS(elmt, url) {
   let id = insertAccordionAndCanvas(elmt);
   fetch(url)
@@ -587,33 +616,7 @@ function plotBothCCS(elmt, url) {
     .then(results => {
       console.log('CCS:', results.data.length);
       insertSourceAndLink(results, id, url);
-      var myChart = new Chart(document.getElementById(id.canvasId), {
-        type: 'horizontalBar',
-        plugins: [],
-        options: {
-          plugins: {
-            crosshair: false
-          },
-          scales: {
-            xAxes: [{
-              ticks: {
-                callback: (value) => value + 'Mt'
-              }
-            }],
-            yAxes: [{
-              gridLines: {
-                display: false
-              }
-            }]
-          },
-          tooltips: {
-            axis: 'y'
-          },
-          legend: {
-            display: false
-          }
-        }
-      });
+      var myChart = makeHorizontalBar(id.canvasId, { callback: v => v + 'Mt' }, {});
       // remove any null projects, then sort it
       let d = results.data.filter(x => x.project != null).sort((a, b) => b.capacity - a.capacity);
       let lineColor = d.map(x => {
@@ -629,4 +632,35 @@ function plotBothCCS(elmt, url) {
       myChart.update();
     })
     .catch(err => console.log(err));
+}
+
+function plotSafety(elmt) {
+  let id = insertAccordionAndCanvas(elmt);
+  let urls = ['https://api.dashboard.eco/mortality-electricity',
+    'https://api.dashboard.eco/mortality-electricity-sovacool',
+    'https://api.dashboard.eco/mortality-electricity-markandya'
+  ];
+  for (let i = 0; i < urls.length; i++) {
+    url = urls[i];
+    fetch(url)
+      .then(status)
+      .then(json)
+      .then(results => {
+        console.log('Mort:', results.data);
+        insertSourceAndLink(results, id, url);
+        if (i > 0) return;
+        let myChart = makeHorizontalBar(id.canvasId, {}, {});
+        let lineColor = results.data.map(x => x.deaths > 1 ? '#c8745e' : '#5ec874');
+        myChart.data.datasets.push({
+          data: results.data.map(x => x.deaths),
+          backgroundColor: lineColor,
+          borderColor: lineColor,
+          minBarLength: 3,
+          categoryPercentage: 0.5,
+        });
+        myChart.data.labels = results.data.map(x => x.resource);
+        myChart.update();
+      })
+      .catch(err => console.log(err));
+  }
 }

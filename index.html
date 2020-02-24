@@ -145,7 +145,7 @@
     </div>
 
     <!-- Plot Glaciers -->
-    <div class="w3-row" id="LatestNews">
+    <div class="w3-row" id="plotGlaciers">
       <div class="w3-container">
         <h2>Glaciers in Norway are shrinking</h2>
         All glaciers tracked by
@@ -157,7 +157,7 @@
         <p class="w3-hide-large w3-hide-medium">This particular chart is best viewed in landscape mode.</p>
       </div>
       <script>
-        plotGlaciers("LatestNews");
+        plotGlaciers("plotGlaciers");
       </script>
     </div>
 
@@ -619,6 +619,43 @@
       </div>
       <script>
         plotCCS("plotCCS");
+      </script>
+    </div>
+
+    <!-- Safety in Electricity Generation -->
+
+    <div class="w3-row" id="LatestNews">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Number of deaths for each TWh of energy generated</h2>
+        University of Oxford's
+        <a href="https://ourworldindata.org/safest-sources-of-energy" target="_blank" rel="noopener">
+          Our World in Data
+        </a>
+        has looked at the number of deaths per TWh (terawatt-hour) of electricity
+        generated from different sources.
+        The figures include accidents and
+        longer term effects due to pollution and radiation,
+        but not any results of CO2 emissions and global warming.
+        <p>
+          Coal is deadliest power-generator, with more than 32 deaths per TWh,
+          mainly due to air pollution. This is 1000 times as many deaths as wind, hydro and solar.
+          For the same amount of energy generated,
+          even natural gas causes about 100 times as many deaths as renewable
+          sources.
+        </p>
+        <p>
+          Nuclear power has a relatively low mortality rate,
+          even when the Chernobyl and Fukushima accidents are included.
+          Our World in Data uses the
+          <a href="https://www.iaea.org/newscenter/pressreleases/chernobyl-true-scale-accident"
+            target="_blank">IAEA/WHO</a>
+          estimate for Chernobyl-related deaths, 4000.
+          This chart uses a higher estimate, 45.000, based on the
+          <a href="http://www.chernobylreport.org/" target="_blank" rel="noopener">TORCH report</a>
+        </p>
+      </div>
+      <script>
+        plotSafety("LatestNews");
       </script>
     </div>
 
