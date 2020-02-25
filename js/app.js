@@ -646,9 +646,9 @@ function plotSafety(elmt) {
       .then(status)
       .then(json)
       .then(results => {
-        console.log('Mort:', results.data);
         insertSourceAndLink(results, id, url);
         if (i > 0) return;
+        console.log('Mort:', results.data.length);
         let myChart = makeHorizontalBar(id.canvasId, {}, {});
         let lineColor = results.data.map(x => x.deaths > 1 ? '#c8745e' : '#5ec874');
         myChart.data.datasets.push({
