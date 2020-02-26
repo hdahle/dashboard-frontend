@@ -431,10 +431,10 @@ function plotEiaFossilFuelProduction(elmt, url) {
       console.log('EIA:', results.series.length);
       insertSourceAndLink(results, id, url);
       let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 }, true);
-      let c = mkColorArray(results.series.length);
+      let c = mkColorArray(results.series.length - 6);
       while (results.series.length) {
         let d = results.series.pop();
-        if (d.region === 'EU28') continue;
+        if (['EU28', 'USA', 'Japan', 'China', 'Russia', 'India'].indexOf(d.region) !== -1) continue;
         let col = c.pop();
         myChart.data.datasets.push({
           label: d.region,
