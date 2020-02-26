@@ -165,6 +165,13 @@ function plotScatter(elmt, urls, labels, xTicks = {}, yTicks = {}, xAxesType = '
           line: { color: '#3f5270' },
         }
       },
+      tooltips: {
+        callbacks: {
+          label: function (tooltipItem, data) {
+            return /*data.labels[tooltipItem.datasetIndex] + ' ' +*/ tooltipItem.xLabel + ': ' + tooltipItem.yLabel;
+          }
+        }
+      },
       scales: {
         xAxes: [{
           ticks: xTicks,
@@ -195,6 +202,7 @@ function plotScatter(elmt, urls, labels, xTicks = {}, yTicks = {}, xAxesType = '
           showLine: true,
           label: lbl
         });
+        myChart.data.labels.push(lbl);
         myChart.update();
       })
       .catch(err => console.log(err));
