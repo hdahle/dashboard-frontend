@@ -471,7 +471,7 @@ function plotEmissionsByFuelType(elmt) {
     .then(results => {
       console.log('Emissions by type:', results.data.length);
       insertSourceAndLink(results, id, url);
-      let c = mkColorArray(results.data.length);
+      let c = mkColorArray(results.data.length - 1);
       while (results.data.length) {
         let d = results.data.shift();
         if (d.fuel === 'Per Capita') continue;
