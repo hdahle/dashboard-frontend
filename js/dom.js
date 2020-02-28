@@ -85,13 +85,25 @@ function insertSourceAndLink(res, elmtId, url) {
       s += "<p>Data retrieved: " + res.accessed + "</p>"; // yes, intentional overwrite of str
     }
     if (res.link !== undefined && res.link !== null && res.link !== "") {
-      s += "<p><i class='fa fa-link w3-text-theme-l1'></i> &nbsp; <a target='_blank' rel='noopener' href='";
+      s += "<p class='w3-button'><i class='fa fa-link w3-text-theme-l1'></i>&nbsp;<a target='_blank' rel='noopener' href='";
       s += res.link + "'>" + res.link + "</a></p>";
     }
     if (url != "") {
-      s += "<p><i class='fa fa-link w3-text-theme-l1'></i> &nbsp; <a target='_blank' rel='noopener' href='" + url + "'>" + url + "</a></p>";
+      s += "<p class='w3-button' onclick='clickBtn(\"" + url + "\");'><i class='fa fa-link w3-text-theme-l1'></i>&nbsp;" + url + "</p>";
     }
     document.getElementById(acc).innerHTML = s;
   }
 }
 
+// 
+// Open new window for displaying JSON content at URL
+//
+function clickBtn(url) {
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(res => {
+      window.open().document.body.innerHTML = "<pre>" + JSON.stringify(res, null, 2) + "<pre>";
+    })
+    .catch(err => console.log(err));
+}
