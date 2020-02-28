@@ -190,7 +190,7 @@
         plotScatter("plotAtmosphericCO2",
           ["https://api.dashboard.eco/maunaloaco2-sm"],
           ['Atmospheric CO2 in ppm'],
-          { max: '2020-06-01', autoSkip: true, maxTicksLimit: 8 },
+          { autoSkip: true, maxTicksLimit: 8 },
           { callback: v => v = v + 'ppm' },
           'time');
       </script>
