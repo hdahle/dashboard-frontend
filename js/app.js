@@ -191,7 +191,6 @@ function plotScatter(elmt, urls, labels, xTicks = {}, yTicks = {}, xAxesType = '
       .then(status)
       .then(json)
       .then(results => {
-        //console.log('plotUrls:', url, results.data.length);
         insertSourceAndLink(results, id, url);
         let col = c.pop();
         myChart.data.datasets.push({
@@ -228,16 +227,17 @@ function makeStackedLineChart(canvas, xTicks, yTicks) {
       scales: {
         yAxes: [{
           stacked: true,
-          ticks: yTicks // { callback: (v) => (v / 1000) + ' Gt' }
+          ticks: yTicks
         }],
         xAxes: [{
           type: 'linear',
-          ticks: xTicks // { min: 1959, max: 2018, callback: (x) => x === 1960 ? null : x}
+          ticks: xTicks
         }]
       }
     }
   });
 }
+
 //
 // CO2 by region
 //
@@ -251,18 +251,17 @@ function plotEmissionsByRegion(elmt) {
       console.log('CO2 Emissions by region:', results.data.length);
       insertSourceAndLink(results, id, url);
       let myChart = makeStackedLineChart(id.canvasId,
-        { min: 1959, max: 2018, callback: (x) => x === 1960 ? null : x },
-        { callback: (v) => (v / 1000) + ' Gt' }
+        { min: 1959, max: 2018, callback: x => x === 1960 ? null : x },
+        { callback: v => (v / 1000) + ' Gt' }
       );
-      let c = mkColorArray(results.data.length);
+      let c = mkColorArray(results.data.length - 2);
       while (results.data.length) {
         let d = results.data.pop();
         switch (d.country) {
           case 'EU28':
             continue;
           case 'World':
-            if (myChart.options.scales.yAxes[0].stacked)
-              continue;
+            continue;
           case 'Central America':
             d.country = 'C America';
             break;
@@ -339,9 +338,7 @@ function plotArcticIce(elmt) {
       insertSourceAndLink(results, id, url);
       let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'right', 'category');
       myChart.data.labels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
-      let yrs = [];
-      // for (let i = 1979; i < 2021; i++) yrs.push(i);
-      yrs = [2020, 2019, 2018, 2017, 2016, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979];
+      let yrs = [2020, 2019, 2018, 2017, 2016, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979];
       let c = mkColorArray(yrs.length).reverse();
       while (yrs.length) {
         let year = yrs.pop();
