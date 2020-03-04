@@ -49,6 +49,224 @@ Chart.plugins.unregister(ChartDataLabels);
 //Chart.defaults.global.plugins.crosshair.line.color = '#3f5270';
 
 //
+// CO2 vs GDP
+//
+function plotCO2vsGDP(elmt) {
+  let id = insertAccordionAndCanvas(elmt, true);
+  //  insertSourceAndLink(results, id.accordionId, url);
+
+  function makeBubbleChart(elmt, mobile = false) {
+    return new Chart(document.getElementById(elmt), {
+      type: 'bubble',
+      options: {
+        tooltips: {
+          intersect: true,
+          callbacks: {
+            title: (i, d) => d.datasets[i[0].datasetIndex].label,
+            label: (i, d) => {
+              let data = d.datasets[i.datasetIndex].data[0];
+              return [
+                'GDP per capita: $' + data.x,
+                'CO2 per capita: ' + data.y + ' kg',
+                'Total CO2: ' + Math.trunc(data.r) / 5 + ' Gt'
+              ]
+            }
+          }
+        },
+        responsive: true,
+        aspectRatio: mobile ? 1 : 2,
+        scales: {
+          xAxes: [{
+            ticks: {
+              min: 0,
+              max: 60000,
+              callback: v => '$' + v
+            },
+            scaleLabel: {
+              display: mobile ? false : true,
+              labelString: 'GDP per capita, in USD (PPP)',
+              //fontSize: 22,
+              //fontColor: '#ddd'
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              min: 0,
+              max: 18000,
+              callback: v => v ? v / 1000 + 't' : 0
+            },
+            scaleLabel: {
+              display: mobile ? false : true,
+              labelString: 'Emissions per capita',
+              //fontSize: 22,
+              //fontColor: '#ddd'
+            }
+          }]
+        },
+        legend: {
+          display: true,
+          position: mobile ? 'top' : 'right',
+          labels: {
+            boxWidth: 10,
+            //fontColor: '#ddd',
+            //fontSize: 18
+          },
+          onClick: function (e, legendItem) {
+            let index = legendItem.datasetIndex;
+            let ci = this.chart;
+            let m = ci.getDatasetMeta(index);
+            // toggle hidden state
+            m.hidden = (m.hidden === null) ? true : null;
+            let country = ci.data.datasets[index].data[0];
+            // no parent? done.
+            if (country.p === null) {
+              ci.update();
+              return;
+            }
+            // add or subtract? hidden or visible
+            let addsub = (m.hidden === true) ? 1 : -1;
+            // hide country, add country values to parent
+            ci.data.datasets.forEach(d => {
+              if (country.p === d.data[0].l) {
+                // update the parent
+                d.data[0].gdp += addsub * country.gdp;
+                d.data[0].pop += addsub * country.pop;
+                d.data[0].co2 += addsub * country.co2;
+                d.data[0].x = Math.trunc(1000000 * d.data[0].gdp / d.data[0].pop);
+                d.data[0].y = Math.trunc(1000000 * d.data[0].co2 / d.data[0].pop);
+                d.data[0].r = Math.trunc(d.data[0].co2 / 20) / 10;
+              }
+            });
+            ci.update();
+            return;
+          },
+        },
+      }
+    });
+  }
+  let myChart = makeBubbleChart(id.canvasId);
+  let myChartMobile = makeBubbleChart(id.canvasIdMobile, true);
+  let data = [{
+    l: 'USA',
+    partof: 'North America',
+    gdp: 18962.24,
+    co2: 5133.44,
+    pop: 325511.2
+  },/* { 
+      l: 'EU28',
+      partof: 'Europe',
+      gdp: 20472.96,
+      co2: 3767.43,
+      pop: 511973.71
+    },*/
+  {
+    l: 'China',
+    partof: 'Asia&Oceania',
+    gdp: 22424.11,
+    co2: 10418.81,
+    pop: 1421755
+  }, {
+    l: 'India',
+    partof: 'Asia&Oceania',
+    gdp: 9335.14,
+    co2: 2312.06,
+    pop: 1340510
+  }, {
+    l: 'Japan',
+    partof: 'Asia&Oceania',
+    gdp: 5264.93,
+    co2: 1116.99,
+    pop: 127461.2
+  }, {
+    l: 'Africa',
+    partof: 'World',
+    gdp: 6272.51,
+    co2: 1308.81,
+    pop: 1232977.03
+  }, {
+    l: 'Russia',
+    partof: 'CIS',
+    gdp: 3920.67,
+    co2: 1782.24,
+    pop: 145517.8
+  }, {
+    l: 'Latin America',
+    partof: 'World',
+    gdp: 7356.64,
+    co2: 1400.09,
+    pop: 511275.85
+  }, {
+    l: 'North America',
+    partof: 'World',
+    gdp: 23075.23 - 18962.24,
+    co2: 6099.79 - 5133.44,
+    pop: 487073.11 - 325511.2
+  }, {
+    l: 'Asia&Oceania',// exc. Chn/Ind/Jpn',
+    partof: 'World',
+    gdp: 52234.89 - 22424.11 - 9335.14 - 5264.93,
+    co2: 17522.55 - 10418.81 - 2312.06 - 1116.99,
+    pop: 4143775.33 - 1421755 - 1340510 - 127461.2
+  }, {
+    l: 'Middle East',
+    partof: 'World',
+    gdp: 6115.22,
+    co2: 2207.26,
+    pop: 248132.95
+  }, {
+    l: 'Europe',
+    partof: 'World',
+    gdp: 23743.54,
+    co2: 4402.95,
+    pop: 625071.09
+  }, {
+    l: 'CIS',
+    partof: 'World',
+    gdp: 5561.51 - 3920.67,
+    co2: 2603.84 - 1782.24,
+    pop: 288783.53 - 145517.8
+  }/*, { 
+      l: 'World',
+      partof: null,
+      gdp: 0,//124359.27,
+      co2: 0,//35545.29,
+      pop: 0,//7537088.89
+    }*/
+  ];
+  // sort array in order to get nice labels
+  data = data.sort((a, b) => b.gdp / b.pop - a.gdp / a.pop);
+  let colors = mkColorArray(data.length);
+  data.forEach(x => x.color = colors.pop());
+  // prepare and scale data before charting
+  data.map(x => ({
+    x: Math.trunc(1000000 * x.gdp / x.pop),
+    y: Math.trunc(1000000 * x.co2 / x.pop),
+    r: Math.trunc(x.co2 / 20) / 10,
+    l: x.l,
+    p: x.partof,
+    gdp: x.gdp,
+    co2: x.co2,
+    pop: x.pop,
+    col: x.color
+  })).forEach(item => {
+    myChart.data.datasets.push({
+      data: [item],
+      label: item.l,
+      backgroundColor: item.col.replace(')', ',0.7)'),
+      borderColor: item.col.replace(')', ',1)')
+    })
+    myChartMobile.data.datasets.push({
+      data: [item],
+      label: item.l,
+      backgroundColor: item.col.replace(')', ',0.7)'),
+      borderColor: item.col.replace(')', ',1)')
+    })
+  });
+  myChart.update();
+  myChartMobile.update();
+}
+
+//
 // Circularity
 //
 function plotCircularity(elmt, url) {
@@ -122,8 +340,8 @@ function plotGlaciers(elmt) {
     'Rembesdalskaaka', 'Engabreen', 'Faabergstolsbreen', 'Nigardsbreen', 'Lodalsbreen'
   ];
   let colors = mkColorArray(glaciers.length);
-  let myChart = makeMultiLineChart(id.canvasId, { callback: (v) => v ? v + 'm' : v }, {}, true, 'right', 'linear', 2);
-  let myChartMobile = makeMultiLineChart(id.canvasIdMobile, { callback: (v) => v ? v + 'm' : v }, {}, false);
+  let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v ? v + 'm' : v }, true, 'right', 'linear', 2);
+  let myChartMobile = makeMultiLineChart(id.canvasIdMobile, {}, { callback: v => v ? v + 'm' : v }, false);
   glaciers.forEach(x => {
     let url = 'https://api.dashboard.eco/glacier-length-nor-' + x;
     fetch(url)
@@ -337,7 +555,7 @@ function plotArcticIce(elmt) {
       console.log('ICE NSIDC:', results.data.length);
       insertSourceAndLink(results, id, url);
       let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'right', 'category');
-      myChart.data.labels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+      myChart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       let yrs = [2020, 2019, 2018, 2017, 2016, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979];
       let c = mkColorArray(yrs.length).reverse();
       while (yrs.length) {
@@ -542,7 +760,7 @@ function plotBrazilFires(elmt) {
     .then(results => {
       console.log('Brazil:', results.data.length);
       insertSourceAndLink(results, id, url);
-      let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'right', 'category');
+      let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'top', 'category');
       let c = mkColorArray(3);
       while (results.data.length) {
         let x = results.data.pop();
@@ -553,15 +771,17 @@ function plotBrazilFires(elmt) {
         }
         let col = c.pop();
         myChart.data.datasets.push({
+          //type: x.year === 'Average' ? 'line' : 'bar',
           data: values,
           label: x.year,
           pointRadius: x.year == 2020 ? 3 : 0,
           borderColor: col,
+          //backgroundColor: col,
           pointBackgroundColor: col,
           fill: false
         });
       }
-      myChart.data.labels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+      myChart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       myChart.update();
     })
     .catch(err => console.log(err));
@@ -579,7 +799,7 @@ function plotGlobalSeaLevel(elmt) {
 }
 
 //
-// CCS - Cabon Capture
+// CCS - Carbon Capture
 //
 function plotCCS(elmt) {
   plotBothCCS(elmt, 'https://api.dashboard.eco/operational-ccs')

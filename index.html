@@ -144,6 +144,31 @@
       </script>
     </div>
 
+    <!-- Plot CO2 vs GDP -->
+    <div class="w3-row" id="plotCO2vsGDP">
+      <div class="w3-container">
+        <!-- w3-col m6 l7" -->
+        <h2>CO2 emissions and GDP</h2>
+        With data from EIA, we can see a certain relationship between emissions and GDP (Gross Domestic Product).
+        The chart uses GDP per capita (at purchasing power parity) along the X-axis,
+        and emissions per capita along the Y-axis.
+        <p>
+          In other words, poor regions with low emissions end up in the lower left hand corner, while rich regions with
+          high emissions are in the top right hand corner.
+        </p>
+        <!--        <p>
+          We can see that while China has very high emissions at the country level (indicated by the size of the
+          bubble), on a per capita basis the Chinese emissions are far lower than e.g. Russia and USA.
+          Africa is characterized by low GDP and low emissions.
+        </p>
+-->
+      </div>
+
+      <script>
+        plotCO2vsGDP("plotCO2vsGDP");
+      </script>
+    </div>
+
     <!-- Plot Glaciers -->
     <div class="w3-row" id="plotGlaciers">
       <div class="w3-container">
