@@ -76,7 +76,10 @@ function plotCorona(elmt, url) {
         },
         scales: {
           xAxes: [{
-            type: 'time'
+            type: 'time',
+            time: {
+              unit: 'day'
+            }
           }]
         }
       }
@@ -106,8 +109,9 @@ function plotCorona(elmt, url) {
           borderWidth: 2,
           borderColor: col,
           backgroundColor: col,
-          data: x.data.map(x => ({ t: moment(x.date, 'YYYY-MMM-D').format('MMMM D'), y: x.cases }))
+          data: x.data.map(x => ({ t: moment(x.date, 'YYYY-MMM-D').format('YYYY-MM-DD'), y: x.cases }))
         }
+        console.log(x.country, d)
         myChart.data.datasets.push(d);
         myChartMobile.data.datasets.push(d);
       }
