@@ -115,6 +115,30 @@
       </div>
     </div>
 
+    <!-- Plot Corona -->
+    <div class="w3-row" id="LatestNews">
+      <div class="w3-container">
+        <h2>Coronavirus/Covid-19 confirmed cases by country: Top 20 countries</h2>
+        This chart uses data from
+        <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
+          Johns Hopkins University Center for
+          Systems Science and Engineering </a> (JHU CSSE)
+        and shows the day-by-day number of confirmed Covid-19 Coronavirus infections.
+        <p>
+          This chart is updated every 24 hours. JHU CSSE updates their data around midnight UTC, this chart is
+          automatically updated shortly thereafter.
+        </p>
+        <p>
+          In order to view more detail, please touch/click China in the legend to turn off the China dataset.
+          If you're using a mobile device: This chart is best viewed in landscape mode.
+        </p>
+      </div>
+      <script>
+        plotCorona("LatestNews", "https://api.dashboard.eco/covid-timeseries-country");
+      </script>
+    </div>
+
+
     <!-- Plot Resource Consumption -->
     <div class="w3-row" id="plotCircularity">
       <div class="w3-container w3-col m6 l7">
@@ -650,7 +674,7 @@
 
     <!-- Safety in Electricity Generation -->
 
-    <div class="w3-row" id="LatestNews">
+    <div class="w3-row" id="plotSafety">
       <div class="w3-container w3-col m6 l7">
         <h2>Electricity generation: Natural gas is 100 times more deadly than renewables. Coal? 1000 times more deadly
         </h2>
@@ -682,7 +706,7 @@
         </p>
       </div>
       <script>
-        plotSafety("LatestNews");
+        plotSafety("plotSafety");
       </script>
     </div>
 

@@ -49,12 +49,79 @@ Chart.plugins.unregister(ChartDataLabels);
 //Chart.defaults.global.plugins.crosshair.line.color = '#3f5270';
 
 //
+// Covid / Coronavirus
+//
+function plotCorona(elmt, url) {
+  let id = insertAccordionAndCanvas(elmt, true);
+
+  function makeChart(id, mobile = false) {
+    return new Chart(document.getElementById(id), {
+      type: 'line',
+      options: {
+        responsive: true,
+        aspectRatio: mobile ? 0.9 : 2,
+        legend: {
+          display: true,
+          reverse: false,
+          position: 'right',
+          labels: {
+            boxWidth: 8,
+            padding: 6,
+            fontSize: mobile ? 10 : 12
+          },
+        },
+        tooltips: {
+          intersect: false,
+          mode: 'index'
+        },
+        scales: {
+          xAxes: [{
+            type: 'time'
+          }]
+        }
+      }
+    });
+  }
+  let myChart = makeChart(id.canvasId);
+  let myChartMobile = makeChart(id.canvasIdMobile, true);
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Covid:', results.data.length);
+      insertSourceAndLink(results, id, url);
+      // sort by number of cases
+      let d = results.data.sort((a, b) => b.data[b.data.length - 1].cases - a.data[a.data.length - 1].cases);
+      // extract top 20
+      let a = d.slice(0, 20);
+      let c = mkColorArray(a.length);
+      while (a.length) {
+        let x = a.shift();
+        let col = c.pop();
+        if (x.country === 'Mainland China') x.country = 'China';
+        if (x.country === 'Others') x.country = 'Diamond Princess';
+        let d = {
+          label: x.country,
+          fill: false,
+          borderWidth: 2,
+          borderColor: col,
+          backgroundColor: col,
+          data: x.data.map(x => ({ t: moment(x.date, 'YYYY-MMM-D').format('MMMM D'), y: x.cases }))
+        }
+        myChart.data.datasets.push(d);
+        myChartMobile.data.datasets.push(d);
+      }
+      myChart.update();
+      myChartMobile.update();
+    })
+    .catch(err => console.log(err));
+}
+
+//
 // CO2 vs GDP
 //
 function plotCO2vsGDP(elmt) {
   let id = insertAccordionAndCanvas(elmt, true);
-  //  insertSourceAndLink(results, id.accordionId, url);
-
   function makeBubbleChart(elmt, mobile = false) {
     return new Chart(document.getElementById(elmt), {
       type: 'bubble',
