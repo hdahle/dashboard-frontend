@@ -111,7 +111,7 @@ function plotCorona(elmt, url) {
           backgroundColor: col,
           data: x.data.map(x => ({ t: moment(x.date, 'YYYY-MMM-D').format('YYYY-MM-DD'), y: x.cases }))
         }
-        console.log(x.country, d)
+        //console.log(x.country, d)
         myChart.data.datasets.push(d);
         myChartMobile.data.datasets.push(d);
       }
