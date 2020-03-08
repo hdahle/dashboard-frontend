@@ -116,7 +116,7 @@
     </div>
 
     <!-- Plot Corona -->
-    <div class="w3-row" id="LatestNews">
+    <div class="w3-row" id="plotCorona">
       <div class="w3-container">
         <h2>Coronavirus/Covid-19 confirmed cases by country: Top 20 countries</h2>
         This chart uses data from
@@ -134,11 +134,33 @@
         </p>
       </div>
       <script>
-        plotCorona("LatestNews", "https://api.dashboard.eco/covid-timeseries-country");
+        plotCorona("plotCorona", "https://api.dashboard.eco/covid-timeseries-country");
       </script>
     </div>
 
 
+    <!-- Plot Corona Per Capita -->
+    <div class="w3-row" id="LatestNews">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Coronavirus/Covid-19 confirmed cases per capita: Top 20 countries</h2>
+        This chart uses data from
+        <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
+          Johns Hopkins University Center for
+          Systems Science and Engineering </a> (JHU CSSE)
+        and shows the current top 20 countries hardest hit by Corona/Covid-19 in terms of confirmed cases per one
+        million inhabitants.
+        The data for Italy includes the Vatican City and San Marino. The data for France includes Saint Barthelemy.
+        The cruise-ship Diamond Princess (696 cases, 7 deaths among 3711 passengers and crew) is not included in this
+        chart.
+        <p>
+          This chart is updated every 24 hours. JHU CSSE updates their data around midnight UTC, this chart is
+          automatically updated shortly thereafter.
+        </p>
+      </div>
+      <script>
+        plotCoronaByCapita("LatestNews", "https://api.dashboard.eco/covid-timeseries-country");
+      </script>
+    </div>
     <!-- Plot Resource Consumption -->
     <div class="w3-row" id="plotCircularity">
       <div class="w3-container w3-col m6 l7">
