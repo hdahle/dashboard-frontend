@@ -1,70 +1,73 @@
 <!DOCTYPE html>
 <html>
-<title>futureplanet.eco</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="UTF-8">
-<link rel="stylesheet" href="css/w3.css">
-<link rel="stylesheet" href="css/w3-custom-colors.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400|Roboto+Condensed&display=swap">
 
-<style>
-  body,
-  html {
-    font-family: 'Roboto', sans-serif;
-  }
+<head>
+  <title>futureplanet.eco</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/w3.css">
+  <link rel="stylesheet" href="css/w3-custom-colors.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400|Roboto+Condensed&display=swap">
 
-  h1,
-  h2 {
-    font-family: 'Roboto Condensed', sans-serif;
-    font-weight: 700;
-    color: #333;
-  }
+  <style>
+    body,
+    html {
+      font-family: 'Roboto', sans-serif;
+    }
 
-  h3,
-  h4 {
-    font-family: 'Roboto Condensed', sans-serif;
-    font-weight: 400;
-    color: #444;
-  }
+    h1,
+    h2 {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 700;
+      color: #333;
+    }
 
-  a {
-    word-wrap: break-word;
-  }
+    h3,
+    h4 {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 400;
+      color: #444;
+    }
 
-  .my-font {
-    font-family: 'Roboto Condensed', sans-serif;
-    font-weight: 700;
-  }
+    a {
+      word-wrap: break-word;
+    }
 
-  .thin-font {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 100;
-    font-size: xx-large;
-  }
+    .my-font {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 700;
+    }
 
-  .fa-twitter,
-  .fa-instagram {
-    background: white;
-    color: black;
-    text-decoration: none;
-  }
+    .thin-font {
+      font-family: 'Roboto', sans-serif;
+      font-weight: 100;
+      font-size: xx-large;
+    }
 
-  .w3-row {
-    padding-bottom: 76px;
-  }
-</style>
+    .fa-twitter,
+    .fa-instagram {
+      background: white;
+      color: black;
+      text-decoration: none;
+    }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-<!-- 
+    .w3-row {
+      padding-bottom: 76px;
+    }
+  </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+  <!-- 
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-crosshair@1.1.2"></script>
 -->
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
-<script src="https://d3js.org/d3-color.v1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+  <script src="https://d3js.org/d3-color.v1.min.js"></script>
 
-<script src="js/app.js"></script>
-<script src="js/dom.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/dom.js"></script>
+</head>
 
 <body>
   <div class="w3-top" id="top-menu-bar">
@@ -138,7 +141,6 @@
       </script>
     </div>
 
-
     <!-- Plot Corona Per Capita -->
     <div class="w3-row" id="LatestNews">
       <div class="w3-container w3-col m6 l7">
@@ -161,6 +163,30 @@
         plotCoronaByCapita("LatestNews", "https://api.dashboard.eco/covid-timeseries-Confirmed");
       </script>
     </div>
+
+    <!-- Plot Corona Deaths Per Capita -->
+    <div class="w3-row" id="plotCoronaDeaths">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Coronavirus/Covid-19 deaths per capita: Top 20 countries</h2>
+        This chart uses data from
+        <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
+          Johns Hopkins University Center for
+          Systems Science and Engineering </a> (JHU CSSE)
+        and shows the current top 20 countries hardest hit by Corona/Covid-19 in terms of confirmed deaths per one
+        million inhabitants.
+        The data for Italy includes the Vatican City and San Marino. The data for France includes Saint Barthelemy.
+        The cruise-ship Diamond Princess (696 cases, 7 deaths among 3711 passengers and crew) is not included in this
+        chart.
+        <p>
+          This chart is updated every 24 hours. JHU CSSE updates their data around midnight UTC, this chart is
+          automatically updated shortly thereafter.
+        </p>
+      </div>
+      <script>
+        plotCoronaByCapita("plotCoronaDeaths", "https://api.dashboard.eco/covid-timeseries-Deaths");
+      </script>
+    </div>
+
     <!-- Plot Resource Consumption -->
     <div class="w3-row" id="plotCircularity">
       <div class="w3-container w3-col m6 l7">
@@ -184,7 +210,6 @@
           The rest, about 31&percnt; is in use. About 8&percnt; is recovered or reused.
         </p>
       </div>
-
       <script>
         plotCircularity("plotCircularity", "https://api.dashboard.eco/circularity-2020");
       </script>
@@ -232,7 +257,6 @@
         plotGlaciers("plotGlaciers");
       </script>
     </div>
-
 
     <!-- Plot CO2 -->
     <div class="w3-row" id="plotAtmosphericCO2">

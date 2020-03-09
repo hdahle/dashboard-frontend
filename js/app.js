@@ -49,7 +49,7 @@ Chart.plugins.unregister(ChartDataLabels);
 //Chart.defaults.global.plugins.crosshair.line.color = '#3f5270';
 
 //
-// Covid / Coronavirus
+// Covid / Coronavirus Top 20 Countries
 //
 function plotCorona(elmt, url) {
   let id = insertAccordionAndCanvas(elmt, true);
@@ -98,15 +98,14 @@ function plotCorona(elmt, url) {
       let c = mkColorArray(d.length);
       while (d.length) {
         let x = d.shift();
-        let col = c.pop();
         let tmp = {
           label: x.country === 'Others' ? 'Diamond Princess' : x.country,
           fill: false,
-          borderWidth: 2,
-          borderColor: col,
-          backgroundColor: col,
+          borderColor: c[0],
+          backgroundColor: c[0],
           data: x.data
         };
+        c.shift();
         myChart.data.datasets.push(tmp);
         myChartMobile.data.datasets.push(tmp);
       }
@@ -116,6 +115,9 @@ function plotCorona(elmt, url) {
     .catch(err => console.log(err));
 }
 
+//
+// Corona cases by capita
+//
 function plotCoronaByCapita(elmt, url) {
   let id = insertAccordionAndCanvas(elmt);
   let myChart = new Chart(document.getElementById(id.canvasId), {
@@ -125,12 +127,6 @@ function plotCoronaByCapita(elmt, url) {
       aspectRatio: 1,
       legend: {
         display: false,
-        reverse: false,
-        position: 'right',
-        labels: {
-          boxWidth: 8,
-          fontSize: 14
-        },
       },
       scales: {
         yAxes: [{
@@ -166,9 +162,10 @@ function plotCoronaByCapita(elmt, url) {
       let col = mkColorArray(data.length * 2);
       // Plot it    
       myChart.data.datasets.push({
-        borderWidth: 2,
-        borderColor: col,
         backgroundColor: col,
+        borderColor: 'rgba(0,0,0,0)',
+        borderWidth: 2,
+        categoryPercentage: 0.5,
         data: data.map(x => x.ypm)
       });
       myChart.data.labels = data.map(x => x.country);
@@ -212,8 +209,6 @@ function plotCO2vsGDP(elmt) {
             scaleLabel: {
               display: mobile ? false : true,
               labelString: 'GDP per capita, in USD (PPP)',
-              //fontSize: 22,
-              //fontColor: '#ddd'
             }
           }],
           yAxes: [{
@@ -225,8 +220,6 @@ function plotCO2vsGDP(elmt) {
             scaleLabel: {
               display: mobile ? false : true,
               labelString: 'Emissions per capita',
-              //fontSize: 22,
-              //fontColor: '#ddd'
             }
           }]
         },
@@ -235,8 +228,6 @@ function plotCO2vsGDP(elmt) {
           position: mobile ? 'top' : 'right',
           labels: {
             boxWidth: 10,
-            //fontColor: '#ddd',
-            //fontSize: 18
           },
           onClick: function (e, legendItem) {
             let index = legendItem.datasetIndex;
