@@ -137,7 +137,14 @@ function plotCoronaByCapita(elmt, url) {
       },
       tooltips: {
         intersect: false,
-        mode: 'index'
+        mode: 'index',
+        displayColors: false,
+        callbacks: {
+          label: function (tooltipItem, data) {
+            let n = myChart.data.datasets[tooltipItem.datasetIndex].data2[tooltipItem.index];
+            return [tooltipItem.xLabel + ' per million', n + '  total'];
+          }
+        }
       },
     }
   });
@@ -166,7 +173,8 @@ function plotCoronaByCapita(elmt, url) {
         borderColor: 'rgba(0,0,0,0)',
         borderWidth: 2,
         categoryPercentage: 0.5,
-        data: data.map(x => x.ypm)
+        data: data.map(x => x.ypm),
+        data2: data.map(x => x.y)
       });
       myChart.data.labels = data.map(x => x.country);
       myChart.update();
@@ -537,6 +545,7 @@ function plotScatter(elmt, urls, labels, xTicks = {}, yTicks = {}, xAxesType = '
           showLine: true,
           label: lbl
         });
+        //console.log('URL:', url, results.data)
         myChart.data.labels.push(lbl);
         myChart.update();
       })
