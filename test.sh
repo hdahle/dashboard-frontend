@@ -15,9 +15,10 @@ do
 
   if [ "${RESULT}" = "${EXPECTED_RESULT}" ]; then
     echo "Success ${f}"
+    RETVAL=0
   else
     echo "Failure ${f}"
-    RETVAL=0
+    RETVAL=1
   fi
 
 done

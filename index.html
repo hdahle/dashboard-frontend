@@ -118,6 +118,37 @@
       </div>
     </div>
 
+    <!-- Plot Corona Deaths 3 Charts -->
+    <div id="LatestNews">
+      <div class="w3-row" style="padding-bottom:16px;">
+        <div class="w3-container">
+          <h2>Coronavirus/Covid-19 confirmed deaths: China compared to Italy, Spain and USA</h2>
+          This chart uses data from
+          <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
+            Johns Hopkins University Center for
+            Systems Science and Engineering </a> (JHU CSSE)
+          and shows the day-by-day number of confirmed Covid-19 Coronavirus infections.
+          <br>
+          This chart is updated every 24 hours. JHU CSSE updates their data around midnight UTC, this chart is
+          automatically updated shortly thereafter.
+        </div>
+      </div>
+      <div class="w3-row">
+        <div class="w3-col w3-third">
+          <div><canvas id="ch1"></canvas></div>
+        </div>
+        <div class="w3-col w3-third">
+          <div><canvas id="ch2"></canvas></div>
+        </div>
+        <div class="w3-col w3-third">
+          <div><canvas id="ch3"></canvas></div>
+        </div>
+        <script>
+          plotCoronaDeaths3("ch1", "ch2", "ch3", "https://api.dashboard.eco/covid-timeseries-Deaths");
+        </script>
+      </div>
+    </div>
+
     <!-- Plot Corona -->
     <div class="w3-row" id="plotCorona">
       <div class="w3-container">
@@ -142,7 +173,7 @@
     </div>
 
     <!-- Plot Corona Per Capita -->
-    <div class="w3-row" id="LatestNews">
+    <div class="w3-row" id="plotCoronaPerCapita">
       <div class="w3-container w3-col m6 l7">
         <h2>Coronavirus/Covid-19 confirmed cases per capita: Top 20 countries</h2>
         This chart uses data from
@@ -160,7 +191,7 @@
         </p>
       </div>
       <script>
-        plotCoronaByCapita("LatestNews", "https://api.dashboard.eco/covid-timeseries-Confirmed");
+        plotCoronaByCapita("plotCoronaPerCapita", "https://api.dashboard.eco/covid-timeseries-Confirmed");
       </script>
     </div>
 

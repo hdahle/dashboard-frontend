@@ -49,6 +49,103 @@ Chart.plugins.unregister(ChartDataLabels);
 //Chart.defaults.global.plugins.crosshair.line.color = '#3f5270';
 
 //
+// Three Corona charts side-by-side
+//
+function plotCoronaDeaths3(elmt1, elmt2, elmt3, url) {
+  function makeChart(elementId) {
+    return new Chart(document.getElementById(elementId), {
+      type: 'bar',
+      options: {
+        responsive: true,
+        aspectRatio: 1,
+        legend: {
+          display: true,
+          reverse: false,
+          position: 'top',
+          labels: {
+            boxWidth: 8,
+            fontSize: 14
+          },
+        },
+        tooltips: {
+          intersect: false,
+          mode: 'index'
+        },
+        scales: {
+          xAxes: [{
+            offset: true,
+            type: 'time',
+            time: {
+              unit: 'day'
+            }
+          }],
+          yAxes: [{
+            ticks: { suggestedMax: 800 }
+          }]
+        }
+      }
+    });
+  }
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('Covid deaths:', results.data.length);
+      //insertSourceAndLink(results, elementSource, url);
+      let ch1 = makeChart(elmt1);
+      let ch2 = makeChart(elmt2);
+      let ch3 = makeChart(elmt3);
+      let d = results.data.filter(x => ["China", "US", "Spain", "Italy"].includes(x.country));
+
+      while (d.length) {
+        let x = d.shift();
+        //console.log(x.data);
+        let y = [];
+        for (let i = 1; i < x.data.length; i++) {
+          y.push({
+            t: x.data[i].t,
+            y: x.data[i].y - x.data[i - 1].y,
+            ypm: x.data[i].ypm - x.data[i - 1].ypm
+          });
+        }
+        //console.log(y);
+        let c = mkColorArray(2);
+        if (["China", "Italy"].includes(x.country)) {
+          ch1.data.datasets.push({
+            label: x.country,
+            barPercentage: 0.8,
+            backgroundColor: x.country == "China" ? c[0] : c[1],
+            categoryPercentage: 1,
+            data: y //.map(x => ({t:x.t, y:x.ypm}))
+          });
+        }
+        if (["China", "Spain"].includes(x.country)) {
+          ch2.data.datasets.push({
+            label: x.country,
+            barPercentage: 0.8,
+            backgroundColor: x.country == "China" ? c[0] : c[1],
+            categoryPercentage: 1,
+            data: y //.map(x => ({t:x.t, y:x.ypm}))
+          });
+        }
+        if (["China", "US"].includes(x.country)) {
+          ch3.data.datasets.push({
+            label: x.country,
+            barPercentage: 0.8,
+            backgroundColor: x.country == "China" ? c[0] : c[1],
+            categoryPercentage: 1,
+            data: y //.map(x => ({t:x.t, y:x.ypm}))
+          });
+        }
+      }
+      ch1.update();
+      ch2.update();
+      ch3.update();
+    })
+    .catch(err => console.log(err));
+}
+
+//
 // Covid / Coronavirus Top 20 Countries
 //
 function plotCorona(elmt, url) {
