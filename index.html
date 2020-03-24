@@ -134,17 +134,11 @@
         </div>
       </div>
       <div class="w3-row">
-        <div class="w3-col w3-third">
-          <div><canvas id="ch1"></canvas></div>
-        </div>
-        <div class="w3-col w3-third">
-          <div><canvas id="ch2"></canvas></div>
-        </div>
-        <div class="w3-col w3-third">
-          <div><canvas id="ch3"></canvas></div>
-        </div>
+        <div style="width:33%;float:left;"><canvas id="ch1"></canvas></div>
+        <div style="width:33%;float:left;"><canvas id="ch2"></canvas></div>
+        <div style="width:33%;float:left;"><canvas id="ch3"></canvas></div>
         <script>
-          plotCoronaDeaths3("ch1", "ch2", "ch3", "https://api.dashboard.eco/covid-timeseries-Deaths");
+          plotCoronaDeaths3("ch1", "ch2", "ch3", "https://api.dashboard.eco/covid-timeseries-deaths");
         </script>
       </div>
     </div>
@@ -168,7 +162,7 @@
         </p>
       </div>
       <script>
-        plotCorona("plotCorona", "https://api.dashboard.eco/covid-timeseries-Confirmed");
+        plotCorona("plotCorona", "https://api.dashboard.eco/covid-timeseries-confirmed");
       </script>
     </div>
 
@@ -191,7 +185,7 @@
         </p>
       </div>
       <script>
-        plotCoronaByCapita("plotCoronaPerCapita", "https://api.dashboard.eco/covid-timeseries-Confirmed");
+        plotCoronaByCapita("plotCoronaPerCapita", "https://api.dashboard.eco/covid-timeseries-confirmed");
       </script>
     </div>
 
@@ -214,7 +208,7 @@
         </p>
       </div>
       <script>
-        plotCoronaByCapita("plotCoronaDeaths", "https://api.dashboard.eco/covid-timeseries-Deaths");
+        plotCoronaByCapita("plotCoronaDeaths", "https://api.dashboard.eco/covid-timeseries-deaths");
       </script>
     </div>
 
