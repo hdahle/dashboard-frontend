@@ -258,7 +258,7 @@ function plotCoronaByCapita(elmt, url) {
         y: d.data.slice(-1)[0].y
       }));
       // Remove 'others'
-      data = data.filter(x => x.country !== 'Others');
+      data = data.filter(x => x.country !== 'Others' && x.country !== 'Diamond Princess');
       // Sort array
       data = data.sort((a, b) => b.ypm - a.ypm);
       // Extract top 20
