@@ -137,18 +137,17 @@
         <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch1"></canvas></div>
         <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch2"></canvas></div>
         <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch3"></canvas></div>
-        <script>
-          plotCoronaDeaths3("ch1", "ch2", "ch3", "https://api.dashboard.eco/covid-timeseries-deaths",
-            ["China", "Italy", "Spain", "France"]);
-        </script>
       </div>
       <div class="w3-row">
         <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch4"></canvas></div>
         <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch5"></canvas></div>
         <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch6"></canvas></div>
         <script>
-          plotCoronaDeaths3("ch4", "ch5", "ch6", "https://api.dashboard.eco/covid-timeseries-deaths",
-            ["China", "US", "United Kingdom", "Germany"]);
+          plotCoronaDeaths3(
+            ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6"],
+            "https://api.dashboard.eco/covid-timeseries-deaths",
+            ["China", "Italy", "Spain", "France", "US", "United Kingdom", "Germany"]
+          );
         </script>
       </div>
     </div>

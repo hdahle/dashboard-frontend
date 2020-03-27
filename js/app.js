@@ -51,7 +51,7 @@ Chart.plugins.unregister(ChartDataLabels);
 //
 // Three Corona charts side-by-side
 //
-function plotCoronaDeaths3(elmt1, elmt2, elmt3, url, countries) {
+function plotCoronaDeaths3(elmt, url, countries) {
   function makeChart(elementId) {
     return new Chart(document.getElementById(elementId), {
       type: 'bar',
@@ -92,56 +92,39 @@ function plotCoronaDeaths3(elmt1, elmt2, elmt3, url, countries) {
     .then(results => {
       console.log('Covid deaths:', results.data.length);
       //insertSourceAndLink(results, elementSource, url);
-      let ch1 = makeChart(elmt1);
-      let ch2 = makeChart(elmt2);
-      let ch3 = makeChart(elmt3);
-      //let countries = ["China", "US", "France", "United Kingdom"];
+      let charts = [];
+      for (let i = 0; i < elmt.length; i++) {
+        charts[i] = makeChart(elmt[i]);
+      }
+      // d is data for the countries we're interested in 
       let d = results.data.filter(x => countries.includes(x.country));
-
       while (d.length) {
+        // x is data for a single country
         let x = d.shift();
-        //console.log(x.data);
         let y = [];
+        // y is list of deaths per day
         for (let i = 1; i < x.data.length; i++) {
           y.push({
             t: x.data[i].t,
             y: x.data[i].y - x.data[i - 1].y,
-            ypm: x.data[i].ypm - x.data[i - 1].ypm
+            //ypm: x.data[i].ypm - x.data[i - 1].ypm
           });
         }
-        //console.log(y);
         let c = mkColorArray(2);
-        if ([countries[0], countries[1]].includes(x.country)) {
-          ch1.data.datasets.push({
-            label: x.country === "United Kingdom" ? "UK" : x.country,
-            barPercentage: 0.8,
-            backgroundColor: x.country == "China" ? c[0] : c[1],
-            categoryPercentage: 1,
-            data: y //.map(x => ({t:x.t, y:x.ypm}))
-          });
-        }
-        if ([countries[0], countries[2]].includes(x.country)) {
-          ch2.data.datasets.push({
-            label: x.country === "United Kingdom" ? "UK" : x.country,
-            barPercentage: 0.8,
-            backgroundColor: x.country == "China" ? c[0] : c[1],
-            categoryPercentage: 1,
-            data: y //.map(x => ({t:x.t, y:x.ypm}))
-          });
-        }
-        if ([countries[0], countries[3]].includes(x.country)) {
-          ch3.data.datasets.push({
-            label: x.country === "United Kingdom" ? "UK" : x.country,
-            barPercentage: 0.8,
-            backgroundColor: x.country == "China" ? c[0] : c[1],
-            categoryPercentage: 1,
-            data: y //.map(x => ({t:x.t, y:x.ypm}))
-          });
+
+        for (let i = 0; i < charts.length; i++) {
+          if ([countries[0], countries[i + 1]].includes(x.country)) {
+            charts[i].data.datasets.push({
+              label: x.country === "United Kingdom" ? "UK" : x.country,
+              barPercentage: 0.8,
+              backgroundColor: x.country == "China" ? c[0] : c[1],
+              categoryPercentage: 1,
+              data: y //.map(x => ({t:x.t, y:x.ypm}))
+            });
+          }
         }
       }
-      ch1.update();
-      ch2.update();
-      ch3.update();
+      charts.forEach(x => x.update());
     })
     .catch(err => console.log(err));
 }
