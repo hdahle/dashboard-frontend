@@ -51,7 +51,7 @@ Chart.plugins.unregister(ChartDataLabels);
 //
 // Three Corona charts side-by-side
 //
-function plotCoronaDeaths3(elmt1, elmt2, elmt3, url) {
+function plotCoronaDeaths3(elmt1, elmt2, elmt3, url, countries) {
   function makeChart(elementId) {
     return new Chart(document.getElementById(elementId), {
       type: 'bar',
@@ -95,7 +95,8 @@ function plotCoronaDeaths3(elmt1, elmt2, elmt3, url) {
       let ch1 = makeChart(elmt1);
       let ch2 = makeChart(elmt2);
       let ch3 = makeChart(elmt3);
-      let d = results.data.filter(x => ["China", "US", "Spain", "Italy"].includes(x.country));
+      //let countries = ["China", "US", "France", "United Kingdom"];
+      let d = results.data.filter(x => countries.includes(x.country));
 
       while (d.length) {
         let x = d.shift();
@@ -110,27 +111,27 @@ function plotCoronaDeaths3(elmt1, elmt2, elmt3, url) {
         }
         //console.log(y);
         let c = mkColorArray(2);
-        if (["China", "Italy"].includes(x.country)) {
+        if ([countries[0], countries[1]].includes(x.country)) {
           ch1.data.datasets.push({
-            label: x.country,
+            label: x.country === "United Kingdom" ? "UK" : x.country,
             barPercentage: 0.8,
             backgroundColor: x.country == "China" ? c[0] : c[1],
             categoryPercentage: 1,
             data: y //.map(x => ({t:x.t, y:x.ypm}))
           });
         }
-        if (["China", "Spain"].includes(x.country)) {
+        if ([countries[0], countries[2]].includes(x.country)) {
           ch2.data.datasets.push({
-            label: x.country,
+            label: x.country === "United Kingdom" ? "UK" : x.country,
             barPercentage: 0.8,
             backgroundColor: x.country == "China" ? c[0] : c[1],
             categoryPercentage: 1,
             data: y //.map(x => ({t:x.t, y:x.ypm}))
           });
         }
-        if (["China", "US"].includes(x.country)) {
+        if ([countries[0], countries[3]].includes(x.country)) {
           ch3.data.datasets.push({
-            label: x.country,
+            label: x.country === "United Kingdom" ? "UK" : x.country,
             barPercentage: 0.8,
             backgroundColor: x.country == "China" ? c[0] : c[1],
             categoryPercentage: 1,
