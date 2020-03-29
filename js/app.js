@@ -51,7 +51,7 @@ Chart.plugins.unregister(ChartDataLabels);
 //
 // Three Corona charts side-by-side
 //
-function plotCoronaDeaths3(elmt, url, refCountry, countries) {
+function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative = false) {
   //console.log("Ref:", refCountry, "Countries:", countries)
   function makeChart(elementId) {
     return new Chart(document.getElementById(elementId), {
@@ -166,7 +166,7 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries) {
           categoryPercentage: 1,
           data: x.data.map(x => ({
             t: x.t,
-            y: x.d
+            y: cumulative ? x.y : x.d
           }))
         });
         // Push the line chart of smoothed daily change
