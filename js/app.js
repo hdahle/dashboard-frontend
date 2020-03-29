@@ -51,7 +51,8 @@ Chart.plugins.unregister(ChartDataLabels);
 //
 // Three Corona charts side-by-side
 //
-function plotCoronaDeaths3(elmt, url, countries) {
+function plotCoronaDeaths3(elmt, url, refCountry, countries) {
+  //console.log("Ref:", refCountry, "Countries:", countries)
   function makeChart(elementId) {
     return new Chart(document.getElementById(elementId), {
       type: 'bar',
@@ -80,7 +81,24 @@ function plotCoronaDeaths3(elmt, url, countries) {
             }
           }],
           yAxes: [{
-            ticks: { suggestedMax: 800 }
+            id: 'L',
+            position: 'left',
+            ticks: {
+              fontColor: 'rgb(40,80,150)',
+            }
+          }, {
+            id: 'R',
+            position: 'right',
+            ticks: {
+              max: 100,
+              min: 0,
+              fontColor: mkColorArray(2)[0],
+              fontSize: 10,
+              callback: v => v ? v + '%' : v
+            },
+            gridLines: {
+              display: false
+            }
           }]
         }
       }
@@ -92,37 +110,80 @@ function plotCoronaDeaths3(elmt, url, countries) {
     .then(results => {
       console.log('Covid deaths:', results.data.length);
       //insertSourceAndLink(results, elementSource, url);
+      let c = mkColorArray(2);
       let charts = [];
       for (let i = 0; i < elmt.length; i++) {
         charts[i] = makeChart(elmt[i]);
       }
       // d is data for the countries we're interested in 
-      let d = results.data.filter(x => countries.includes(x.country));
-      while (d.length) {
-        // x is data for a single country
-        let x = d.shift();
-        let y = [];
-        // y is list of deaths per day
-        for (let i = 1; i < x.data.length; i++) {
-          y.push({
-            t: x.data[i].t,
-            y: x.data[i].y - x.data[i - 1].y,
-            //ypm: x.data[i].ypm - x.data[i - 1].ypm
-          });
-        }
-        let c = mkColorArray(2);
+      let r = results.data.filter(x => countries.includes(x.country));
+      let chIndex = 0
 
-        for (let i = 0; i < charts.length; i++) {
-          if ([countries[0], countries[i + 1]].includes(x.country)) {
-            charts[i].data.datasets.push({
-              label: x.country === "United Kingdom" ? "UK" : x.country,
-              barPercentage: 0.8,
-              backgroundColor: x.country == "China" ? c[0] : c[1],
-              categoryPercentage: 1,
-              data: y //.map(x => ({t:x.t, y:x.ypm}))
-            });
+      while (r.length) {
+        // x is data for a single country
+        let x = r.shift();
+        let d = x.data;
+
+        // Create a smoothed array of daily cases
+        let smooth = [];
+        for (let i = 0; i < d.length; i++) {
+          let e = {
+            t: d[i].t,
+            y: 0, // cumulative 
+            d: 0, // daily
+            c: 0 // change in percent
+          }
+          if (i === 0) {
+            e.y = d[i].y;//(d[i].y + d[i+1].y) / 2;
+          } else if (i === d.length - 1) {
+            e.y = d[i].y;//(d[i-1].y +d[i].y) / 2;
+          } else {
+            e.y = (d[i - 1].y + d[i].y + d[i + 1].y) / 3;
+          }
+          smooth[i] = e;
+        }
+        // Calculate growth based on smoothed daily numbers
+        for (let i = 0; i < smooth.length; i++) {
+          if (i === 0) {
+            smooth[i].c = 0;
+            smooth[i].d = 0;
+          } else if (i === smooth.length - 1) {
+            smooth[i].d = d[i].y - d[i - 1].y;
+            smooth[i].c = 100 * smooth[i].d / smooth[i - 1].y;
+          } else {
+            smooth[i].d = (smooth[i].y - smooth[i - 1].y)
+            smooth[i].c = 100 * smooth[i].d / smooth[i - 1].y;
           }
         }
+        // Push the ba chart of cases per day
+        //console.log("Country:", x.country, "Index:", chIndex)
+
+        charts[chIndex].data.datasets.push({
+          yAxisID: 'L',
+          label: x.country,
+          barPercentage: 0.8,
+          backgroundColor: 'rgba(40,80,150,0.4)', //c[1],
+          categoryPercentage: 1,
+          data: x.data.map(x => ({
+            t: x.t,
+            y: x.d
+          }))
+        });
+        // Push the line chart of smoothed daily change
+        charts[chIndex].data.datasets.push({
+          yAxisID: 'R',
+          type: 'line',
+          label: 'Growth in %',
+          categoryPercentage: 1,
+          fill: false,
+          borderColor: c[0],
+          borderWidth: 2,
+          data: smooth.map(x => ({
+            t: x.t,
+            y: x.y > 100 ? x.c : null
+          }))
+        });
+        chIndex++;
       }
       charts.forEach(x => x.update());
     })

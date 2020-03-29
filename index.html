@@ -122,13 +122,16 @@
     <div id="LatestNews">
       <div class="w3-row" style="padding-bottom:16px;">
         <div class="w3-container">
-          <h2>Coronavirus/Covid-19 confirmed deaths: China compared to Italy, Spain and USA</h2>
+          <h2>Coronavirus/Covid-19 confirmed deaths</h2>
           This chart uses data from
           <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
             Johns Hopkins University Center for
             Systems Science and Engineering </a> (JHU CSSE)
           and shows the daily number of confirmed Covid-19 Coronavirus deaths.
-          <br>
+          <p>
+            The bars show the number of new deaths per day. The red line show the increase in number of deaths. If the
+            increase is 0, then no more deaths have occurred on that specific day.
+          </p>
           This chart is updated every 24 hours. JHU CSSE updates their data around midnight UTC, this chart is
           automatically updated shortly thereafter.
         </div>
@@ -145,8 +148,9 @@
         <script>
           plotCoronaDeaths3(
             ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6"],
-            "https://api.dashboard.eco/covid-timeseries-deaths",
-            ["China", "Italy", "Spain", "France", "US", "UK", "Germany"]
+            "https://api.dashboard.eco/covid-deaths",
+            "China",
+            ["Italy", "Spain", "France", "US", "UK", "World"]
           );
         </script>
       </div>
