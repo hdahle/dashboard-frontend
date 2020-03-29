@@ -173,7 +173,7 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries) {
         charts[chIndex].data.datasets.push({
           yAxisID: 'R',
           type: 'line',
-          label: 'Growth in %',
+          label: 'Daily increase',
           categoryPercentage: 1,
           fill: false,
           borderColor: c[0],
