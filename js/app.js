@@ -51,7 +51,7 @@ Chart.plugins.unregister(ChartDataLabels);
 //
 // Three Corona charts side-by-side
 //
-function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative = false) {
+function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative) {
   //console.log("Ref:", refCountry, "Countries:", countries)
   function makeChart(elementId) {
     return new Chart(document.getElementById(elementId), {
@@ -70,7 +70,17 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative = false)
         },
         tooltips: {
           intersect: false,
-          mode: 'index'
+          mode: 'index',
+          callbacks: {
+            label: function (tooltipItem, data) {
+              let t = data.datasets[tooltipItem.datasetIndex].tooltipText;
+              t = (t === undefined) || (t === null) ? '' : t;
+              t0 = Array.isArray(t) && t.length > 0 ? t[0] : t;
+              t1 = Array.isArray(t) && t.length > 1 ? t[1] : '';
+              return t0 + Math.round(tooltipItem.yLabel) + t1;
+            }
+          }
+
         },
         scales: {
           xAxes: [{
@@ -164,6 +174,7 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative = false)
           barPercentage: 0.8,
           backgroundColor: 'rgba(40,80,150,0.4)', //c[1],
           categoryPercentage: 1,
+          tooltipText: 'Cases per day: ',
           data: x.data.map(x => ({
             t: x.t,
             y: cumulative ? x.y : x.d
@@ -177,7 +188,9 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative = false)
           categoryPercentage: 1,
           fill: false,
           borderColor: c[0],
+          backgroundColor: c[0],
           borderWidth: 2,
+          tooltipText: ['Daily increase: ', '%'],
           data: smooth.map(x => ({
             t: x.t,
             y: x.y > 100 ? x.c : null
