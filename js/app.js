@@ -51,7 +51,7 @@ Chart.plugins.unregister(ChartDataLabels);
 //
 // Three Corona charts side-by-side
 //
-function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative) {
+function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggestedMax) {
   //console.log("Ref:", refCountry, "Countries:", countries)
   function makeChart(elementId) {
     return new Chart(document.getElementById(elementId), {
@@ -80,7 +80,6 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative) {
               return t0 + Math.round(tooltipItem.yLabel) + t1;
             }
           }
-
         },
         scales: {
           xAxes: [{
@@ -94,7 +93,8 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative) {
             id: 'L',
             position: 'left',
             ticks: {
-              fontColor: 'rgb(40,80,150)',
+              suggestedMax: suggestedMax,
+              fontColor: 'rgb(40,80,150)'
             }
           }, {
             id: 'R',
@@ -122,16 +122,19 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative) {
       //insertSourceAndLink(results, elementSource, url);
       let c = mkColorArray(2);
       let charts = [];
-      for (let i = 0; i < elmt.length; i++) {
-        charts[i] = makeChart(elmt[i]);
-      }
-      // d is data for the countries we're interested in 
-      let r = results.data.filter(x => countries.includes(x.country));
+      elmt.forEach(e => charts.push(makeChart(e)))
       let chIndex = 0
 
-      while (r.length) {
-        // x is data for a single country
-        let x = r.shift();
+      // Process each country
+      while (countries.length) {
+        let cName = countries.shift(); // country name
+        console.log(cName)
+        let x = results.data.find(x => x.country === cName);
+        if (x === undefined) {
+          console.log("Warning:", cn, " not found")
+          continue;
+        }
+        /*
         let d = x.data;
 
         // Create a smoothed array of daily cases
@@ -165,9 +168,8 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative) {
             smooth[i].c = 100 * smooth[i].d / smooth[i - 1].y;
           }
         }
+        */
         // Push the ba chart of cases per day
-        //console.log("Country:", x.country, "Index:", chIndex)
-
         charts[chIndex].data.datasets.push({
           yAxisID: 'L',
           label: x.country,
@@ -191,10 +193,13 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative) {
           backgroundColor: c[0],
           borderWidth: 2,
           tooltipText: ['Daily increase: ', '%'],
-          data: smooth.map(x => ({
+          data: x.data.map(x => ({
             t: x.t,
             y: x.y > 100 ? x.c : null
-          }))
+          }))/*smooth.map(x => ({
+            t: x.t,
+            y: x.y > 100 ? x.c : null
+          }))*/
         });
         chIndex++;
       }
