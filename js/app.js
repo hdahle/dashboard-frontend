@@ -254,10 +254,11 @@ function plotCorona(elmt, url) {
       insertSourceAndLink(results, id, url);
       let d = results.data.sort((a, b) => b.data[b.data.length - 1].y - a.data[a.data.length - 1].y);
       // just get top20
-      d = d.slice(0, 20);
+      d = d.slice(0, 21);
       let c = mkColorArray(d.length);
       while (d.length) {
         let x = d.shift();
+        if (x.country === 'World') continue;
         let tmp = {
           label: x.country === 'Others' ? 'Diamond Princess' : x.country,
           fill: false,
