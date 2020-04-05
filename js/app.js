@@ -49,6 +49,91 @@ Chart.plugins.unregister(ChartDataLabels);
 //Chart.defaults.global.plugins.crosshair.line.color = '#3f5270';
 
 //
+// Daily CO2 per year
+//
+function plotDailyCO2(elmt, url) {
+  let id = insertAccordionAndCanvas(elmt, false);
+  let myChart = new Chart(document.getElementById(id.canvasId), {
+    type: 'line',
+    options: {
+      responsive: true,
+      aspectRatio: 1,
+      legend: {
+        display: true,
+        reverse: false,
+        position: 'right',
+        labels: {
+          boxWidth: 6,
+          fontSize: 10
+        },
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            callback: v => v + 'ppm'
+          }
+        }],
+        xAxes: [{
+          type: 'time',
+          time: {
+            unit: 'month',
+            displayFormats: {
+              month: 'MMM'
+            }
+          },
+        }]
+      },
+      tooltips: {
+        intersect: false,
+        mode: 'index',
+        callbacks: {
+          title: (tooltip) => {
+            //console.log(tooltip)
+            if (tooltip[0].datasetIndex === 0) {
+              let diff = tooltip[0].value - tooltip[1].value;
+              let chg = Math.floor(1000 * diff / tooltip[1].value) / 10;
+              return [
+                moment(tooltip[0].xLabel).format('MMMM D'),
+                "2020 compared to 2019: " + chg + "%"
+              ]
+            }
+            return moment(tooltip[0].xLabel).format('MMMM D')
+          }
+        }
+      }
+    }
+  });
+  fetch(url)
+    .then(status)
+    .then(json)
+    .then(results => {
+      console.log('co2-daily:', results.data);
+      insertSourceAndLink(results, id, url);
+      let d = results.data;
+      let colors = mkColorArray(2 * d.length);
+      let colorNow = colors[d.length];
+      // plot each year as a separate dataset
+      while (d.length) {
+        let c = colors.pop();
+        let year = d.shift();
+        myChart.data.datasets.push({
+          label: year.year,
+          borderColor: year.year == 2020 ? colorNow : c,
+          backgroundColor: year.year == 2020 ? colorNow : c,
+          showLine: true,
+          fill: false,
+          data: year.data.map(d => ({
+            t: '2000-' + d.t,
+            y: d.y
+          }))
+        });
+      }
+      myChart.update();
+    })
+    .catch(err => console.log(err));
+}
+
+//
 // Three Corona charts side-by-side
 //
 function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggestedMax) {
@@ -58,7 +143,7 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggest
       type: 'bar',
       options: {
         responsive: true,
-        aspectRatio: 1,
+        aspectRatio: 1.2,
         legend: {
           display: true,
           reverse: false,
@@ -118,7 +203,7 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggest
     .then(status)
     .then(json)
     .then(results => {
-      console.log('Covid deaths:', results.data.length);
+      console.log('Covid, countries:', results.data.length);
       //insertSourceAndLink(results, elementSource, url);
       let c = mkColorArray(2);
       let charts = [];
@@ -128,47 +213,11 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggest
       // Process each country
       while (countries.length) {
         let cName = countries.shift(); // country name
-        console.log(cName)
         let x = results.data.find(x => x.country === cName);
         if (x === undefined) {
           console.log("Warning:", cn, " not found")
           continue;
         }
-        /*
-        let d = x.data;
-
-        // Create a smoothed array of daily cases
-        let smooth = [];
-        for (let i = 0; i < d.length; i++) {
-          let e = {
-            t: d[i].t,
-            y: 0, // cumulative 
-            d: 0, // daily
-            c: 0 // change in percent
-          }
-          if (i === 0) {
-            e.y = d[i].y;//(d[i].y + d[i+1].y) / 2;
-          } else if (i === d.length - 1) {
-            e.y = d[i].y;//(d[i-1].y +d[i].y) / 2;
-          } else {
-            e.y = (d[i - 1].y + d[i].y + d[i + 1].y) / 3;
-          }
-          smooth[i] = e;
-        }
-        // Calculate growth based on smoothed daily numbers
-        for (let i = 0; i < smooth.length; i++) {
-          if (i === 0) {
-            smooth[i].c = 0;
-            smooth[i].d = 0;
-          } else if (i === smooth.length - 1) {
-            smooth[i].d = d[i].y - d[i - 1].y;
-            smooth[i].c = 100 * smooth[i].d / smooth[i - 1].y;
-          } else {
-            smooth[i].d = (smooth[i].y - smooth[i - 1].y)
-            smooth[i].c = 100 * smooth[i].d / smooth[i - 1].y;
-          }
-        }
-        */
         // Push the ba chart of cases per day
         charts[chIndex].data.datasets.push({
           yAxisID: 'L',
@@ -196,10 +245,7 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggest
           data: x.data.map(x => ({
             t: x.t,
             y: x.y > 100 ? x.c : null
-          }))/*smooth.map(x => ({
-            t: x.t,
-            y: x.y > 100 ? x.c : null
-          }))*/
+          }))
         });
         chIndex++;
       }
