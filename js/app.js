@@ -88,13 +88,14 @@ function plotDailyCO2(elmt, url) {
         mode: 'index',
         callbacks: {
           title: (tooltip) => {
-            //console.log(tooltip)
             if (tooltip[0].datasetIndex === 0) {
               let diff = tooltip[0].value - tooltip[1].value;
               let chg = Math.floor(1000 * diff / tooltip[1].value) / 10;
               return [
                 moment(tooltip[0].xLabel).format('MMMM D'),
-                "2020 compared to 2019: " + chg + "%"
+                "2020 compared to " +
+                myChart.data.datasets[tooltip[1].datasetIndex].label +
+                ": " + chg + "%"
               ]
             }
             return moment(tooltip[0].xLabel).format('MMMM D')
