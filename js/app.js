@@ -108,6 +108,9 @@ function plotSpainElectricity(elmt) {
       tooltips: {
         intersect: false,
         mode: 'index',
+        callbacks: {
+          title: (tooltip) => moment(tooltip[0].xLabel).format('MMMM D')
+        }
       }
     }
   });
@@ -129,7 +132,7 @@ function plotSpainElectricity(elmt) {
           backgroundColor: year == 2020 ? '#f73' : 'rgba(100,100,100,0.25)',
           showLine: true,
           fill: false,
-          data: d
+          data: d.map(x => ({ t: '2000-' + x.t, y: x.y }))
         });
         myChart.update();
       })
@@ -200,7 +203,7 @@ function plotDailyCO2(elmt, url) {
     let d = results.data;
     let colors = mkColorArray(2 * d.length);
     let colorNow = colors[d.length];
-    console.log('co2-daily:', results.data);
+    console.log('co2-daily:', d.length);
     insertSourceAndLink(results, id, url);
     // plot each year as a separate dataset
     while (d.length) {
@@ -220,8 +223,6 @@ function plotDailyCO2(elmt, url) {
     }
     myChart.update();
   }
-
-
 }
 
 function fetchAndChart(url, id, myChart, chartWorker) {
