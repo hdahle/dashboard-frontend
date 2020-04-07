@@ -48,6 +48,95 @@ Chart.defaults.global.responsive = true;
 Chart.plugins.unregister(ChartDataLabels);
 //Chart.defaults.global.plugins.crosshair.line.color = '#3f5270';
 
+
+//
+//
+//
+function plotSpainElectricity(elmt) {
+  let id = insertAccordionAndCanvas(elmt, false);
+  let urls = [
+    'https://api.dashboard.eco/spain-electricity-2011',
+    'https://api.dashboard.eco/spain-electricity-2012',
+    'https://api.dashboard.eco/spain-electricity-2013',
+    'https://api.dashboard.eco/spain-electricity-2014',
+    'https://api.dashboard.eco/spain-electricity-2015',
+    'https://api.dashboard.eco/spain-electricity-2016',
+    'https://api.dashboard.eco/spain-electricity-2017',
+    'https://api.dashboard.eco/spain-electricity-2018',
+    'https://api.dashboard.eco/spain-electricity-2019',
+    'https://api.dashboard.eco/spain-electricity-2020'
+  ];
+  let myChart = new Chart(document.getElementById(id.canvasId), {
+    type: 'line',
+    options: {
+      responsive: true,
+      aspectRatio: 1,
+      legend: {
+        display: true,
+        reverse: false,
+        position: 'right',
+        labels: {
+          boxWidth: 8,
+          fontSize: 14,
+          fontSize: 10
+        },
+      },
+      scales: {
+        yAxes: [{
+          gridLines: {
+            display: true,
+          },
+          ticks: {
+            fontSize: 10,
+            min: 0,
+            callback: v => v + ' GWh'
+          }
+        }],
+        xAxes: [{
+          type: 'time',
+          time: {
+            unit: 'month',
+            displayFormats: {
+              month: 'MMM'
+            }
+          },
+          gridLines: {
+            display: false
+          }
+        }]
+      },
+      tooltips: {
+        intersect: false,
+        mode: 'index',
+      }
+    }
+  });
+  urls.forEach(url => {
+    fetch(url)
+      .then(status)
+      .then(json)
+      .then(results => {
+        console.log('ree.es:', results.data.length)
+        let d = results.data;
+        d.pop();
+        d.shift();
+        let year = results.year;
+        if (year == 2020) insertSourceAndLink(results, id, url);
+        myChart.data.datasets.push({
+          label: year,
+          borderWidth: year == 2020 ? 2 : 1,
+          borderColor: year == 2020 ? '#f73' : 'rgba(140,170,200,0.25)',
+          backgroundColor: year == 2020 ? '#f73' : 'rgba(100,100,100,0.25)',
+          showLine: true,
+          fill: false,
+          data: d
+        });
+        myChart.update();
+      })
+      .catch(err => console.log(err));
+  })
+}
+
 //
 // Daily CO2 per year
 //
@@ -104,35 +193,70 @@ function plotDailyCO2(elmt, url) {
       }
     }
   });
+
+  fetchAndChart(url, id, myChart, chartWorker);
+
+  function chartWorker(results, id, url, myChart) {
+    let d = results.data;
+    let colors = mkColorArray(2 * d.length);
+    let colorNow = colors[d.length];
+    console.log('co2-daily:', results.data);
+    insertSourceAndLink(results, id, url);
+    // plot each year as a separate dataset
+    while (d.length) {
+      let c = colors.pop();
+      let year = d.shift();
+      myChart.data.datasets.push({
+        label: year.year,
+        borderColor: year.year == 2020 ? colorNow : c,
+        backgroundColor: year.year == 2020 ? colorNow : c,
+        showLine: true,
+        fill: false,
+        data: year.data.map(d => ({
+          t: '2000-' + d.t,
+          y: d.y
+        }))
+      });
+    }
+    myChart.update();
+  }
+
+
+}
+
+function fetchAndChart(url, id, myChart, chartWorker) {
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
-      console.log('co2-daily:', results.data);
-      insertSourceAndLink(results, id, url);
-      let d = results.data;
-      let colors = mkColorArray(2 * d.length);
-      let colorNow = colors[d.length];
-      // plot each year as a separate dataset
-      while (d.length) {
-        let c = colors.pop();
-        let year = d.shift();
-        myChart.data.datasets.push({
-          label: year.year,
-          borderColor: year.year == 2020 ? colorNow : c,
-          backgroundColor: year.year == 2020 ? colorNow : c,
-          showLine: true,
-          fill: false,
-          data: year.data.map(d => ({
-            t: '2000-' + d.t,
-            y: d.y
-          }))
-        });
-      }
-      myChart.update();
+      chartWorker(results, id, url, myChart);
+
+      /*    let d = results.data;
+          let colors = mkColorArray(2 * d.length);
+          let colorNow = colors[d.length];
+          // plot each year as a separate dataset
+          while (d.length) {
+            let c = colors.pop();
+            let year = d.shift();
+            myChart.data.datasets.push({
+              label: year.year,
+              borderColor: year.year == 2020 ? colorNow : c,
+              backgroundColor: year.year == 2020 ? colorNow : c,
+              showLine: true,
+              fill: false,
+              data: year.data.map(d => ({
+                t: '2000-' + d.t,
+                y: d.y
+              }))
+            });
+          }
+          myChart.update();
+        */
     })
     .catch(err => console.log(err));
 }
+
+
 
 //
 // Three Corona charts side-by-side

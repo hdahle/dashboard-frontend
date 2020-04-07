@@ -121,6 +121,22 @@
     <!-- Plot CO2 multiple annual charts -->
     <div class="w3-row" id="LatestNews">
       <div class="w3-container w3-col m6 l7">
+        <h2>Corona impact in Spain: Reduced electricity consumption</h2>
+        The chart uses data from <a href "https://ree.es/en" target="_blank" rel="noopener">Red Electrica de Espana</a>,
+        the operator of the Spanish electricity grid.
+        <p>Events started shutting down in late February, the first schools closures were annonced on March 9,
+          and National lockdown was imposed on March 14</p>
+        <p>
+          This chart is updated daily.
+      </div>
+      <script>
+        plotSpainElectricity(document.currentScript.parentNode.getAttribute('id'));
+      </script>
+    </div>
+
+    <!-- Plot CO2 multiple annual charts -->
+    <div class="w3-row" id="plotMultipleAnnual">
+      <div class="w3-container w3-col m6 l7">
         <h2>Will the Corona/Covid-19 pandemic cause a reduction in CO2 levels?</h2>
         With reduced travel and reduced economic activity,
         global CO2 emissions might be lower than previous years.
