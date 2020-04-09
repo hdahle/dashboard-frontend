@@ -118,18 +118,18 @@
       </div>
     </div>
 
-    <!-- Plot CO2 multiple annual charts -->
+    <!-- Plot Spain Electricity -->
     <div class="w3-row" id="LatestNews">
       <div class="w3-container w3-col m6 l7">
         <h2>Corona impact in Spain: Reduced electricity consumption</h2>
         The chart uses data from <a href="https://www.ree.es/en" target="_blank" rel="noopener">Red Electrica de
           Espana</a>,
         the operator of the Spanish electricity grid.
-        The chart shows the daily electricity consumption for each year since 2011.
+        The chart shows the daily electricity consumption for this year compared to the last five years.
         It seems clear that electricity consumption has been reduced since the first half of March.
         <p>Events started shutting down in late February, the first schools closures were annonced on March 9,
           and National lockdown was imposed on March 14</p>
-        <p>
+        <p>The unusual pattern in the usage is because power consumption is far lower on weekends than on weekdays.
           This chart is updated daily.
       </div>
       <script>
@@ -157,6 +157,7 @@
           This chart is updated daily based on measurements from the Mauna Loa Observatory.
         </p>
       </div>
+      <script src="js/plot-co2-daily.js"></script>
       <script>
         plotDailyCO2(
           document.currentScript.parentNode.getAttribute('id'),
@@ -395,7 +396,6 @@
           { callback: v => v = v + 'ppm' },
           'time');
       </script>
-
     </div>
 
     <!-- Plot Law Dome 2000 years of CO2 -->
