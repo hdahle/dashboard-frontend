@@ -79,10 +79,10 @@ function insertSourceAndLink(res, elmtId, url) {
     let acc = accordions.pop();
     let s = document.getElementById(acc).innerHTML;
     if (res.source !== undefined && res.source !== null && res.source !== "") {
-      s += "<p>" + res.source + "</p>"; // yes, intentional overwrite of str
+      s += "<p>" + res.source + "</p>";
     }
     if (res.accessed !== undefined && res.accessed !== null && res.accessed !== "") {
-      s += "<p>Data retrieved: " + res.accessed + "</p>"; // yes, intentional overwrite of str
+      s += "<p>Data retrieved: " + res.accessed + "</p>";
     }
     if (res.link !== undefined && res.link !== null && res.link !== "") {
       s += "<p class='w3-button'><i class='fa fa-link w3-text-theme-l1'></i>&nbsp;<a target='_blank' rel='noopener' href='";
