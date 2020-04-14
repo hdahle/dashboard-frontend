@@ -38,7 +38,7 @@ else
 fi
 
 # make new crontab entry: twice daily
-NEWENTRY="55 * * * * cd ${PWD} && ${PWD}/${SCRIPT} >> ${LOGFILE} 2>&1"
+NEWENTRY="55 1,13 * * * cd ${PWD} && ${PWD}/${SCRIPT} >> ${LOGFILE} 2>&1 && cp redis*.js ../js/ && cp plot*.js ../js/"
 echo "Crontab entry will be: ${NEWENTRY}"
 
 # test if new entry already exists
