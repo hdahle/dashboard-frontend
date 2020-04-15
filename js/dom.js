@@ -88,8 +88,14 @@ function insertSourceAndLink(res, elmtId, url) {
       s += "<p class='w3-button'><i class='fa fa-link w3-text-theme-l1'></i>&nbsp;<a target='_blank' rel='noopener' href='";
       s += res.link + "'>" + res.link + "</a></p>";
     }
-    if (url != "") {
-      s += "<p class='w3-button' onclick='clickBtn(\"" + url + "\");'><i class='fa fa-link w3-text-theme-l1'></i>&nbsp;" + url + "</p>";
+    if (Array.isArray(url)) {
+      url.forEach(u => {
+        s += "<p class='w3-button' onclick='clickBtn(\"" + u + "\");'><i class='fa fa-link w3-text-theme-l1'></i>&nbsp;" + u + "</p>";
+      });
+    } else {
+      if (url != "") {
+        s += "<p class='w3-button' onclick='clickBtn(\"" + url + "\");'><i class='fa fa-link w3-text-theme-l1'></i>&nbsp;" + url + "</p>";
+      }
     }
     document.getElementById(acc).innerHTML = s;
   }
@@ -103,7 +109,21 @@ function clickBtn(url) {
     .then(status)
     .then(json)
     .then(res => {
-      window.open().document.body.innerHTML = "<pre>" + JSON.stringify(res, null, 2) + "<pre>";
+      let w = window.open();
+      w.document.body.innerHTML = "<pre>" + JSON.stringify(res, null, 2) + "<pre>";
     })
     .catch(err => console.log(err));
+}
+
+// Helpers for fetch() 
+function status(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return Promise.resolve(response)
+  } else {
+    return Promise.reject(new Error(response.statusText))
+  }
+}
+
+function json(response) {
+  return response.json()
 }

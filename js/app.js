@@ -1,7 +1,7 @@
 //
 // app.js
 //
-// H. Dahle
+// 2020 H. Dahle
 //
 
 // Create color array for charts
@@ -18,18 +18,8 @@ function mkColorArray(num, color) {
   }
   return r;
 }
-
-// Helpers for fetch() 
-function status(response) {
-  if (response.status >= 200 && response.status < 300) {
-    return Promise.resolve(response)
-  } else {
-    return Promise.reject(new Error(response.statusText))
-  }
-}
-
-function json(response) {
-  return response.json()
+function colorArrayToAlpha(array, alpha) {
+  return array.map(x => x.replace('rgb', 'rgba').replace(')', ',' + alpha + ')'));
 }
 
 // Chart.js global settings
@@ -46,12 +36,11 @@ Chart.defaults.global.aspectRatio = 1;
 Chart.defaults.global.responsive = true;
 
 Chart.plugins.unregister(ChartDataLabels);
-//Chart.defaults.global.plugins.crosshair.line.color = '#3f5270';
 
 //
 // Plot Spain Electricity Consumption last 10 years
 //
-function plotSpainElectricity(elmt) {
+function plotSpainElectricity(elmt, json, urls, yUnit = '') {
   let id = insertAccordionAndCanvas(elmt, false);
   let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'line',
@@ -59,32 +48,24 @@ function plotSpainElectricity(elmt) {
       responsive: true,
       aspectRatio: 1,
       legend: {
-        display: true,
-        reverse: false,
-        position: 'right',
         labels: {
-          boxWidth: 8,
-          fontSize: 14,
-          fontSize: 10
+          boxWidth: 8
         },
       },
       scales: {
         yAxes: [{
-          gridLines: {
-            display: true,
-          },
           ticks: {
             fontSize: 10,
             min: 0,
-            callback: v => v + ' GWh'
+            callback: v => v + yUnit
           }
         }],
         xAxes: [{
           type: 'time',
           time: {
-            unit: 'month',
+            unit: 'week',
             displayFormats: {
-              month: 'MMM'
+              week: 'MMM D'
             }
           },
           gridLines: {
@@ -101,31 +82,29 @@ function plotSpainElectricity(elmt) {
       }
     }
   });
-  let urlBase = 'https://api.dashboard.eco/spain-electricity-';
-  [/*2011, 2012, 2013, 2014, */2015, 2016, 2017, 2018, 2019, 2020].forEach(n => {
-    let url = urlBase + n;
-    fetch(url)
-      .then(status)
-      .then(json)
-      .then(results => {
-        console.log('ree.es:', results.data.length)
-        // Just plot the days since start of year until end of current month
-        let d = results.data.slice(1, parseInt(moment().endOf('month').format('DDD')));
-        let year = results.year;
-        if (year == 2020) insertSourceAndLink(results, id, url);
-        myChart.data.datasets.push({
-          label: year,
-          borderWidth: year == 2020 ? 2 : 1,
-          borderColor: year == 2020 ? '#f73' : 'rgba(140,170,200,0.25)',
-          backgroundColor: year == 2020 ? '#f73' : 'rgba(100,100,100,0.25)',
-          showLine: true,
-          fill: false,
-          data: d.map(x => ({ t: '2000-' + x.t, y: x.y }))
-        });
-        myChart.update();
-      })
-      .catch(err => console.log(err));
-  })
+  //let url = urls.pop();
+  let cSolid = mkColorArray(json.length);
+  let cAlpha = colorArrayToAlpha(cSolid, 0.3);
+  let c2020 = cSolid[0];
+
+  while (json.length) {
+    let results = json.pop();
+    console.log('ree.es:', results.data.length)
+    // Just plot the days since start of year until end of current month
+    let d = results.data.slice(1, parseInt(moment().endOf('month').format('DDD')));
+    let year = results.year;
+    if (year == 2020) insertSourceAndLink(results, id, urls);
+    myChart.data.datasets.push({
+      label: year,
+      borderWidth: 2,//year == 2020 ? 2 : 1,
+      borderColor: year == 2020 ? c2020 : cAlpha.pop(),
+      backgroundColor: year == 2020 ? c2020 : cSolid.pop(),
+      showLine: true,
+      fill: false,
+      data: d.map(x => ({ t: '2000-' + x.t, y: x.y }))
+    });
+    myChart.update();
+  }
 }
 
 //
@@ -185,20 +164,15 @@ function plotDailyCO2(elmt, url) {
     }
   });
 
-  // fetchAndChart(url, id, myChart, chartWorker);
-  //chartWorker(redisCO2Daily, id, url, myChart);
   let results = redisCO2Daily;
-  // function chartWorker(results, id, url, myChart) {
   let d = results.data;
   let colors = mkColorArray(2 * d.length);
   let colorNow = colors[d.length];
-  console.log('co2-daily:', d.length, results.accessed);
   insertSourceAndLink(results, id, url);
   // plot each year as a separate dataset
   while (d.length) {
     let c = colors.pop();
     let year = d.shift();
-    console.log(year)
     myChart.data.datasets.push({
       label: year.year,
       borderColor: year.year == 2020 ? colorNow : c,
@@ -212,14 +186,12 @@ function plotDailyCO2(elmt, url) {
     });
   }
   myChart.update();
-  //}
 }
 
 //
 // Three Corona charts side-by-side
 //
 function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggestedMax) {
-  //console.log("Ref:", refCountry, "Countries:", countries)
   function makeChart(elementId) {
     return new Chart(document.getElementById(elementId), {
       type: 'bar',
@@ -260,8 +232,7 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggest
             id: 'L',
             position: 'left',
             ticks: {
-              suggestedMax: suggestedMax,
-              fontColor: 'rgb(40,80,150)'
+              suggestedMax: suggestedMax
             }
           }, {
             id: 'R',
@@ -281,133 +252,61 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggest
       }
     });
   }
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('Covid, countries:', results.data.length);
-      //insertSourceAndLink(results, elementSource, url);
-      let c = mkColorArray(2);
-      let charts = [];
-      elmt.forEach(e => charts.push(makeChart(e)))
-      let chIndex = 0
+  let results = redisCovidDeaths;
+  console.log('Covid, countries:', results.data.length);
+  //insertSourceAndLink(results, elementSource, url);
+  let c = mkColorArray(2);
+  let charts = [];
+  elmt.forEach(e => charts.push(makeChart(e)))
+  let chIndex = 0
 
-      // Process each country
-      while (countries.length) {
-        let cName = countries.shift(); // country name
-        let x = results.data.find(x => x.country === cName);
-        if (x === undefined) {
-          console.log("Warning:", cn, " not found")
-          continue;
-        }
-        // Push the ba chart of cases per day
-        charts[chIndex].data.datasets.push({
-          yAxisID: 'L',
-          label: x.country,
-          barPercentage: 0.8,
-          backgroundColor: 'rgba(40,80,150,0.4)', //c[1],
-          categoryPercentage: 1,
-          tooltipText: 'Cases per day: ',
-          data: x.data.map(x => ({
-            t: x.t,
-            y: cumulative ? x.y : x.d
-          }))
-        });
-        // Push the line chart of smoothed daily change
-        charts[chIndex].data.datasets.push({
-          yAxisID: 'R',
-          type: 'line',
-          label: 'Daily increase',
-          categoryPercentage: 1,
-          fill: false,
-          borderColor: c[0],
-          backgroundColor: c[0],
-          borderWidth: 2,
-          tooltipText: ['Daily increase: ', '%'],
-          data: x.data.map(x => ({
-            t: x.t,
-            y: x.y > 100 ? x.c : null
-          }))
-        });
-        chIndex++;
-      }
-      charts.forEach(x => x.update());
-    })
-    .catch(err => console.log(err));
-}
-
-//
-// Covid / Coronavirus Top 20 Countries
-//
-function plotCorona(elmt, url) {
-  let id = insertAccordionAndCanvas(elmt, true);
-  function makeChart(id, mobile = false) {
-    return new Chart(document.getElementById(id), {
-      type: 'line',
-      options: {
-        responsive: true,
-        aspectRatio: mobile ? 0.9 : 2,
-        legend: {
-          display: true,
-          reverse: false,
-          position: 'right',
-          labels: {
-            boxWidth: 8,
-            padding: 6,
-            fontSize: mobile ? 10 : 12
-          },
-        },
-        tooltips: {
-          intersect: false,
-          mode: 'index'
-        },
-        scales: {
-          xAxes: [{
-            type: 'time',
-            time: {
-              unit: 'day'
-            }
-          }]
-        }
-      }
+  // Process each country
+  while (countries.length) {
+    let cName = countries.shift(); // country name
+    let x = results.data.find(x => x.country === cName);
+    if (x === undefined) {
+      console.log("Warning:", cName, " not found")
+      continue;
+    }
+    // Push the ba chart of cases per day
+    charts[chIndex].data.datasets.push({
+      yAxisID: 'L',
+      label: x.country,
+      barPercentage: 0.8,
+      backgroundColor: c[1].replace('rgb', 'rgba').replace(')', ',0.6)'),//'rgba(40,80,150,0.4)', //c[1],
+      categoryPercentage: 1,
+      tooltipText: 'Cases per day: ',
+      data: x.data.map(x => ({
+        t: x.t,
+        y: cumulative ? x.y : x.d
+      }))
     });
+    // Push the line chart of smoothed daily change
+    charts[chIndex].data.datasets.push({
+      yAxisID: 'R',
+      type: 'line',
+      label: 'Daily increase',
+      categoryPercentage: 1,
+      fill: false,
+      borderColor: c[0],
+      backgroundColor: c[0],
+      borderWidth: 2,
+      tooltipText: ['Daily increase: ', '%'],
+      data: x.data.map(x => ({
+        t: x.t,
+        y: x.y > 100 ? x.c : null
+      }))
+    });
+    chIndex++;
   }
-  let myChart = makeChart(id.canvasId);
-  let myChartMobile = makeChart(id.canvasIdMobile, true);
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      //console.log('Covid:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      let d = results.data.sort((a, b) => b.data[b.data.length - 1].y - a.data[a.data.length - 1].y);
-      // just get top20
-      d = d.slice(0, 21);
-      let c = mkColorArray(d.length);
-      while (d.length) {
-        let x = d.shift();
-        if (x.country === 'World') continue;
-        let tmp = {
-          label: x.country === 'Others' ? 'Diamond Princess' : x.country,
-          fill: false,
-          borderColor: c[0],
-          backgroundColor: c[0],
-          data: x.data
-        };
-        c.shift();
-        myChart.data.datasets.push(tmp);
-        myChartMobile.data.datasets.push(tmp);
-      }
-      myChart.update();
-      myChartMobile.update();
-    })
-    .catch(err => console.log(err));
+  charts.forEach(x => x.update());
 }
+
 
 //
 // Corona cases by capita
 //
-function plotCoronaByCapita(elmt, url) {
+function plotCoronaDeathsByCapita(elmt, url) {
   let id = insertAccordionAndCanvas(elmt);
   let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
@@ -437,38 +336,32 @@ function plotCoronaByCapita(elmt, url) {
       },
     }
   });
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      //console.log('Covid:', results);
-      insertSourceAndLink(results, id, url);
-      // Create array of { country, cases }
-      let data = results.data.map(d => ({
-        country: d.country,
-        ypm: d.data.slice(-1)[0].ypm,
-        y: d.data.slice(-1)[0].y
-      }));
-      // Remove 'others'
-      data = data.filter(x => x.country !== 'Others' && x.country !== 'Diamond Princess');
-      // Sort array
-      data = data.sort((a, b) => b.ypm - a.ypm);
-      // Extract top 20
-      data = data.slice(0, 20);
-      let col = mkColorArray(data.length * 2);
-      // Plot it    
-      myChart.data.datasets.push({
-        backgroundColor: col,
-        borderColor: 'rgba(0,0,0,0)',
-        borderWidth: 2,
-        categoryPercentage: 0.5,
-        data: data.map(x => x.ypm),
-        data2: data.map(x => x.y)
-      });
-      myChart.data.labels = data.map(x => x.country);
-      myChart.update();
-    })
-    .catch(err => console.log(err));
+  let results = redisCovidDeaths;
+  insertSourceAndLink(results, id, url);
+  // Create array of { country, cases }
+  let data = results.data.map(d => ({
+    country: d.country,
+    ypm: d.data.slice(-1)[0].ypm,
+    y: d.data.slice(-1)[0].y
+  }));
+  // Remove 'others'
+  data = data.filter(x => x.country !== 'Others' && x.country !== 'Diamond Princess');
+  // Sort array
+  data = data.sort((a, b) => b.ypm - a.ypm);
+  // Extract top 20
+  data = data.slice(0, 20);
+  let col = mkColorArray(data.length * 2);
+  // Plot it    
+  myChart.data.datasets.push({
+    backgroundColor: col,
+    borderColor: 'rgba(0,0,0,0)',
+    borderWidth: 2,
+    categoryPercentage: 0.5,
+    data: data.map(x => x.ypm),
+    data2: data.map(x => x.y)
+  });
+  myChart.data.labels = data.map(x => x.country);
+  myChart.update();
 }
 
 //
@@ -651,7 +544,7 @@ function plotCO2vsGDP(elmt) {
   // sort array in order to get nice labels
   data = data.sort((a, b) => b.gdp / b.pop - a.gdp / a.pop);
   let colors = mkColorArray(data.length);
-  data.forEach(x => x.color = colors.pop());
+  //data.forEach(x => x.color = colors.pop());
   // prepare and scale data before charting
   data.map(x => ({
     x: Math.trunc(1000000 * x.gdp / x.pop),
@@ -662,19 +555,19 @@ function plotCO2vsGDP(elmt) {
     gdp: x.gdp,
     co2: x.co2,
     pop: x.pop,
-    col: x.color
+    col: colors.pop() //x.color
   })).forEach(item => {
     myChart.data.datasets.push({
       data: [item],
       label: item.l,
-      backgroundColor: item.col.replace(')', ',0.7)'),
-      borderColor: item.col.replace(')', ',1)')
+      backgroundColor: item.col.replace('rgb', 'rgba').replace(')', ',0.7)'),
+      borderColor: item.col.replace('rgb', 'rgba').replace(')', ',1)')
     })
     myChartMobile.data.datasets.push({
       data: [item],
       label: item.l,
-      backgroundColor: item.col.replace(')', ',0.7)'),
-      borderColor: item.col.replace(')', ',1)')
+      backgroundColor: item.col.replace('rgb', 'rgba').replace(')', ',0.7)'),
+      borderColor: item.col.replace('rgb', 'rgba').replace(')', ',1)')
     })
   });
   myChart.update();
@@ -699,7 +592,6 @@ function plotCircularity(elmt, url) {
         padding: 0
       },
       plugins: {
-        crosshair: false,
         datalabels: {
           labels: {
             title: {
@@ -726,23 +618,19 @@ function plotCircularity(elmt, url) {
       }
     }
   });
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('Circularity:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      let d = results.data.pop();
-      let c = mkColorArray(d.data[0].values.length);
-      myChart.data.datasets.push({
-        label: d.data[0].legend,
-        data: d.data[0].values,
-        backgroundColor: c,
-      });
-      myChart.data.labels = d.data[0].legend;
-      myChart.options.title.text = 'Resources consumed: 100.6 Gt (billion tons)';//d.data[0].title;
-      myChart.update();
-    })
+  let results = redisCircularity2020;
+  console.log('Circularity:', results.data.length);
+  insertSourceAndLink(results, id, url);
+  let d = results.data.pop();
+  let c = mkColorArray(d.data[0].values.length);
+  myChart.data.datasets.push({
+    label: d.data[0].legend,
+    data: d.data[0].values,
+    backgroundColor: c,
+  });
+  myChart.data.labels = d.data[0].legend;
+  myChart.options.title.text = 'Resources consumed: 100.6 Gt (billion tons)';//d.data[0].title;
+  myChart.update();
 }
 
 //
@@ -750,54 +638,39 @@ function plotCircularity(elmt, url) {
 //
 function plotGlaciers(elmt) {
   let id = insertAccordionAndCanvas(elmt, true);
-  let glaciers = ['Styggedalsbreen', 'Bondhusbrea', 'Boyabreen', 'Buerbreen',
-    'Hellstugubreen', 'Storbreen', 'Stigaholtbreen', 'Briksdalsbreen',
-    'Rembesdalskaaka', 'Engabreen', 'Faabergstolsbreen', 'Nigardsbreen', 'Lodalsbreen'
-  ];
-  let colors = mkColorArray(glaciers.length);
+  let results = redisGlaciers;
+  let colors = mkColorArray(results.length);
   let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v ? v + 'm' : v }, true, 'right', 'linear', 2);
   let myChartMobile = makeMultiLineChart(id.canvasIdMobile, {}, { callback: v => v ? v + 'm' : v }, false);
-  glaciers.forEach(x => {
-    let url = 'https://api.dashboard.eco/glacier-length-nor-' + x;
-    fetch(url)
-      .then(status)
-      .then(json)
-      .then(results => {
-        console.log('Glaciers:', results.data.length);
-        insertSourceAndLink(results, id, url);
-        let col = colors.pop();
-        let dataset = {
-          data: results.data,
-          fill: false,
-          borderColor: col,
-          backgroundColor: col,
-          showLine: true,
-          label: results.glacier
-        };
-        myChart.data.datasets.push(dataset);
-        myChartMobile.data.datasets.push(dataset);
-        myChart.update();
-        myChartMobile.update();
-      })
-      .catch(err => console.log(err));
-  })
+
+  while (results.length) {
+    let d = results.pop();
+    let url = 'https://api.dashboard.eco/glacier-length-nor-' + d.glacier;
+    insertSourceAndLink(results, id, url);
+    let col = colors.pop();
+    let dataset = {
+      data: d.data,
+      fill: false,
+      borderColor: col,
+      backgroundColor: col,
+      showLine: true,
+      label: d.glacier
+    };
+    myChart.data.datasets.push(dataset);
+    myChartMobile.data.datasets.push(dataset);
+    myChart.update();
+    myChartMobile.update();
+  }
 }
 
 // 
 // Plot scatter data. Used by several sections in HTML
 //
-function plotScatter(elmt, urls, labels, xTicks = {}, yTicks = {}, xAxesType = 'linear') {
+function plotScatter(elmt, urls, res, labels, xTicks = {}, yTicks = {}, xAxesType = 'linear') {
   let id = insertAccordionAndCanvas(elmt);
   var myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'scatter',
     options: {
-      plugins: {
-        crosshair: {
-          sync: { enabled: false },
-          zoom: { enabled: false },
-          line: { color: '#3f5270' },
-        }
-      },
       tooltips: {
         callbacks: {
           label: function (tooltipItem, data) {
@@ -817,28 +690,22 @@ function plotScatter(elmt, urls, labels, xTicks = {}, yTicks = {}, xAxesType = '
     }
   });
   let c = mkColorArray(urls.length);
-  while (urls.length && labels.length) {
+  while (urls.length && labels.length & res.length) {
     let url = urls.shift();
     let lbl = labels.shift();
-    fetch(url)
-      .then(status)
-      .then(json)
-      .then(results => {
-        insertSourceAndLink(results, id, url);
-        let col = c.pop();
-        myChart.data.datasets.push({
-          data: results.data,
-          fill: false,
-          borderColor: col,
-          backgroundColor: col,
-          showLine: true,
-          label: lbl
-        });
-        //console.log('URL:', url, results.data)
-        myChart.data.labels.push(lbl);
-        myChart.update();
-      })
-      .catch(err => console.log(err));
+    let results = res.shift();
+    insertSourceAndLink(results, id, url);
+    let col = c.pop();
+    myChart.data.datasets.push({
+      data: results.data,
+      fill: false,
+      borderColor: col,
+      backgroundColor: col,
+      showLine: true,
+      label: lbl
+    });
+    myChart.data.labels.push(lbl);
+    myChart.update();
   }
 }
 
@@ -847,13 +714,6 @@ function makeStackedLineChart(canvas, xTicks, yTicks) {
   return new Chart(document.getElementById(canvas), {
     type: 'line',
     options: {
-      plugins: {
-        crosshair: {
-          sync: { enabled: false },
-          zoom: { enabled: false },
-          line: { color: '#3f5270' }
-        }
-      },
       legend: {
         reverse: true,
         position: 'right',
@@ -878,52 +738,47 @@ function makeStackedLineChart(canvas, xTicks, yTicks) {
 function plotEmissionsByRegion(elmt) {
   let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/emissions-by-region';
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('CO2 Emissions by region:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      let myChart = makeStackedLineChart(id.canvasId,
-        { min: 1959, max: 2018, callback: x => x === 1960 ? null : x },
-        { callback: v => (v / 1000) + ' Gt' }
-      );
-      let c = mkColorArray(results.data.length - 2);
-      while (results.data.length) {
-        let d = results.data.pop();
-        switch (d.country) {
-          case 'EU28':
-            continue;
-          case 'World':
-            continue;
-          case 'Central America':
-            d.country = 'C America';
-            break;
-          case 'South America':
-            d.country = 'S America';
-            break;
-          case 'North America':
-            d.country = 'N America';
-            break;
-          case 'Middle East':
-            d.country = 'Midl East';
-            break;
-          case 'Bunkers':
-            d.country = 'Transport';
-            break;
-        }
-        col = c.pop();
-        myChart.data.datasets.push({
-          label: d.country,
-          fill: true,
-          borderColor: col,
-          backgroundColor: col,
-          data: d.data
-        });
-      }
-      myChart.update();
-    })
-    .catch(err => console.log(err));
+  let results = redisEmissionsByRegion;
+  console.log('CO2 Emissions by region:', results.data.length);
+  insertSourceAndLink(results, id, url);
+  let myChart = makeStackedLineChart(id.canvasId,
+    { min: 1959, max: 2018, callback: x => x === 1960 ? null : x },
+    { callback: v => (v / 1000) + ' Gt' }
+  );
+  let c = mkColorArray(results.data.length - 2);
+  while (results.data.length) {
+    let d = results.data.pop();
+    switch (d.country) {
+      case 'EU28':
+        continue;
+      case 'World':
+        continue;
+      case 'Central America':
+        d.country = 'C America';
+        break;
+      case 'South America':
+        d.country = 'S America';
+        break;
+      case 'North America':
+        d.country = 'N America';
+        break;
+      case 'Middle East':
+        d.country = 'Midl East';
+        break;
+      case 'Bunkers':
+        d.country = 'Transport';
+        break;
+    }
+    col = c.pop();
+    myChart.data.datasets.push({
+      label: d.country,
+      fill: true,
+      borderColor: col,
+      backgroundColor: col,
+      data: d.data
+    });
+  }
+  myChart.update();
 }
 
 //
@@ -932,30 +787,25 @@ function plotEmissionsByRegion(elmt) {
 function plotEmissionsNorway(elmt) {
   let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/emissions-norway';
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('Norway:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      let myChart = makeStackedLineChart(id.canvasId,
-        { max: 2018 },
-        { callback: (value) => Math.trunc(value / 1000) + " Mt" }
-      );
-      let c = mkColorArray(results.data.length - 1);
-      // Plot all datasets except 0 which is the Total
-      for (let i = 1; i < results.data.length; i++) {
-        myChart.data.datasets.push({
-          data: results.data[i].values.map(x => ({ x: x.t, /* + "-12-31"*/ y: x.y })),
-          backgroundColor: c[0],
-          borderColor: c[0],
-          label: results.data[i].name
-        })
-        c.shift();
-      }
-      myChart.update();
+  let results = redisEmissionsNorway;
+  console.log('Norway:', results.data.length);
+  insertSourceAndLink(results, id, url);
+  let myChart = makeStackedLineChart(id.canvasId,
+    { max: 2018 },
+    { callback: (value) => Math.trunc(value / 1000) + " Mt" }
+  );
+  let c = mkColorArray(results.data.length - 1);
+  // Plot all datasets except 0 which is the Total
+  for (let i = 1; i < results.data.length; i++) {
+    myChart.data.datasets.push({
+      data: results.data[i].values.map(x => ({ x: x.t, /* + "-12-31"*/ y: x.y })),
+      backgroundColor: c[0],
+      borderColor: c[0],
+      label: results.data[i].name
     })
-    .catch(err => console.log(err))
+    c.shift();
+  }
+  myChart.update();
 }
 
 //
@@ -964,36 +814,30 @@ function plotEmissionsNorway(elmt) {
 function plotArcticIce(elmt) {
   let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/ice-nsidc';
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('ICE NSIDC:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'right', 'category');
-      myChart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      let yrs = [2020, 2019, 2018, 2017, 2016, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979];
-      let c = mkColorArray(yrs.length).reverse();
-      while (yrs.length) {
-        let year = yrs.pop();
-        // Extract a subset of data for a particular year
-        let tmp = results.data.filter(x => x.year === year);
-        // Then create a table that only contains the datapoints
-        let resval = tmp.map(x => x.extent);
-        myChart.data.datasets.push({
-          data: resval,
-          label: year,
-          fill: false,
-          borderColor: c[0],
-          pointColor: c[0],
-          backgroundColor: c[0],
-          pointRadius: year == 2020 ? 2 : 0,
-        });
-        c.shift();
-        myChart.update();
-      }
-    })
-    .catch(err => console.log(err));
+  let results = redisIceNsidc;
+  console.log('ICE NSIDC:', results.data.length);
+  insertSourceAndLink(results, id, url);
+  let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'right', 'category');
+  myChart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  let yrs = [2019, 2018, 2017, 2016, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979, 2020];
+  let c = mkColorArray(yrs.length).reverse();
+  while (yrs.length) {
+    let year = yrs.pop();
+    // Extract a subset of data for a particular year
+    let tmp = results.data.filter(x => x.year === year);
+    // Then create a table that only contains the datapoints
+    let resval = tmp.map(x => x.extent);
+    myChart.data.datasets.push({
+      data: resval,
+      label: year,
+      fill: false,
+      borderColor: c[0],
+      backgroundColor: c[0].replace('rgb', 'rgba').replace(')', ',0.4)'),
+      pointRadius: year == 2020 ? 4 : 0,
+    });
+    c.shift();
+    myChart.update();
+  }
 }
 
 //
@@ -1002,30 +846,25 @@ function plotArcticIce(elmt) {
 function plotWorldPopulation(elmt) {
   let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/WPP2019_TotalPopulationByRegion';
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('Population:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 + ' bn' }, true, 'right');
-      let c = mkColorArray(results.data.length);
-      while (results.data.length) {
-        let x = results.data.pop();
-        x.region = x.region.replace('Latin America and the Caribbean', 'S America');
-        x.region = x.region.replace('Northern America', 'N America');
-        myChart.data.datasets.push({
-          label: x.region,
-          data: x.data,
-          borderColor: c[0],
-          backgroundColor: c[0],
-          fill: false
-        });
-        c.shift();
-      }
-      myChart.update();
-    })
-    .catch(err => console.log(err));
+  let results = redisPopulationByRegion;
+  console.log('Population:', results.data.length);
+  insertSourceAndLink(results, id, url);
+  let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 + ' bn' }, true, 'right');
+  let c = mkColorArray(results.data.length);
+  while (results.data.length) {
+    let x = results.data.pop();
+    x.region = x.region.replace('Latin America and the Caribbean', 'S America');
+    x.region = x.region.replace('Northern America', 'N America');
+    myChart.data.datasets.push({
+      label: x.region,
+      data: x.data,
+      borderColor: c[0],
+      backgroundColor: c[0],
+      fill: false
+    });
+    c.shift();
+  }
+  myChart.update();
 }
 
 
@@ -1033,13 +872,6 @@ function makeMultiLineChart(canvas, xTicks, yTicks, showLegend, pos, category, a
   return new Chart(document.getElementById(canvas), {
     type: 'line',
     options: {
-      plugins: {
-        crosshair: (category === 'category') ? false : {
-          sync: { enabled: false },
-          zoom: { enabled: false },
-          line: { color: '#3f5270' }
-        }
-      },
       aspectRatio: aspect === undefined ? 1 : aspect,
       legend: {
         display: showLegend === undefined ? true : showLegend,
@@ -1063,32 +895,32 @@ function makeMultiLineChart(canvas, xTicks, yTicks, showLegend, pos, category, a
 //
 function plotEiaFossilFuelProduction(elmt, url) {
   let id = insertAccordionAndCanvas(elmt);
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('EIA:', results.series.length);
-      insertSourceAndLink(results, id, url);
-      let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 }, true);
-      let c = mkColorArray(results.series.length - 6);
-      while (results.series.length) {
-        let d = results.series.pop();
-        // Don't plot these...too much detail
-        if (['EU28', 'USA', 'Japan', 'China', 'Russia', 'India'].indexOf(d.region) !== -1) {
-          continue;
-        }
-        let col = c.pop();
-        myChart.data.datasets.push({
-          label: d.region,
-          data: d.data,
-          borderColor: col,
-          backgroundColor: col,
-          fill: false
-        });
-      }
-      myChart.update();
-    })
-    .catch(err => console.log(err));
+  let results = null;
+  if (url.includes('oil')) results = redisEiaGlobalOil;
+  else if (url.includes('gas')) results = redisEiaGlobalGas;
+  else if (url.includes('coal')) results = redisEiaGlobalCoal;
+  else return;
+
+  console.log('EIA:', results.series.length);
+  insertSourceAndLink(results, id, url);
+  let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 }, true);
+  let c = mkColorArray(results.series.length - 6);
+  while (results.series.length) {
+    let d = results.series.pop();
+    // Don't plot these...too much detail
+    if (['EU28', 'USA', 'Japan', 'China', 'Russia', 'India'].indexOf(d.region) !== -1) {
+      continue;
+    }
+    let col = c.pop();
+    myChart.data.datasets.push({
+      label: d.region,
+      data: d.data,
+      borderColor: col,
+      backgroundColor: col,
+      fill: false
+    });
+  }
+  myChart.update();
 }
 
 //
@@ -1104,28 +936,23 @@ function plotEmissionsByFuelType(elmt) {
   }, {
     callback: v => (v / 1000) + ' Gt'
   }, true);
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('Emissions by type:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      let c = mkColorArray(results.data.length - 1);
-      while (results.data.length) {
-        let d = results.data.shift();
-        if (d.fuel === 'Per Capita') continue;
-        let col = c.pop();
-        myChart.data.datasets.push({
-          label: d.fuel,
-          fill: false,
-          borderColor: col,
-          backgroundColor: col,
-          data: d.data
-        });
-      }
-      myChart.update();
-    })
-    .catch(err => console.log(err));
+  let results = redisEmissionsByFuelType;
+  console.log('Emissions by type:', results.data.length);
+  insertSourceAndLink(results, id, url);
+  let c = mkColorArray(results.data.length - 1);
+  while (results.data.length) {
+    let d = results.data.shift();
+    if (d.fuel === 'Per Capita') continue;
+    let col = c.pop();
+    myChart.data.datasets.push({
+      label: d.fuel,
+      fill: false,
+      borderColor: col,
+      backgroundColor: col,
+      data: d.data
+    });
+  }
+  myChart.update();
 }
 
 //
@@ -1134,8 +961,9 @@ function plotEmissionsByFuelType(elmt) {
 function plotOzoneHole(elmt) {
   plotScatter(elmt,
     ['https://api.dashboard.eco/ozone-nasa'],
+    [redisOzoneNasa],
     ["Ozone hole in million sq km"],
-    { max: 2019, autoSkip: true, maxTicksLimit: 8 },
+    { max: 2020, autoSkip: true, maxTicksLimit: 8 },
     {}
   );
 }
@@ -1146,6 +974,7 @@ function plotOzoneHole(elmt) {
 function plotGlobalTemp(elmt) {
   plotScatter(elmt,
     ["https://api.dashboard.eco/global-temperature-anomaly", "https://api.dashboard.eco/global-temperature-hadcrut", "https://api.dashboard.eco/global-temperature-uah"],
+    [redisGlobalTemperatureAnomaly, redisGlobalTemperatureHadcrut, redisGlobalTemperatureUah],
     ["NASA dataset", "HadCRUT dataset", "UAH dataset"],
     { max: 2020, autoSkip: true, maxTicksLimit: 8 },
     { callback: value => Math.round(value * 10) / 10 + "\u00b0" + "C" }
@@ -1158,6 +987,7 @@ function plotGlobalTemp(elmt) {
 function plotSvalbardTemp(elmt) {
   plotScatter(elmt,
     ['https://api.dashboard.eco/temperature-svalbard'],
+    [redisTemperatureSvalbard],
     ["Svalbard Airport annual mean temperature"],
     { min: 1900, max: 2020, autoSkip: true, maxTicksLimit: 8 },
     { callback: (value) => Math.round(value * 10) / 10 + "\u00b0" + "C" }
@@ -1170,37 +1000,30 @@ function plotSvalbardTemp(elmt) {
 function plotBrazilFires(elmt) {
   let id = insertAccordionAndCanvas(elmt);
   let url = 'https://api.dashboard.eco/queimadas-brazil';
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('Brazil:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'top', 'category');
-      let c = mkColorArray(3);
-      while (results.data.length) {
-        let x = results.data.pop();
-        let values = x.data;
-        // Too much data here. Let us just look at 2019 and Average
-        if (x.year != 2019 && x.year != 2020 && x.year != "Average") { // && x.year != "Maximum" && x.year != "Minimum") 
-          continue;
-        }
-        let col = c.pop();
-        myChart.data.datasets.push({
-          //type: x.year === 'Average' ? 'line' : 'bar',
-          data: values,
-          label: x.year,
-          pointRadius: x.year == 2020 ? 3 : 0,
-          borderColor: col,
-          //backgroundColor: col,
-          pointBackgroundColor: col,
-          fill: false
-        });
-      }
-      myChart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      myChart.update();
-    })
-    .catch(err => console.log(err));
+  let results = redisQueimadasBrazil;
+  console.log('Brazil:', results.data.length);
+  insertSourceAndLink(results, id, url);
+  let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'top', 'category');
+  let c = mkColorArray(3);
+  while (results.data.length) {
+    let x = results.data.pop();
+    let values = x.data;
+    // Too much data here. Let us just look at 2019 and Average
+    if (x.year != 2019 && x.year != 2020 && x.year != "Average") { // && x.year != "Maximum" && x.year != "Minimum") 
+      continue;
+    }
+    let col = c.pop();
+    myChart.data.datasets.push({
+      data: values,
+      label: x.year,
+      pointRadius: x.year == 2020 ? 4 : 0,
+      borderColor: col,
+      backgroundColor: col,
+      fill: false
+    });
+  }
+  myChart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  myChart.update();
 }
 
 //
@@ -1209,6 +1032,7 @@ function plotBrazilFires(elmt) {
 function plotGlobalSeaLevel(elmt) {
   plotScatter(elmt,
     ['https://api.dashboard.eco/CSIRO_Recons_2015', 'https://api.dashboard.eco/CSIRO_Alt_yearly'],
+    [redisCsiroRecons2015, redisCsiroAltYearly],
     ['Land-based measurements', 'Satellite measurements'],
     { autoSkip: true, maxTicksLimit: 8, min: 1880, max: 2020 },
     { callback: value => value ? value + 'mm' : value });
@@ -1218,19 +1042,16 @@ function plotGlobalSeaLevel(elmt) {
 // CCS - Carbon Capture
 //
 function plotCCS(elmt) {
-  plotBothCCS(elmt, 'https://api.dashboard.eco/operational-ccs')
+  plotBothCCS(elmt, 'https://api.dashboard.eco/operational-ccs', redisOperationalCCS)
 }
 function plotPlannedCCS(elmt) {
-  plotBothCCS(elmt, 'https://api.dashboard.eco/planned-ccs')
+  plotBothCCS(elmt, 'https://api.dashboard.eco/planned-ccs', redisPlannedCCS)
 }
 function makeHorizontalBar(canvas, xTicks, yTicks) {
   return new Chart(document.getElementById(canvas), {
     type: 'horizontalBar',
     plugins: [],
     options: {
-      plugins: {
-        crosshair: false
-      },
       scales: {
         xAxes: [{
           ticks: xTicks
@@ -1252,59 +1073,54 @@ function makeHorizontalBar(canvas, xTicks, yTicks) {
   });
 }
 
-function plotBothCCS(elmt, url) {
+function plotBothCCS(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      console.log('CCS:', results.data.length);
-      insertSourceAndLink(results, id, url);
-      var myChart = makeHorizontalBar(id.canvasId, { callback: v => v + 'Mt' }, {});
-      // remove any null projects, then sort it
-      let d = results.data.filter(x => x.project != null).sort((a, b) => b.capacity - a.capacity);
-      let lineColor = d.map(x => {
-        return x.type === 'EOR' ? '#c8745e' : (x.type == 'Storage' ? '#5ec874' : '#777');
-      });
-      myChart.data.datasets.push({
-        data: d.map(x => x.capacity),
-        backgroundColor: lineColor,
-        borderColor: lineColor,
-        categoryPercentage: 0.5,
-      });
-      myChart.data.labels = d.map(x => x.project + ", " + x.country);
-      myChart.update();
-    })
-    .catch(err => console.log(err));
+  console.log('CCS:', results.data.length);
+  insertSourceAndLink(results, id, url);
+  var myChart = makeHorizontalBar(id.canvasId, { callback: v => v + 'Mt' }, {});
+  // remove any null projects, then sort it
+  let d = results.data.filter(x => x.project != null).sort((a, b) => b.capacity - a.capacity);
+  let lineColor = d.map(x => {
+    return x.type === 'EOR' ? '#c8745e' : (x.type == 'Storage' ? '#5ec874' : '#777');
+  });
+  myChart.data.datasets.push({
+    data: d.map(x => x.capacity),
+    backgroundColor: lineColor,
+    borderColor: lineColor,
+    categoryPercentage: 0.5,
+  });
+  myChart.data.labels = d.map(x => x.project + ", " + x.country);
+  myChart.update();
 }
 
 function plotSafety(elmt) {
   let id = insertAccordionAndCanvas(elmt);
-  let urls = ['https://api.dashboard.eco/mortality-electricity',
+  let urls = [
+    'https://api.dashboard.eco/mortality-electricity',
     'https://api.dashboard.eco/mortality-electricity-sovacool',
     'https://api.dashboard.eco/mortality-electricity-markandya'
   ];
+  let res = [
+    redisMortalityElectricity,
+    redisMortalityElectricitySovacool,
+    redisMortalityElectricityMarkandya
+  ];
   for (let i = 0; i < urls.length; i++) {
     url = urls[i];
-    fetch(url)
-      .then(status)
-      .then(json)
-      .then(results => {
-        insertSourceAndLink(results, id, url);
-        if (i > 0) return;
-        console.log('Mort:', results.data.length);
-        let myChart = makeHorizontalBar(id.canvasId, {}, {});
-        let lineColor = results.data.map(x => x.deaths > 1 ? '#c8745e' : '#5ec874');
-        myChart.data.datasets.push({
-          data: results.data.map(x => x.deaths),
-          backgroundColor: lineColor,
-          borderColor: lineColor,
-          minBarLength: 3,
-          categoryPercentage: 0.5,
-        });
-        myChart.data.labels = results.data.map(x => x.resource);
-        myChart.update();
-      })
-      .catch(err => console.log(err));
+    results = res[i];
+    insertSourceAndLink(results, id, url);
+    if (i > 0) return;
+    console.log('Mort:', results.data.length);
+    let myChart = makeHorizontalBar(id.canvasId, {}, {});
+    let lineColor = results.data.map(x => x.deaths > 1 ? '#c8745e' : '#5ec874');
+    myChart.data.datasets.push({
+      data: results.data.map(x => x.deaths),
+      backgroundColor: lineColor,
+      borderColor: lineColor,
+      minBarLength: 3,
+      categoryPercentage: 0.5,
+    });
+    myChart.data.labels = results.data.map(x => x.resource);
+    myChart.update();
   }
 }

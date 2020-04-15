@@ -59,12 +59,9 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-  <!-- 
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-crosshair@1.1.2"></script>
--->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
   <script src="https://d3js.org/d3-color.v1.min.js"></script>
-
+  <script src="js/redis-values.js"></script>
   <script src="js/app.js"></script>
   <script src="js/dom.js"></script>
 </head>
@@ -121,19 +118,60 @@
     <!-- Plot Spain Electricity -->
     <div class="w3-row" id="LatestNews">
       <div class="w3-container w3-col m6 l7">
-        <h2>Corona impact in Spain: Reduced electricity consumption</h2>
+        <h2>Corona impact in Spain: Electricity consumption down about 20&percnt;</h2>
         The chart uses data from <a href="https://www.ree.es/en" target="_blank" rel="noopener">Red Electrica de
           Espana</a>,
         the operator of the Spanish electricity grid.
         The chart shows the daily electricity consumption for this year compared to the last five years.
-        It seems clear that electricity consumption has been reduced since the first half of March.
-        <p>Events started shutting down in late February, the first schools closures were annonced on March 9,
+        Since mid-March, it seems that weekend power consumption is down from about 600GWh to 500GWh per day.
+        Weekday consumption is down from about 750GWh to 600GWh per day.
+        <p>Corona in Spain: Events started shutting down in late February,
+          the first schools closures were annonced on March 9,
           and National lockdown was imposed on March 14</p>
         <p>The unusual pattern in the usage is because power consumption is far lower on weekends than on weekdays.
-          This chart is updated daily.
+          This chart is updated daily.</p>
       </div>
       <script>
-        plotSpainElectricity(document.currentScript.parentNode.getAttribute('id'));
+        plotSpainElectricity(
+          document.currentScript.parentNode.getAttribute('id'),
+          redisSpainElectricity,
+          [
+            'https://api.dashboard.eco/spain-electricity-2016',
+            'https://api.dashboard.eco/spain-electricity-2017',
+            'https://api.dashboard.eco/spain-electricity-2018',
+            'https://api.dashboard.eco/spain-electricity-2019',
+            'https://api.dashboard.eco/spain-electricity-2020'
+          ],
+          'GWh'
+        );
+      </script>
+    </div>
+
+    <!-- Plot Norway Traffic -->
+    <div class="w3-row" id="plotNorwayTraffic">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Corona impact in Norway: Reduced road traffic</h2>
+        The
+        <a href="https://www.vegvesen.no" target="_blank" rel="noopener">
+          Norwegian Public Roads Administration
+        </a> monitors vehicle traffic at hundreds of locations in Norway.
+        This chart displays the number of cars per day passing Oslo/Ring 3/Smestad.
+        In March-April 2019, weekday traffic volume was around 55000 cars per hour,
+        weekend traffic 30000-35000 cars per day.
+        <p>After Corona lockdown measures were implemented in Norway on March 12,
+          weekday traffic fell to about 32000 cars per day, but has since increased to about 40000.
+        </p>
+        This chart is updated daily.
+      </div>
+      <script>
+        plotSpainElectricity(
+          document.currentScript.parentNode.getAttribute('id'),
+          redisNorwayTrafficSmestad,
+          [
+            'https://api.dashboard.eco/norway-traffic-smestad-2019',
+            'https://api.dashboard.eco/norway-traffic-smestad-2020'
+          ]
+        );
       </script>
     </div>
 
@@ -157,7 +195,6 @@
           This chart is updated daily based on measurements from the Mauna Loa Observatory.
         </p>
       </div>
-      <script src="js/plot-co2-daily.js"></script>
       <script>
         plotDailyCO2(
           document.currentScript.parentNode.getAttribute('id'),
@@ -211,65 +248,6 @@
       </script>
     </div>
 
-    <!-- Plot Corona -->
-    <div class="w3-row" id="plotCorona">
-      <div class="w3-container">
-        <h2>Coronavirus/Covid-19 confirmed infections</h2>
-        This chart uses data from
-        <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
-          Johns Hopkins University Center for
-          Systems Science and Engineering </a> (JHU CSSE)
-        and shows the total number of confirmed Covid-19 Coronavirus infections.
-        <p>
-          This chart is updated every 24 hours. JHU CSSE updates their data around midnight UTC, this chart is
-          automatically updated shortly thereafter.
-        </p>
-      </div>
-      <div class="w3-row">
-        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="c1"></canvas></div>
-        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="c2"></canvas></div>
-        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="c3"></canvas></div>
-      </div>
-      <div class="w3-row">
-        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="c4"></canvas></div>
-        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="c5"></canvas></div>
-        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="c6"></canvas></div>
-      </div>
-      <script>
-        plotCoronaDeaths3(
-          ["c1", "c2", "c3", "c4", "c5", "c6"],
-          "https://api.dashboard.eco/covid-confirmed",
-          "China",
-          ["Italy", "Spain", "China", "US", "UK", "World"],
-          true,
-          200000
-        );
-      </script>
-    </div>
-
-    <!-- Plot Corona Per Capita -->
-    <div class="w3-row" id="plotCoronaPerCapita">
-      <div class="w3-container w3-col m6 l7">
-        <h2>Coronavirus/Covid-19 confirmed cases per capita: Top 20 countries</h2>
-        This chart uses data from
-        <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
-          Johns Hopkins University Center for
-          Systems Science and Engineering </a> (JHU CSSE)
-        and shows the current top 20 countries hardest hit by Corona/Covid-19 in terms of confirmed cases per one
-        million inhabitants.
-        The data for Italy includes the Vatican City and San Marino. The data for France includes Saint Barthelemy.
-        The cruise-ship Diamond Princess (712 cases, 10 deaths among 3711 passengers and crew) is not included in this
-        chart.
-        <p>
-          This chart is updated every 24 hours. JHU CSSE updates their data around midnight UTC, this chart is
-          automatically updated shortly thereafter.
-        </p>
-      </div>
-      <script>
-        plotCoronaByCapita("plotCoronaPerCapita", "https://api.dashboard.eco/covid-confirmed");
-      </script>
-    </div>
-
     <!-- Plot Corona Deaths Per Capita -->
     <div class="w3-row" id="plotCoronaDeaths">
       <div class="w3-container w3-col m6 l7">
@@ -289,7 +267,7 @@
         </p>
       </div>
       <script>
-        plotCoronaByCapita("plotCoronaDeaths", "https://api.dashboard.eco/covid-deaths");
+        plotCoronaDeathsByCapita("plotCoronaDeaths", "https://api.dashboard.eco/covid-deaths");
       </script>
     </div>
 
@@ -391,6 +369,7 @@
       <script>
         plotScatter("plotAtmosphericCO2",
           ["https://api.dashboard.eco/maunaloaco2-sm"],
+          [redisMaunaLoaCO2Sm],
           ['Atmospheric CO2 in ppm'],
           { autoSkip: true, maxTicksLimit: 8 },
           { callback: v => v = v + 'ppm' },
@@ -417,6 +396,7 @@
       <script>
         plotScatter(document.currentScript.parentNode.getAttribute('id'),/*"plotLawDome",*/
           ["https://api.dashboard.eco/maunaloa-annual-mean", "https://api.dashboard.eco/law2018co2"],
+          [redisMaunaLoaAnnualMean, redisLaw2018CO2],
           ["Mauna Loa", "Law Dome"],
           {
             autoSkip: true,
@@ -448,6 +428,7 @@
       <script>
         plotScatter("plotVostok",
           ["https://api.dashboard.eco/maunaloa-annual-mean", "https://api.dashboard.eco/law2018co2", "https://api.dashboard.eco/vostok"],
+          [redisMaunaLoaAnnualMean, redisLaw2018CO2, redisVostok],
           ["Mauna Loa", "Law Dome", "Vostok"],
           {
             autoSkip: true,
@@ -537,6 +518,7 @@
       <script>
         plotScatter('plotAtmosphericCH4',
           ['https://api.dashboard.eco/maunaloach4-sm'],
+          [redisMaunaLoaCH4Sm],
           ['Atmospheric CH4 (methane) in ppb'],
           { autoSkip: true, maxTicksLimit: 8 },
           { callback: v => v = v + 'ppb' },
@@ -812,9 +794,8 @@
             rel="noopener">
             IEA
           </a>
-          estimates that this accounts for an extra 500.000 barrels of oil per day.
-          This equals 78 million tons CO2 emissions per year.
-          In other words, CCS generates an extra 40 million tons of CO2 emissions annually.
+          estimates that this accounts for an extra 500.000 barrels of oil per day,
+          which equals 78 million tons CO2 emissions per year.
         </p>
         <p>
           The chart lists all CCS projects as of 2019. Those in red color use captured CO2 for EOR.
@@ -888,8 +869,7 @@
     </div>
     <div class="w3-container w3-section">
       <h2>About</h2>
-      This website collects and visualizes publicly available data on the state of the earth.
-      All data is fact-based and from reliable sources.
+      This website visualizes publicly available data from reliable sources on the state of the earth.
       <p>H&aring;kon Dahle, Oslo, Norway, 2020</p>
     </div>
   </div>
@@ -925,7 +905,7 @@
     }
   </script>
 
-  <!-- API BUTTONS -->
+  <!-- API BUTTONS 
 
   <script>
     function tryUrl(url) {
@@ -942,7 +922,7 @@
         .catch(err => console.log(err));
     }
   </script>
-
+-->
 </body>
 
 </html>
