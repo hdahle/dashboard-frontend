@@ -546,6 +546,9 @@ function plotCircularity(elmt, url) {
     type: 'doughnut',
     plugins: [ChartDataLabels],
     options: {
+      tooltips: {
+        enabled: false
+      },
       title: {
         display: true,
         position: 'bottom',
