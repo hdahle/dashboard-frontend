@@ -19,6 +19,18 @@ echo ";" >> ${JSFILE}
 echo -n "redisCovidDeaths" 
 wc ${JSFILE}
 
+echo "let redisCovidDeathsSelect=" >> ${JSFILE}
+curl -s "https://api.dashboard.eco/covid-deaths-select" >> ${JSFILE}
+echo ";" >> ${JSFILE}
+echo -n "redisCovidDeathsSelect" 
+wc ${JSFILE}
+
+echo "let redisCovidDeathsTop=" >> ${JSFILE}
+curl -s "https://api.dashboard.eco/covid-deaths-top" >> ${JSFILE}
+echo ";" >> ${JSFILE}
+echo -n "redisCovidDeathsTop" 
+wc ${JSFILE}
+
 #echo "let redisCovidConfirmed=" >> ${JSFILE}
 #curl "https://api.dashboard.eco/covid-confirmed" >> ${JSFILE}
 #echo ";" >> ${JSFILE}
