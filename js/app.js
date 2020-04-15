@@ -75,7 +75,7 @@ function plotSpainElectricity(elmt, json, urls, yUnit = '') {
       },
       tooltips: {
         intersect: false,
-        mode: 'index',
+        mode: 'x',
         callbacks: {
           title: (tooltip) => moment(tooltip[0].xLabel).format('MMMM D')
         }
