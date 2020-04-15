@@ -27,7 +27,7 @@ Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif";
 Chart.defaults.global.elements.point.radius = 0;
 Chart.defaults.global.elements.line.borderWidth = 2;
 Chart.defaults.global.animation.duration = 0;
-Chart.defaults.global.tooltips.backgroundColor = '#3f5270';// '#5e79a5';//'#222c3c';
+Chart.defaults.global.tooltips.backgroundColor = 'rgba(63,82,112,0.75)';//'#3f5270';// '#5e79a5';//'#222c3c';
 Chart.defaults.global.tooltips.intersect = false;
 Chart.defaults.global.tooltips.axis = 'x';
 Chart.defaults.global.legend.labels.boxWidth = 10;
@@ -45,13 +45,6 @@ function plotSpainElectricity(elmt, json, urls, yUnit = '') {
   let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'line',
     options: {
-      responsive: true,
-      aspectRatio: 1,
-      legend: {
-        labels: {
-          boxWidth: 8
-        },
-      },
       scales: {
         yAxes: [{
           ticks: {
@@ -74,8 +67,6 @@ function plotSpainElectricity(elmt, json, urls, yUnit = '') {
         }]
       },
       tooltips: {
-        intersect: false,
-        mode: 'x',
         callbacks: {
           title: (tooltip) => moment(tooltip[0].xLabel).format('MMMM D')
         }
@@ -96,7 +87,6 @@ function plotSpainElectricity(elmt, json, urls, yUnit = '') {
     if (year == 2020) insertSourceAndLink(results, id, urls);
     myChart.data.datasets.push({
       label: year,
-      borderWidth: 2,//year == 2020 ? 2 : 1,
       borderColor: year == 2020 ? c2020 : cAlpha.pop(),
       backgroundColor: year == 2020 ? c2020 : cSolid.pop(),
       showLine: true,
@@ -115,14 +105,9 @@ function plotDailyCO2(elmt, url) {
   let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'line',
     options: {
-      responsive: true,
-      aspectRatio: 1,
       legend: {
-        display: true,
-        reverse: false,
         position: 'right',
         labels: {
-          boxWidth: 6,
           fontSize: 10
         },
       },
@@ -143,7 +128,6 @@ function plotDailyCO2(elmt, url) {
         }]
       },
       tooltips: {
-        intersect: false,
         mode: 'index',
         callbacks: {
           title: (tooltip) => {
@@ -196,19 +180,8 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggest
     return new Chart(document.getElementById(elementId), {
       type: 'bar',
       options: {
-        responsive: true,
         aspectRatio: 1.2,
-        legend: {
-          display: true,
-          reverse: false,
-          position: 'top',
-          labels: {
-            boxWidth: 8,
-            fontSize: 14
-          },
-        },
         tooltips: {
-          intersect: false,
           mode: 'index',
           callbacks: {
             label: function (tooltipItem, data) {
@@ -290,7 +263,6 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggest
       fill: false,
       borderColor: c[0],
       backgroundColor: c[0],
-      borderWidth: 2,
       tooltipText: ['Daily increase: ', '%'],
       data: x.data.map(x => ({
         t: x.t,
@@ -311,8 +283,6 @@ function plotCoronaDeathsByCapita(elmt, url) {
   let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
     options: {
-      responsive: true,
-      aspectRatio: 1,
       legend: {
         display: false,
       },
@@ -324,7 +294,6 @@ function plotCoronaDeathsByCapita(elmt, url) {
         }]
       },
       tooltips: {
-        intersect: false,
         mode: 'index',
         displayColors: false,
         callbacks: {
@@ -355,7 +324,6 @@ function plotCoronaDeathsByCapita(elmt, url) {
   myChart.data.datasets.push({
     backgroundColor: col,
     borderColor: 'rgba(0,0,0,0)',
-    borderWidth: 2,
     categoryPercentage: 0.5,
     data: data.map(x => x.ypm),
     data2: data.map(x => x.y)
@@ -387,7 +355,6 @@ function plotCO2vsGDP(elmt) {
             }
           }
         },
-        responsive: true,
         aspectRatio: mobile ? 1 : 2,
         scales: {
           xAxes: [{
@@ -414,11 +381,7 @@ function plotCO2vsGDP(elmt) {
           }]
         },
         legend: {
-          display: true,
           position: mobile ? 'top' : 'right',
-          labels: {
-            boxWidth: 10,
-          },
           onClick: function (e, legendItem) {
             let index = legendItem.datasetIndex;
             let ci = this.chart;
@@ -585,30 +548,24 @@ function plotCircularity(elmt, url) {
     options: {
       title: {
         display: true,
-        fontSize: 14,
         position: 'bottom',
-        fontColor: '#222c3c',
-        fontStyle: 'normal',
-        padding: 0
+        fontStyle: 'normal'
       },
       plugins: {
         datalabels: {
           labels: {
             title: {
-              align: 'top', offset: 8,
-              color: '#3f5270',
-              font: {
-                size: 14,
-              },
-              formatter: (value, ctx) => ctx.dataset.label[ctx.dataIndex],
+              align: 'top',
+              color: '#fff',
+              formatter: (value, ctx) => ctx.dataset.label[ctx.dataIndex]
             },
             value: {
-              color: '#3f5270',
+              offset: 8,
+              color: '#fff',
               font: {
-                size: 18,
-                weight: 'bold'
+                size: 16
               },
-              formatter: (val) => val + ' Gt',
+              formatter: (value) => value + ' Gt'
             }
           }
         }
@@ -621,15 +578,19 @@ function plotCircularity(elmt, url) {
   let results = redisCircularity2020;
   console.log('Circularity:', results.data.length);
   insertSourceAndLink(results, id, url);
-  let d = results.data.pop();
-  let c = mkColorArray(d.data[0].values.length);
+
+  let legend = results.data[0].data[0].legend;
+  let values = results.data[0].data[0].values;
+  let c = mkColorArray(values.length);
   myChart.data.datasets.push({
-    label: d.data[0].legend,
-    data: d.data[0].values,
+    label: legend,
+    data: values,
     backgroundColor: c,
   });
-  myChart.data.labels = d.data[0].legend;
-  myChart.options.title.text = 'Resources consumed: 100.6 Gt (billion tons)';//d.data[0].title;
+  let tot = 0;
+  for (let i = 0; i < values.length; i++)
+    tot += values[i];
+  myChart.options.title.text = 'Resources consumed: ' + tot + ' Gt (billion tons)';
   myChart.update();
 }
 
