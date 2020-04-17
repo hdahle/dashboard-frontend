@@ -240,10 +240,7 @@
         plotCoronaDeaths3(
           ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9"],
           "https://api.dashboard.eco/covid-deaths",
-          "China",
           ["Italy", "Spain", "France", "US", "UK", "World", "Norway", "Sweden", "Denmark"],
-          false,
-          100
         );
       </script>
     </div>
@@ -258,7 +255,8 @@
           Systems Science and Engineering </a> (JHU CSSE)
         and shows the current top 20 countries hardest hit by Corona/Covid-19 in terms of confirmed deaths per one
         million inhabitants.
-        The data for Italy includes the Vatican City and San Marino. The data for France includes Saint Barthelemy.
+        The data for Italy includes the Vatican City and San Marino. Countries with less than 50000 inhabitants are not
+        included.
         The cruise-ship Diamond Princess (712 cases, 10 deaths among 3711 passengers and crew) is not included in this
         chart.
         <p>
@@ -267,7 +265,7 @@
         </p>
       </div>
       <script>
-        plotCoronaDeathsByCapita("plotCoronaDeaths", "https://api.dashboard.eco/covid-deaths");
+        plotCoronaDeathsByCapita("plotCoronaDeaths", "https://api.dashboard.eco/covid-deaths-top");
       </script>
     </div>
 
@@ -312,14 +310,7 @@
           with
           high emissions are in the top right hand corner.
         </p>
-        <!--        <p>
-          We can see that while China has very high emissions at the country level (indicated by the size of the
-          bubble), on a per capita basis the Chinese emissions are far lower than e.g. Russia and USA.
-          Africa is characterized by low GDP and low emissions.
-        </p>
--->
       </div>
-
       <script>
         plotCO2vsGDP("plotCO2vsGDP");
       </script>
@@ -371,7 +362,7 @@
           ["https://api.dashboard.eco/maunaloaco2-sm"],
           [redisMaunaLoaCO2Sm],
           ['Atmospheric CO2 in ppm'],
-          { autoSkip: true, maxTicksLimit: 8 },
+          { autoSkip: true, maxTicksLimit: 8, min: '1958-01-01', max: '2022-01-01' },
           { callback: v => v = v + 'ppm' },
           'time');
       </script>
@@ -520,7 +511,7 @@
           ['https://api.dashboard.eco/maunaloach4-sm'],
           [redisMaunaLoaCH4Sm],
           ['Atmospheric CH4 (methane) in ppb'],
-          { autoSkip: true, maxTicksLimit: 8 },
+          { autoSkip: true, maxTicksLimit: 8, min: '1980-01-01', max: '2020-12-31' },
           { callback: v => v = v + 'ppb' },
           'time');
       </script>

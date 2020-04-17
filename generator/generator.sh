@@ -11,13 +11,13 @@ echo -n "redisCO2Daily"
 wc ${JSFILE}
 
 # Temporary hack
-cp ${JSFILE} plot-co2-daily.js
+# cp ${JSFILE} plot-co2-daily.js
 
-echo "let redisCovidDeaths=" >> ${JSFILE}
-curl -s "https://api.dashboard.eco/covid-deaths" >> ${JSFILE}
-echo ";" >> ${JSFILE}
-echo -n "redisCovidDeaths" 
-wc ${JSFILE}
+#echo "let redisCovidDeaths=" >> ${JSFILE}
+#curl -s "https://api.dashboard.eco/covid-deaths" >> ${JSFILE}
+#echo ";" >> ${JSFILE}
+#echo -n "redisCovidDeaths" 
+#wc ${JSFILE}
 
 echo "let redisCovidDeathsSelect=" >> ${JSFILE}
 curl -s "https://api.dashboard.eco/covid-deaths-select" >> ${JSFILE}

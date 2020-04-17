@@ -56,6 +56,7 @@ function plotSpainElectricity(elmt, json, urls, yUnit = '') {
         xAxes: [{
           type: 'time',
           time: {
+            parser: 'MM-DD',
             unit: 'week',
             displayFormats: {
               week: 'MMM D'
@@ -68,7 +69,7 @@ function plotSpainElectricity(elmt, json, urls, yUnit = '') {
       },
       tooltips: {
         callbacks: {
-          title: (tooltip) => moment(tooltip[0].xLabel).format('MMMM D')
+          title: (tooltip) => moment(tooltip[0].xLabel, 'MM-DD').format('MMMM D')
         }
       }
     }
@@ -91,7 +92,7 @@ function plotSpainElectricity(elmt, json, urls, yUnit = '') {
       backgroundColor: year == 2020 ? c2020 : cSolid.pop(),
       showLine: true,
       fill: false,
-      data: d.map(x => ({ t: '2000-' + x.t, y: x.y }))
+      data: d
     });
     myChart.update();
   }
@@ -106,10 +107,7 @@ function plotDailyCO2(elmt, url) {
     type: 'line',
     options: {
       legend: {
-        position: 'right',
-        labels: {
-          fontSize: 10
-        },
+        position: 'right'
       },
       scales: {
         yAxes: [{
@@ -120,11 +118,12 @@ function plotDailyCO2(elmt, url) {
         xAxes: [{
           type: 'time',
           time: {
+            parser: 'MM-DD',
             unit: 'month',
             displayFormats: {
               month: 'MMM'
             }
-          },
+          }
         }]
       },
       tooltips: {
@@ -135,38 +134,35 @@ function plotDailyCO2(elmt, url) {
               let diff = tooltip[0].value - tooltip[1].value;
               let chg = Math.floor(1000 * diff / tooltip[1].value) / 10;
               return [
-                moment(tooltip[0].xLabel).format('MMMM D'),
+                moment(tooltip[0].xLabel, 'MM-DD').format('MMMM D'),
                 "2020 compared to " +
                 myChart.data.datasets[tooltip[1].datasetIndex].label +
-                ": " + chg + "%"
+                ": " + (chg > 0 ? '+' : '') + chg + "%"
               ]
             }
-            return moment(tooltip[0].xLabel).format('MMMM D')
+            return moment(tooltip[0].xLabel, 'MM-DD').format('MMMM D')
           }
         }
       }
     }
   });
 
-  let results = redisCO2Daily;
-  let d = results.data;
-  let colors = mkColorArray(2 * d.length);
-  let colorNow = colors[d.length];
-  insertSourceAndLink(results, id, url);
+  let d = redisCO2Daily.data;
+  let cSolid = mkColorArray(d.length);
+  let cAlpha = colorArrayToAlpha(cSolid, 0.6);
+  insertSourceAndLink(redisCO2Daily, id, url);
   // plot each year as a separate dataset
   while (d.length) {
-    let c = colors.pop();
-    let year = d.shift();
+    let x = d.shift();
+    let cS = cSolid.pop();
+    let cA = cAlpha.pop();
     myChart.data.datasets.push({
-      label: year.year,
-      borderColor: year.year == 2020 ? colorNow : c,
-      backgroundColor: year.year == 2020 ? colorNow : c,
+      label: x.year,
+      borderColor: x.year == 2020 ? cS : cA,
+      backgroundColor: cS,
       showLine: true,
       fill: false,
-      data: year.data.map(d => ({
-        t: '2000-' + d.t,
-        y: d.y
-      }))
+      data: x.data
     });
   }
   myChart.update();
@@ -175,16 +171,19 @@ function plotDailyCO2(elmt, url) {
 //
 // Three Corona charts side-by-side
 //
-function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggestedMax) {
+function plotCoronaDeaths3(elmt, url, countries) {
   function makeChart(elementId) {
     return new Chart(document.getElementById(elementId), {
       type: 'bar',
       options: {
-        aspectRatio: 1.2,
+        aspectRatio: 1.3,
         tooltips: {
           mode: 'index',
           callbacks: {
-            label: function (tooltipItem, data) {
+            title: (tooltip) => {
+              return moment(tooltip[0].xLabel, 'YYYY-MM-DD').format('MMMM D')
+            },
+            label: (tooltipItem, data) => {
               let t = data.datasets[tooltipItem.datasetIndex].tooltipText;
               t = (t === undefined) || (t === null) ? '' : t;
               t0 = Array.isArray(t) && t.length > 0 ? t[0] : t;
@@ -205,7 +204,7 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggest
             id: 'L',
             position: 'left',
             ticks: {
-              suggestedMax: suggestedMax
+              suggestedMax: 100 // percentage scale
             }
           }, {
             id: 'R',
@@ -225,7 +224,7 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggest
       }
     });
   }
-  let results = redisCovidDeaths;
+  let results = redisCovidDeathsSelect;
   console.log('Covid, countries:', results.data.length);
   //insertSourceAndLink(results, elementSource, url);
   let c = mkColorArray(2);
@@ -241,17 +240,17 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggest
       console.log("Warning:", cName, " not found")
       continue;
     }
-    // Push the ba chart of cases per day
+    // Push the bar chart of cases per day
     charts[chIndex].data.datasets.push({
       yAxisID: 'L',
-      label: x.country,
+      label: x.country + ', ' + x.total,
       barPercentage: 0.8,
       backgroundColor: c[1].replace('rgb', 'rgba').replace(')', ',0.6)'),//'rgba(40,80,150,0.4)', //c[1],
       categoryPercentage: 1,
-      tooltipText: 'Cases per day: ',
+      tooltipText: 'Deaths per day: ',
       data: x.data.map(x => ({
         t: x.t,
-        y: cumulative ? x.y : x.d
+        y: x.d
       }))
     });
     // Push the line chart of smoothed daily change
@@ -264,10 +263,7 @@ function plotCoronaDeaths3(elmt, url, refCountry, countries, cumulative, suggest
       borderColor: c[0],
       backgroundColor: c[0],
       tooltipText: ['Daily increase: ', '%'],
-      data: x.data.map(x => ({
-        t: x.t,
-        y: x.y > 100 ? x.c : null
-      }))
+      data: x.data,
     });
     chIndex++;
   }
@@ -283,6 +279,12 @@ function plotCoronaDeathsByCapita(elmt, url) {
   let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
     options: {
+      title: {
+        display: true,
+        text: 'Deaths per one million',
+        position: 'bottom',
+        fontStyle: 'normal'
+      },
       legend: {
         display: false,
       },
@@ -305,30 +307,14 @@ function plotCoronaDeathsByCapita(elmt, url) {
       },
     }
   });
-  let results = redisCovidDeaths;
-  insertSourceAndLink(results, id, url);
-  // Create array of { country, cases }
-  let data = results.data.map(d => ({
-    country: d.country,
-    ypm: d.data.slice(-1)[0].ypm,
-    y: d.data.slice(-1)[0].y
-  }));
-  // Remove 'others'
-  data = data.filter(x => x.country !== 'Others' && x.country !== 'Diamond Princess');
-  // Sort array
-  data = data.sort((a, b) => b.ypm - a.ypm);
-  // Extract top 20
-  data = data.slice(0, 20);
-  let col = mkColorArray(data.length * 2);
-  // Plot it    
+  insertSourceAndLink(redisCovidDeathsTop, id, url);
   myChart.data.datasets.push({
-    backgroundColor: col,
-    borderColor: 'rgba(0,0,0,0)',
+    backgroundColor: '#c8745e',
     categoryPercentage: 0.5,
-    data: data.map(x => x.ypm),
-    data2: data.map(x => x.y)
+    data: redisCovidDeathsTop.data.percapita,
+    data2: redisCovidDeathsTop.data.total
   });
-  myChart.data.labels = data.map(x => x.country);
+  myChart.data.labels = redisCovidDeathsTop.data.countries;
   myChart.update();
 }
 
@@ -344,7 +330,9 @@ function plotCO2vsGDP(elmt) {
         tooltips: {
           intersect: true,
           callbacks: {
-            title: (i, d) => d.datasets[i[0].datasetIndex].label,
+            title: (i, d) => {
+              return d.datasets[i[0].datasetIndex].label
+            },
             label: (i, d) => {
               let data = d.datasets[i.datasetIndex].data[0];
               return [
@@ -630,22 +618,30 @@ function plotGlaciers(elmt) {
 // 
 // Plot scatter data. Used by several sections in HTML
 //
-function plotScatter(elmt, urls, res, labels, xTicks = {}, yTicks = {}, xAxesType = 'linear') {
+function plotScatter(elmt, urls, res, labels, xTicks = {}, yTicks = {}, xAxesType = 'linear', parser = 'YYYY-MM-DD') {
   let id = insertAccordionAndCanvas(elmt);
   var myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'scatter',
     options: {
       tooltips: {
         callbacks: {
-          label: function (tooltipItem, data) {
-            return /*data.labels[tooltipItem.datasetIndex] + ' ' +*/ tooltipItem.xLabel + ': ' + tooltipItem.yLabel;
-          }
+          label: (tooltipItem) => {
+            let x = tooltipItem.xLabel;
+            if (moment(x, 'YYYY-MM-DD', true).isValid()) {
+              x = moment(x, 'YYYY-MM-DD').format('MMM YYYY');
+            }
+            return x + ': ' + tooltipItem.yLabel;
+          },
         }
       },
       scales: {
         xAxes: [{
           ticks: xTicks,
-          type: xAxesType
+          type: xAxesType,
+          time: {
+            parser: parser,
+            unit: 'year'
+          }
         }],
         yAxes: [{
           ticks: yTicks
@@ -762,7 +758,7 @@ function plotEmissionsNorway(elmt) {
   // Plot all datasets except 0 which is the Total
   for (let i = 1; i < results.data.length; i++) {
     myChart.data.datasets.push({
-      data: results.data[i].values.map(x => ({ x: x.t, /* + "-12-31"*/ y: x.y })),
+      data: results.data[i].values,//.map(x => ({ x: x.t, /* + "-12-31"*/ y: x.y })),
       backgroundColor: c[0],
       borderColor: c[0],
       label: results.data[i].name
@@ -783,8 +779,9 @@ function plotArcticIce(elmt) {
   insertSourceAndLink(results, id, url);
   let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'right', 'category');
   myChart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  let yrs = [2019, 2018, 2017, 2016, 2015, 2010, 2005, 2000, 1995, 1990, 1985, 1979, 2020];
-  let c = mkColorArray(yrs.length).reverse();
+  let yrs = [1979, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2016, 2017, 2018, 2019, 2020];
+  let cSolid = mkColorArray(yrs.length);
+  let cAlpha = colorArrayToAlpha(cSolid, 0.4);
   while (yrs.length) {
     let year = yrs.pop();
     // Extract a subset of data for a particular year
@@ -795,11 +792,12 @@ function plotArcticIce(elmt) {
       data: resval,
       label: year,
       fill: false,
-      borderColor: c[0],
-      backgroundColor: c[0].replace('rgb', 'rgba').replace(')', ',0.4)'),
+      borderColor: year == 2020 ? cSolid[0] : cAlpha[0],
+      backgroundColor: cAlpha[0],
       pointRadius: year == 2020 ? 4 : 0,
     });
-    c.shift();
+    cSolid.shift();
+    cAlpha.shift();
     myChart.update();
   }
 }
