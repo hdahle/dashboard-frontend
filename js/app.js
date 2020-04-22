@@ -18,8 +18,19 @@ function mkColorArray(num, color) {
   }
   return r;
 }
-function colorArrayToAlpha(array, alpha) {
-  return array.map(x => x.replace('rgb', 'rgba').replace(')', ',' + alpha + ')'));
+function colorArrayToAlpha(arr, alpha) {
+  return arr.map(x => x.replace('rgb', 'rgba').replace(')', ',' + alpha + ')'));
+}
+function colorArrayMix(arr) {
+  let res = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (i % 2) {
+      res.push(arr[i])
+    } else {
+      res.unshift(arr[i])
+    }
+  }
+  return res;
 }
 
 // Chart.js global settings
@@ -74,18 +85,16 @@ function plotSpainElectricity(elmt, json, urls, yUnit = '') {
       }
     }
   });
-  //let url = urls.pop();
   let cSolid = mkColorArray(json.length);
   let cAlpha = colorArrayToAlpha(cSolid, 0.3);
   let c2020 = cSolid[0];
+  insertSourceAndLink(json[0], id, urls);
 
   while (json.length) {
     let results = json.pop();
-    console.log('ree.es:', results.data.length)
     // Just plot the days since start of year until end of current month
     let d = results.data.slice(1, parseInt(moment().endOf('month').format('DDD')));
     let year = results.year;
-    if (year == 2020) insertSourceAndLink(results, id, urls);
     myChart.data.datasets.push({
       label: year,
       borderColor: year == 2020 ? c2020 : cAlpha.pop(),
@@ -94,8 +103,8 @@ function plotSpainElectricity(elmt, json, urls, yUnit = '') {
       fill: false,
       data: d
     });
-    myChart.update();
   }
+  myChart.update();
 }
 
 //
@@ -224,28 +233,18 @@ function plotCoronaDeaths3(elmt, url, countries) {
       }
     });
   }
-  let results = redisCovidDeathsSelect;
-  console.log('Covid, countries:', results.data.length);
+  console.log('Covid, countries:', redisCovidDeathsSelect.data.length);
   //insertSourceAndLink(results, elementSource, url);
   let c = mkColorArray(2);
-  let charts = [];
-  elmt.forEach(e => charts.push(makeChart(e)))
-  let chIndex = 0
-
-  // Process each country
-  while (countries.length) {
-    let cName = countries.shift(); // country name
-    let x = results.data.find(x => x.country === cName);
-    if (x === undefined) {
-      console.log("Warning:", cName, " not found")
-      continue;
-    }
-    // Push the bar chart of cases per day
-    charts[chIndex].data.datasets.push({
+  let c0 = c[0];
+  let c1 = c[1].replace('rgb', 'rgba').replace(')', ',0.6)');
+  redisCovidDeathsSelect.data.forEach(x => {
+    let ch = makeChart(elmt.pop());
+    ch.data.datasets.push({
       yAxisID: 'L',
       label: x.country + ', ' + x.total,
       barPercentage: 0.8,
-      backgroundColor: c[1].replace('rgb', 'rgba').replace(')', ',0.6)'),//'rgba(40,80,150,0.4)', //c[1],
+      backgroundColor: c1,
       categoryPercentage: 1,
       tooltipText: 'Deaths per day: ',
       data: x.data.map(x => ({
@@ -254,20 +253,19 @@ function plotCoronaDeaths3(elmt, url, countries) {
       }))
     });
     // Push the line chart of smoothed daily change
-    charts[chIndex].data.datasets.push({
+    ch.data.datasets.push({
       yAxisID: 'R',
       type: 'line',
       label: 'Daily increase',
       categoryPercentage: 1,
       fill: false,
-      borderColor: c[0],
-      backgroundColor: c[0],
+      borderColor: c0,
+      backgroundColor: c0,
       tooltipText: ['Daily increase: ', '%'],
       data: x.data,
     });
-    chIndex++;
-  }
-  charts.forEach(x => x.update());
+    ch.update();
+  });
 }
 
 
@@ -578,9 +576,7 @@ function plotCircularity(elmt, url) {
     data: values,
     backgroundColor: c,
   });
-  let tot = 0;
-  for (let i = 0; i < values.length; i++)
-    tot += values[i];
+  let tot = results.data[0].data[0].total;
   myChart.options.title.text = 'Resources consumed: ' + tot + ' Gt (billion tons)';
   myChart.update();
 }
@@ -610,9 +606,9 @@ function plotGlaciers(elmt) {
     };
     myChart.data.datasets.push(dataset);
     myChartMobile.data.datasets.push(dataset);
-    myChart.update();
-    myChartMobile.update();
   }
+  myChart.update();
+  myChartMobile.update();
 }
 
 // 
@@ -650,7 +646,9 @@ function plotScatter(elmt, urls, res, labels, xTicks = {}, yTicks = {}, xAxesTyp
     }
   });
   let c = mkColorArray(urls.length);
-  while (urls.length && labels.length & res.length) {
+  if ((urls.length !== res.length) || (labels.length !== res.length)) return;
+
+  while (res.length) {
     let url = urls.shift();
     let lbl = labels.shift();
     let results = res.shift();
@@ -664,9 +662,9 @@ function plotScatter(elmt, urls, res, labels, xTicks = {}, yTicks = {}, xAxesTyp
       showLine: true,
       label: lbl
     });
-    myChart.data.labels.push(lbl);
-    myChart.update();
   }
+  myChart.data.labels = labels;
+  myChart.update();
 }
 
 
@@ -705,38 +703,18 @@ function plotEmissionsByRegion(elmt) {
     { min: 1959, max: 2018, callback: x => x === 1960 ? null : x },
     { callback: v => (v / 1000) + ' Gt' }
   );
-  let c = mkColorArray(results.data.length - 2);
+  let c = mkColorArray(results.data.length);
+  c = colorArrayMix(c);
   while (results.data.length) {
     let d = results.data.pop();
-    switch (d.country) {
-      case 'EU28':
-        continue;
-      case 'World':
-        continue;
-      case 'Central America':
-        d.country = 'C America';
-        break;
-      case 'South America':
-        d.country = 'S America';
-        break;
-      case 'North America':
-        d.country = 'N America';
-        break;
-      case 'Middle East':
-        d.country = 'Midl East';
-        break;
-      case 'Bunkers':
-        d.country = 'Transport';
-        break;
-    }
-    col = c.pop();
     myChart.data.datasets.push({
       label: d.country,
       fill: true,
-      borderColor: col,
-      backgroundColor: col,
+      borderColor: c[0],
+      backgroundColor: c[0],
       data: d.data
     });
+    c.shift();
   }
   myChart.update();
 }
@@ -798,8 +776,8 @@ function plotArcticIce(elmt) {
     });
     cSolid.shift();
     cAlpha.shift();
-    myChart.update();
   }
+  myChart.update();
 }
 
 //
@@ -1057,32 +1035,20 @@ function plotBothCCS(elmt, url, results) {
 
 function plotSafety(elmt) {
   let id = insertAccordionAndCanvas(elmt);
-  let urls = [
-    'https://api.dashboard.eco/mortality-electricity',
-    'https://api.dashboard.eco/mortality-electricity-sovacool',
-    'https://api.dashboard.eco/mortality-electricity-markandya'
-  ];
-  let res = [
-    redisMortalityElectricity,
-    redisMortalityElectricitySovacool,
-    redisMortalityElectricityMarkandya
-  ];
-  for (let i = 0; i < urls.length; i++) {
-    url = urls[i];
-    results = res[i];
-    insertSourceAndLink(results, id, url);
-    if (i > 0) return;
-    console.log('Mort:', results.data.length);
-    let myChart = makeHorizontalBar(id.canvasId, {}, {});
-    let lineColor = results.data.map(x => x.deaths > 1 ? '#c8745e' : '#5ec874');
-    myChart.data.datasets.push({
-      data: results.data.map(x => x.deaths),
-      backgroundColor: lineColor,
-      borderColor: lineColor,
-      minBarLength: 3,
-      categoryPercentage: 0.5,
-    });
-    myChart.data.labels = results.data.map(x => x.resource);
-    myChart.update();
-  }
+  insertSourceAndLink(redisMortalityElectricity, id, 'https://api.dashboard.eco/mortality-electricity');
+  insertSourceAndLink(redisMortalityElectricitySovacool, id, 'https://api.dashboard.eco/mortality-electricity-sovacool');
+  insertSourceAndLink(redisMortalityElectricityMarkandya, id, 'https://api.dashboard.eco/mortality-electricity-markandya');
+  let myChart = makeHorizontalBar(id.canvasId, {}, {});
+  let d = redisMortalityElectricity.data;
+  console.log('Safety electricity:', d.length);
+  let lineColor = d.map(x => x.deaths > 1 ? '#c8745e' : '#5ec874');
+  myChart.data.datasets.push({
+    data: d.map(x => x.deaths),
+    backgroundColor: lineColor,
+    borderColor: lineColor,
+    minBarLength: 3,
+    categoryPercentage: 0.5,
+  });
+  myChart.data.labels = d.map(x => x.resource);
+  myChart.update();
 }

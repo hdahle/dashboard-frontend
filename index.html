@@ -92,18 +92,64 @@
   </div>
 
   <!-- Limit content width to 920px -->
-  <div class="w3-content w3-padding-48" id="Top" style="max-width:920px;">
+  <div class="w3-content w3-padding-32" id="Top" style="max-width:920px;">
 
     <!-- For tagline -->
-    <div class="w3-row w3-hide-small">
-      <div class="w3-container w3-col w3-quarter w3-margin-top">
-        <div class="w3-text-theme-d3 thin-font w3-margin-top">
-          We<br>probably<br>only have <br>one earth
+    <div class="w3-row w3-padding-16">
+      <div class="w3-theme-l5">
+        <div class="w3-half w3-container thin-font w3-hide-small">
+          We probably<br>
+          only have<br>
+          one earth
+        </div>
+        <div class="w3-container w3-rest">
+          <div class="w3-padding-16 w3-right-align">
+            Atmospheric CO2 level today<br>
+            <span class="thin-font" id="div-co2-now"></span><br>
+            <div style="font-size: small;">
+              <span id="div-co2-last"></span> than 1 year ago<br>
+              <span id="div-co2-ten"></span> than 10 years ago<br>
+              Source: <a href="http://esrl.noaa.gov/gmd/" target="_blank" rel="noopener">
+                NOAA ESRL
+              </a>
+              <!-- 
+            <button onclick="myAccordion('div-co2-now-source')" class="w3-button w3-stretch w3-right-align">
+              Source<i class='fa fa-angle-down'></i>
+            </button>
+            <div id="div-co2-now-source" class="w3-container w3-hide">
+              <p>Source</p>
+              <p>Link</p>
+            </div>
+            -->
+            </div>
+          </div>
+          <script>
+            if (1) {
+              let d = redisCO2Now.data[0];
+              document.getElementById('div-co2-now').innerHTML = d.value + ' ppm';
+              document.getElementById('div-co2-last').innerHTML =
+                Math.trunc(1000 * (d.value - d.valueLastYear) / d.valueLastYear) / 10 + '&percnt;' +
+                ((d.value > d.valueLastYear) ? ' higher' : ' lower');
+              document.getElementById('div-co2-ten').innerHTML =
+                Math.trunc(1000 * (d.value - d.value10yrsAgo) / d.value10yrsAgo) / 10 + '&percnt;' +
+                ((d.value > d.value10yrsAgo) ? ' higher' : ' lower');
+            }
+          </script>
         </div>
       </div>
-      <div class="w3-container w3-col w3-rest">
-      </div>
     </div>
+
+    <script>
+      function myAccordion(id) {
+        var x = document.getElementById(id);
+        if (x.className.indexOf("w3-show") == -1) {
+          x.className += " w3-show";
+        } else {
+          x.className = x.className.replace(" w3-show", "");
+        }
+      }
+    </script>
+
 
     <!-- Placeholder DIV for Latest News -->
     <div class="w3-section">
@@ -240,7 +286,7 @@
         plotCoronaDeaths3(
           ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9"],
           "https://api.dashboard.eco/covid-deaths",
-          ["Italy", "Spain", "France", "US", "UK", "World", "Norway", "Sweden", "Denmark"],
+          ["Italy", "Spain", "France", "US", "UK", "World", "Switzerland", "Sweden", "Belgium"],
         );
       </script>
     </div>
@@ -255,7 +301,8 @@
           Systems Science and Engineering </a> (JHU CSSE)
         and shows the current top 20 countries hardest hit by Corona/Covid-19 in terms of confirmed deaths per one
         million inhabitants.
-        The data for Italy includes the Vatican City and San Marino. Countries with less than 50000 inhabitants are not
+        The data for Italy includes the Vatican City and San Marino. Countries with less than 50000 inhabitants are
+        not
         included.
         The cruise-ship Diamond Princess (712 cases, 10 deaths among 3711 passengers and crew) is not included in this
         chart.

@@ -10,14 +10,11 @@ echo ";" >> ${JSFILE}
 echo -n "redisCO2Daily" 
 wc ${JSFILE}
 
-# Temporary hack
-# cp ${JSFILE} plot-co2-daily.js
-
-#echo "let redisCovidDeaths=" >> ${JSFILE}
-#curl -s "https://api.dashboard.eco/covid-deaths" >> ${JSFILE}
-#echo ";" >> ${JSFILE}
-#echo -n "redisCovidDeaths" 
-#wc ${JSFILE}
+echo "let redisCO2Now=" >> ${JSFILE}
+curl -s "https://api.dashboard.eco/maunaloaco2-daily" >> ${JSFILE}
+echo ";" >> ${JSFILE}
+echo -n "redisCO2Now" 
+wc ${JSFILE}
 
 echo "let redisCovidDeathsSelect=" >> ${JSFILE}
 curl -s "https://api.dashboard.eco/covid-deaths-select" >> ${JSFILE}
@@ -30,11 +27,6 @@ curl -s "https://api.dashboard.eco/covid-deaths-top" >> ${JSFILE}
 echo ";" >> ${JSFILE}
 echo -n "redisCovidDeathsTop" 
 wc ${JSFILE}
-
-#echo "let redisCovidConfirmed=" >> ${JSFILE}
-#curl "https://api.dashboard.eco/covid-confirmed" >> ${JSFILE}
-#echo ";" >> ${JSFILE}
-#wc ${JSFILE}
 
 echo "let redisMaunaLoaCO2Sm=" >> ${JSFILE}
 curl -s "http://api.dashboard.eco/maunaloaco2-sm" >> ${JSFILE}
