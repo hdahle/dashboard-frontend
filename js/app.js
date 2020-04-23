@@ -242,7 +242,7 @@ function plotCoronaDeaths3(elmt, url, countries) {
     let ch = makeChart(elmt.pop());
     ch.data.datasets.push({
       yAxisID: 'L',
-      label: x.country + ', ' + x.total,
+      label: x.country + ': ' + x.total + ' deaths',
       barPercentage: 0.8,
       backgroundColor: c1,
       categoryPercentage: 1,
