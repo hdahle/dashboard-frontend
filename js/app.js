@@ -588,8 +588,8 @@ function plotGlaciers(elmt) {
   let id = insertAccordionAndCanvas(elmt, true);
   let results = redisGlaciers;
   let colors = mkColorArray(results.length);
-  let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v ? v + 'm' : v }, true, 'right', 'linear', 2);
-  let myChartMobile = makeMultiLineChart(id.canvasIdMobile, {}, { callback: v => v ? v + 'm' : v }, false);
+  let myChart = makeMultiLineChart(id.canvasId, { min: 1900, max: 2020 }, { callback: v => v ? v + 'm' : v }, true, 'right', 'linear', 2);
+  let myChartMobile = makeMultiLineChart(id.canvasIdMobile, { min: 1900, max: 2020 }, { callback: v => v ? v + 'm' : v }, false);
 
   while (results.length) {
     let d = results.pop();

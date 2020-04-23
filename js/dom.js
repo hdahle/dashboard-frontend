@@ -85,20 +85,39 @@ function insertSourceAndLink(res, elmtId, url) {
       s += "<p>Data retrieved: " + res.accessed + "</p>";
     }
     if (res.link !== undefined && res.link !== null && res.link !== "") {
-      s += "<p class='w3-button'><i class='fa fa-link w3-text-theme-l1'></i>&nbsp;<a target='_blank' rel='noopener' href='";
+      s += "<p class='w3-button'><i class='fa fa-link'></i>&nbsp;<a target='_blank' rel='noopener' href='";
       s += res.link + "'>" + res.link + "</a></p>";
     }
     if (Array.isArray(url)) {
       url.forEach(u => {
-        s += "<p class='w3-button' onclick='clickBtn(\"" + u + "\");'><i class='fa fa-link w3-text-theme-l1'></i>&nbsp;" + u + "</p>";
+        s += "<p class='w3-button fp-url' onclick='clickBtn(\"" + u + "\");'><i class='fa fa-link'></i>&nbsp;" + u + "</p>";
       });
     } else {
       if (url != "") {
-        s += "<p class='w3-button' onclick='clickBtn(\"" + url + "\");'><i class='fa fa-link w3-text-theme-l1'></i>&nbsp;" + url + "</p>";
+        s += "<p class='w3-button fp-url' onclick='clickBtn(\"" + url + "\");'><i class='fa fa-link'></i>&nbsp;" + url + "</p>";
       }
     }
     document.getElementById(acc).innerHTML = s;
   }
+}
+
+//
+// Get list of all API-urls
+//
+function insertFpUrls(elmt) {
+  let urlElements = document.getElementsByClassName('fp-url');
+  let s = '';
+  let res = [];
+  for (let i = 0; i < urlElements.length; i++) {
+    let url = urlElements[i].innerText;
+    let idx = url.indexOf('http');
+    if (idx === -1) continue;               // if 'http' not found it's an error, skip
+    url = url.substr(idx, url.length);      // strip off leading spaces etc
+    if (res.indexOf(url) !== -1) continue;  // duplicate URL, skip
+    res.push(url);                          // save the URL so that we can avoid duplicates
+    s += "<div class='w3-button' onclick='clickBtn(\"" + url + "\");'><i class='fa fa-link'></i>&nbsp;" + url + "</div></br>";
+  };
+  document.getElementById(elmt).innerHTML = s;
 }
 
 // 
