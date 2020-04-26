@@ -231,7 +231,11 @@ echo -n "redisNorwayTrafficBaneheia"
 wc ${JSFILE}
 
 echo "let redisSchipholFlights =" >> ${JSFILE}
-curl -s "http://api.dashboard.eco/schiphol-flights" >> ${JSFILE}
-echo ";" >> ${JSFILE}
+for YEAR in '2020'
+do
+  curl -s "http://api.dashboard.eco/schiphol-flights-${YEAR}" >> ${JSFILE}
+  echo "," >> ${JSFILE}
+done
+echo "];" >> ${JSFILE}
 echo -n "redisSchipholFlights"
 wc ${JSFILE}
