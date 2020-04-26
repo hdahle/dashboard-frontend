@@ -161,8 +161,34 @@
       </div>
     </div>
 
-    <!-- Plot Spain Electricity -->
+    <!-- Plot Schiphol Air Traffic -->
     <div class="w3-row" id="LatestNews">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Corona impact on air traffic: 85-90&percnt; decrease at Amsterdam Airport</h2>
+        Amsterdam Airport Schiphol usually has about 650 airplane arrivals and 650 departures per day.
+        <p>Since mid-March, the number of airplane arrivals has dropped to about 70-90 per day, a decrease of more than
+          85&percnt; </p>
+        <p>
+          Corona-virus travel restrictions: The Dutch government imposed restrictions
+          starting on March 13 2020 when all flights to and from China, Italy, Iran and South Korea were cancelled.
+          This chart shows the number of flight arrivals per day since January 1, 2020.
+        </p>
+        <p> This chart is updated daily.
+        </p>
+      </div>
+      <script>
+        plotSpainElectricity(
+          document.currentScript.parentNode.getAttribute('id'),
+          redisSchipholFlights,
+          [
+            'https://api.dashboard.eco/schiphol-flights-2020'
+          ]
+        );
+      </script>
+    </div>
+
+    <!-- Plot Spain Electricity -->
+    <div class="w3-row" id="plotSpainElectricity">
       <div class="w3-container w3-col m6 l7">
         <h2>Corona impact in Spain: Electricity consumption down about 20&percnt;</h2>
         The chart uses data from <a href="https://www.ree.es/en" target="_blank" rel="noopener">Red Electrica de
@@ -196,7 +222,7 @@
     <!-- Plot Norway Traffic -->
     <div class="w3-row" id="plotNorwayTraffic">
       <div class="w3-container w3-col m6 l7">
-        <h2>Corona impact in Norway: Reduced road traffic</h2>
+        <h2>Corona impact in Norway: Reduced road traffic, but now approaching normal levels</h2>
         The
         <a href="https://www.vegvesen.no" target="_blank" rel="noopener">
           Norwegian Public Roads Administration
@@ -205,7 +231,7 @@
         In March-April 2019, weekday traffic volume was around 55000 cars per hour,
         weekend traffic 30000-35000 cars per day.
         <p>After Corona lockdown measures were implemented in Norway on March 12,
-          weekday traffic fell to about 32000 cars per day, but has since increased to about 40000.
+          weekday traffic fell to about 32000 cars per day, but has since increased to about 45000.
         </p>
         This chart is updated daily.
       </div>
