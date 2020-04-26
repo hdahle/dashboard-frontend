@@ -230,7 +230,7 @@ echo "];" >> ${JSFILE}
 echo -n "redisNorwayTrafficBaneheia" 
 wc ${JSFILE}
 
-echo "let redisSchipholFlights =" >> ${JSFILE}
+echo "let redisSchipholFlights=[" >> ${JSFILE}
 for YEAR in '2020'
 do
   curl -s "http://api.dashboard.eco/schiphol-flights-${YEAR}" >> ${JSFILE}
