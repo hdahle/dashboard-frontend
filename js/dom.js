@@ -84,17 +84,20 @@ function insertSourceAndLink(res, elmtId, url) {
     if (res.accessed !== undefined && res.accessed !== null && res.accessed !== "") {
       s += "<p>Data retrieved: " + res.accessed + "</p>";
     }
+    if (res.updated !== undefined && res.updated !== null && res.updated !== "") {
+      s += "<p>Data retrieved: " + res.updated + "</p>";
+    }
     if (res.link !== undefined && res.link !== null && res.link !== "") {
-      s += "<p class='w3-button'><i class='fa fa-link'></i>&nbsp;<a target='_blank' rel='noopener' href='";
-      s += res.link + "'>" + res.link + "</a></p>";
+      s += "<div class='w3-button'><i class='fa fa-link'></i>&nbsp;<a target='_blank' rel='noopener' href='";
+      s += res.link + "'>" + res.link + "</a></div><br>";
     }
     if (Array.isArray(url)) {
       url.forEach(u => {
-        s += "<p class='w3-button fp-url' onclick='clickBtn(\"" + u + "\");'><i class='fa fa-link'></i>&nbsp;" + u + "</p>";
+        s += "<div class='w3-button fp-url' onclick='clickBtn(\"" + u + "\");'><i class='fa fa-link'></i>&nbsp;" + u + "</div><br>";
       });
     } else {
       if (url != "") {
-        s += "<p class='w3-button fp-url' onclick='clickBtn(\"" + url + "\");'><i class='fa fa-link'></i>&nbsp;" + url + "</p>";
+        s += "<div class='w3-button fp-url' onclick='clickBtn(\"" + url + "\");'><i class='fa fa-link'></i>&nbsp;" + url + "</div><br>";
       }
     }
     document.getElementById(acc).innerHTML = s;

@@ -34,15 +34,20 @@
       word-wrap: break-word;
     }
 
-    .my-font {
+    .fp-my-font {
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 700;
     }
 
-    .thin-font {
+    .fp-thin-font,
+    .fp-ppm-font {
       font-family: 'Roboto', sans-serif;
       font-weight: 100;
       font-size: xx-large;
+    }
+
+    .fp-ppm-font {
+      color: rgb(200, 116, 94);
     }
 
     .fa-twitter,
@@ -97,40 +102,30 @@
     <!-- For tagline -->
     <div class="w3-row w3-padding-16">
       <div class="w3-theme-l5">
-        <div class="w3-half w3-container thin-font w3-hide-small">
+        <div class="w3-half w3-container fp-thin-font w3-hide-small">
           We probably<br>
           only have<br>
           one earth
         </div>
         <div class="w3-container w3-rest">
-          <div class="w3-padding-16 w3-right-align">
-            Atmospheric CO2 level today<br>
-            <span class="thin-font" id="div-co2-now"></span><br>
-            <div style="font-size: small;">
-              <span id="div-co2-last"></span> than 1 year ago<br>
-              <span id="div-co2-ten"></span> than 10 years ago<br>
-              Source: <a href="http://esrl.noaa.gov/gmd/" target="_blank" rel="noopener">
-                NOAA ESRL
-              </a>
-              <!-- 
-            <button onclick="myAccordion('div-co2-now-source')" class="w3-button w3-stretch w3-right-align">
-              Source<i class='fa fa-angle-down'></i>
-            </button>
-            <div id="div-co2-now-source" class="w3-container w3-hide">
-              <p>Source</p>
-              <p>Link</p>
-            </div>
-            -->
-            </div>
+          <div class="w3-padding-16 w3-right-align w3-small">
+            Atmospheric CO2 level
+            <span id="fp-co2-date"></span><br>
+            <span id="fp-co2-ppm" class="fp-ppm-font"></span><br>
+            <span id="fp-co2-last"></span> than 1 year ago<br>
+            <span id="fp-co2-ten"></span> than 10 years ago<br>
+            Source:
+            <a href="http://esrl.noaa.gov/gmd/" target="_blank" rel="noopener">NOAA ESRL</a>
           </div>
           <script>
             if (1) {
               let d = redisCO2Now.data[0];
-              document.getElementById('div-co2-now').innerHTML = d.value + ' ppm';
-              document.getElementById('div-co2-last').innerHTML =
+              document.getElementById('fp-co2-date').innerHTML = moment(d.date, 'YYYY-MM-DD').format('dddd MMMM Do');
+              document.getElementById('fp-co2-ppm').innerHTML = d.value + ' ppm';
+              document.getElementById('fp-co2-last').innerHTML =
                 Math.trunc(1000 * (d.value - d.valueLastYear) / d.valueLastYear) / 10 + '&percnt;' +
                 ((d.value > d.valueLastYear) ? ' higher' : ' lower');
-              document.getElementById('div-co2-ten').innerHTML =
+              document.getElementById('fp-co2-ten').innerHTML =
                 Math.trunc(1000 * (d.value - d.value10yrsAgo) / d.value10yrsAgo) / 10 + '&percnt;' +
                 ((d.value > d.value10yrsAgo) ? ' higher' : ' lower');
             }
@@ -169,7 +164,7 @@
         <p>Since mid-March, the number of airplane arrivals has dropped to about 70-90 per day, a decrease of more than
           85&percnt; </p>
         <p>
-          Corona-virus travel restrictions: The Dutch government imposed restrictions
+          Corona-virus travel restrictions: The Dutch government put in place restrictions
           starting on March 13 2020 when all flights to and from China, Italy, Iran and South Korea were cancelled.
           Since then a number of additional restrictions have been put in place, stopping all non-essential travel.
           This chart shows the number of flight arrivals per day since January 1, 2020.
@@ -200,7 +195,7 @@
         Weekday consumption is down from about 750GWh to 600GWh per day.
         <p>Corona in Spain: Events started shutting down in late February,
           the first schools closures were annonced on March 9,
-          and National lockdown was imposed on March 14</p>
+          and National lockdown started on March 14</p>
         <p>The unusual pattern in the usage is because power consumption is far lower on weekends than on weekdays.
           This chart is updated daily.</p>
       </div>
@@ -945,12 +940,12 @@
 
   <!-- FOOTER -->
 
-  <div class="w3-container w3-center my-font w3-section">
+  <div class="w3-container w3-center w3-section fp-my-font">
     <p> design by futureplanet.eco </p>
     &nbsp;
-    <!--    <a href="https://twitter.com/probably_one" class="fa fa-twitter" target="_blank" rel="noopener"></a>
-    &nbsp; 
--->
+    <a href="https://www.linkedin.com/company/futureplanet-eco/" class="fa fa-linkedin" target="_blank"
+      rel="noopener"></a>
+    &nbsp;
     <a href="https://www.instagram.com/futureplanet.eco/" class="fa fa-instagram" target="_blank" rel="noopener"></a>
     &nbsp;
     <a href="https://profiles.eco/dashboard" ref="noreferrer" target="_blank" rel="noopener">

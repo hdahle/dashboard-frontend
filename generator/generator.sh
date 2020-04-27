@@ -59,7 +59,7 @@ echo -n "redisMaunaLoaCH4Sm"
 wc ${JSFILE}
 
 echo "let redisSpainElectricity=[" >> ${JSFILE}
-for YEAR in "2015" "2016" "2017" "2018" "2019" "2020" 
+for YEAR in "2020" "2019" "2018" "2017" "2016" 
 do
   curl -s "http://api.dashboard.eco/spain-electricity-${YEAR}" >> ${JSFILE}
   echo "," >> ${JSFILE}
@@ -211,7 +211,7 @@ echo -n "redisCsiroAltYearly"
 wc ${JSFILE}
 
 echo "let redisNorwayTrafficSmestad=[" >> ${JSFILE}
-for STATION in 'smestad-2019' 'smestad-2020'
+for STATION in 'smestad-2020' 'smestad-2019'
 do
   curl -s "http://api.dashboard.eco/norway-traffic-${STATION}" >> ${JSFILE}
   echo "," >> ${JSFILE}
@@ -221,7 +221,7 @@ echo -n "redisNorwayTrafficSmestad"
 wc ${JSFILE}
 
 echo "let redisNorwayTrafficBaneheia=[" >> ${JSFILE}
-for STATION in 'baneheia-2019' 'baneheia-2020'
+for STATION in 'baneheia-2020' 'baneheia-2019'
 do
   curl -s "http://api.dashboard.eco/norway-traffic-${STATION}" >> ${JSFILE}
   echo "," >> ${JSFILE}
