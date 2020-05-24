@@ -180,7 +180,7 @@ function plotDailyCO2(elmt, url) {
 //
 // Three Corona charts side-by-side
 //
-function plotCoronaDeaths3(elmt, url, countries) {
+function plotCoronaDeaths3(elmt, json, countries) {
   function makeChart(elementId) {
     return new Chart(document.getElementById(elementId), {
       type: 'bar',
@@ -206,14 +206,18 @@ function plotCoronaDeaths3(elmt, url, countries) {
             offset: true,
             type: 'time',
             time: {
-              unit: 'day'
+              unit: 'week',
+              displayFormats: {
+                week: 'MMM D'
+              }
             }
           }],
           yAxes: [{
             id: 'L',
             position: 'left',
             ticks: {
-              suggestedMax: 100 // percentage scale
+              suggestedMax: 100,
+              min: 0
             }
           }, {
             id: 'R',
@@ -233,12 +237,13 @@ function plotCoronaDeaths3(elmt, url, countries) {
       }
     });
   }
-  console.log('Covid, countries:', redisCovidDeathsSelect.data.length);
+  console.log('Covid, countries:', json.data.length);
   //insertSourceAndLink(results, elementSource, url);
   let c = mkColorArray(2);
   let c0 = c[0];
   let c1 = c[1].replace('rgb', 'rgba').replace(')', ',0.6)');
-  redisCovidDeathsSelect.data.forEach(x => {
+  json.data.forEach(x => {
+    if (!elmt.length) return;
     let ch = makeChart(elmt.pop());
     ch.data.datasets.push({
       yAxisID: 'L',
