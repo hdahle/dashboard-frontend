@@ -307,7 +307,7 @@
         plotCoronaDeaths3(
           ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9"],
           redisCovidDeathsSelect,
-          []//["Italy", "Spain", "France", "US", "UK", "World", "Switzerland", "Sweden", "Belgium"],
+          []
         );
       </script>
     </div>
@@ -321,13 +321,12 @@
           <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
             Johns Hopkins University Center for
             Systems Science and Engineering </a> (JHU CSSE)
-          and shows the daily number of confirmed Covid-19 Coronavirus deaths.
+          and shows the daily number of confirmed Covid-19 Coronavirus deaths. The chart is updated every 24 hours.
           <p>
-            The bars show the number of new deaths per day. The red line show the increase in number of deaths. If the
-            increase is 0, then no more deaths have occurred on that specific day.
+            In these charts, Northern America consists of USA, Canada, Greenland, Bermuda and St Pierre and Miquelon.
+            Latin America
+            consists of all countries south of the USA, including the Caribbean countries.
           </p>
-          This chart is updated every 24 hours. JHU CSSE updates their data around midnight UTC, this chart is
-          automatically updated shortly thereafter.
         </div>
       </div>
       <div class="w3-row">
@@ -335,11 +334,16 @@
         <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch2"></canvas></div>
         <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch3"></canvas></div>
       </div>
+      <div class="w3-row">
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch4"></canvas></div>
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch5"></canvas></div>
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch6"></canvas></div>
+      </div>
       <script>
         plotCoronaDeaths3(
-          ["regions-ch1", "regions-ch2", "regions-ch3"],
-          redisCovidDeathsRegions, //"https://api.dashboard.eco/covid-deaths-regions",
-          ["Africa", "South America", "Asia"],
+          ["regions-ch1", "regions-ch2", "regions-ch3", "regions-ch4", "regions-ch5", "regions-ch6"],
+          redisCovidDeathsRegions,
+          []
         );
       </script>
     </div>
