@@ -1,6 +1,7 @@
 #!/bin/sh
 
 JSFILE=redis-values.js
+PERFFILE=perf-values.js
 
 echo `date` " Generator starting"
 
@@ -239,3 +240,10 @@ done
 echo "];" >> ${JSFILE}
 echo -n "redisSchipholFlights"
 wc ${JSFILE}
+
+echo "let redisCovidDeathsRegions =" >> ${JSFILE}
+curl -s "http://api.dashboard.eco/covid-deaths-regions" >> ${JSFILE}
+echo ";" >> ${JSFILE}
+echo -n "redisCovidDeathsRegions" 
+wc ${JSFILE}
+
