@@ -160,14 +160,13 @@
     <div class="w3-row" id="LatestNews">
       <div class="w3-container w3-col m6 l7">
         <h2>Corona impact on air traffic: 85-90&percnt; decrease at Amsterdam Airport</h2>
-        Amsterdam Airport Schiphol usually has about 650 airplane arrivals and 650 departures per day.
+        Amsterdam Airport Schiphol usually has about 650 airplane arrivals per day.
         <p>Since mid-March, the number of airplane arrivals has dropped to about 70-90 per day, a decrease of more than
           85&percnt; </p>
         <p>
           Corona-virus travel restrictions: The Dutch government put in place restrictions
           starting on March 13 2020 when all flights to and from China, Italy, Iran and South Korea were cancelled.
           Since then a number of additional restrictions have been put in place, stopping all non-essential travel.
-          This chart shows the number of flight arrivals per day since January 1, 2020.
         </p>
         <p> This chart is updated daily.
         </p>
@@ -307,11 +306,45 @@
       <script>
         plotCoronaDeaths3(
           ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9"],
-          "https://api.dashboard.eco/covid-deaths",
-          ["Italy", "Spain", "France", "US", "UK", "World", "Switzerland", "Sweden", "Belgium"],
+          redisCovidDeathsSelect,
+          []//["Italy", "Spain", "France", "US", "UK", "World", "Switzerland", "Sweden", "Belgium"],
         );
       </script>
     </div>
+
+    <!-- Plot Corona Deaths Regions  -->
+    <div id="plotCoronaDeathsRegions">
+      <div class="w3-row" style="padding-bottom:16px;">
+        <div class="w3-container">
+          <h2>Coronavirus/Covid-19 confirmed deaths by region</h2>
+          This chart uses data from
+          <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
+            Johns Hopkins University Center for
+            Systems Science and Engineering </a> (JHU CSSE)
+          and shows the daily number of confirmed Covid-19 Coronavirus deaths.
+          <p>
+            The bars show the number of new deaths per day. The red line show the increase in number of deaths. If the
+            increase is 0, then no more deaths have occurred on that specific day.
+          </p>
+          This chart is updated every 24 hours. JHU CSSE updates their data around midnight UTC, this chart is
+          automatically updated shortly thereafter.
+        </div>
+      </div>
+      <div class="w3-row">
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch1"></canvas></div>
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch2"></canvas></div>
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch3"></canvas></div>
+      </div>
+      <script>
+        plotCoronaDeaths3(
+          ["regions-ch1", "regions-ch2", "regions-ch3"],
+          redisCovidDeathsRegions, //"https://api.dashboard.eco/covid-deaths-regions",
+          ["Africa", "South America", "Asia"],
+        );
+      </script>
+    </div>
+
+
 
     <!-- Plot Corona Deaths Per Capita -->
     <div class="w3-row" id="plotCoronaDeaths">
