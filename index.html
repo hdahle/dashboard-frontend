@@ -157,9 +157,9 @@
     </div>
 
     <!-- Plot Schiphol Air Traffic -->
-    <div class="w3-row" id="LatestNews">
+    <div class="w3-row" id="Schiphol">
       <div class="w3-container w3-col m6 l7">
-        <h2>Corona impact on air traffic: 85-90&percnt; decrease at Amsterdam Airport</h2>
+        <h2>Initial Corona impact on air traffic: 85-90&percnt; decrease at Amsterdam Airport, now at 50&percnt;</h2>
         Amsterdam Airport Schiphol usually has about 650 airplane arrivals per day.
         <p>Since mid-March, the number of airplane arrivals has dropped to about 70-90 per day, a decrease of more than
           85&percnt; </p>
@@ -185,15 +185,16 @@
     <!-- Plot Spain Electricity -->
     <div class="w3-row" id="plotSpainElectricity">
       <div class="w3-container w3-col m6 l7">
-        <h2>Corona impact in Spain: Electricity consumption down about 20&percnt;</h2>
+        <h2>Corona impact in Spain: Electricity consumption down about 20&percnt;, now back to normal</h2>
         The chart uses data from <a href="https://www.ree.es/en" target="_blank" rel="noopener">Red Electrica de
           Espana</a>,
         the operator of the Spanish electricity grid.
         The chart shows the daily electricity consumption for this year compared to the last five years.
-        Since mid-March, it seems that weekend power consumption is down from about 600GWh to 500GWh per day.
-        Weekday consumption is down from about 750GWh to 600GWh per day.
+        In mid-March power consumption dropped about 20&percnt; with
+        weekday consumption down from about 750GWh to 600GWh per day.
+        Since the beginning of August electricity consumption is back at normal levels.
         <p>Corona in Spain: Events started shutting down in late February,
-          the first schools closures were annonced on March 9,
+          the first schools closures were announced on March 9,
           and National lockdown started on March 14</p>
         <p>The unusual pattern in the usage is because power consumption is far lower on weekends than on weekdays.
           This chart is updated daily.</p>
@@ -217,7 +218,7 @@
     <!-- Plot Norway Traffic -->
     <div class="w3-row" id="plotNorwayTraffic">
       <div class="w3-container w3-col m6 l7">
-        <h2>Corona impact in Norway: Reduced road traffic, but now approaching normal levels</h2>
+        <h2>Corona impact in Norway: Reduced road traffic, but now above normal levels</h2>
         The
         <a href="https://www.vegvesen.no" target="_blank" rel="noopener">
           Norwegian Public Roads Administration
@@ -226,7 +227,7 @@
         In March-April 2019, weekday traffic volume was around 55000 cars per hour,
         weekend traffic 30000-35000 cars per day.
         <p>After Corona lockdown measures were implemented in Norway on March 12,
-          weekday traffic fell to about 32000 cars per day, but has since increased to about 45000.
+          weekday traffic fell to about 32000 cars per day, but has since increased to beyond normal levels.
         </p>
         This chart is updated daily.
       </div>
@@ -624,11 +625,12 @@
     </div>
 
     <!-- Arctic Ice Extent -->
-    <div class="w3-row" id="plotArcticIce">
+    <div class="w3-row" id="LatestNews">
       <div class="w3-container w3-col m6 l7">
-        <h2>Ice extent in the Arctic is steadily decreasing, 2019 had 38&percnt; less than 1979</h2>
+        <h2>Ice extent in the Arctic at record lows. July 2020 had the least ice coverage for any month of July
+          since measurements began </h2>
         <a href="https://nsidc.org" target="_blank" rel="noopener">NSIDC</a>
-        (National Snow and Ice Data Center at University of Colorado, Boulder)
+        (National Snow and Ice Data Center at University of Colorado)
         provides imagery and data to help understand
         how sea ice is retreating in the Arctic and Antarctic regions.
         Sea ice extent is defined as areas of the sea with at least 15% ice cover.
@@ -636,11 +638,13 @@
         The chart shows the annual cycle for several years.
         In the Arctic, sea ice cover is at its lowest in September, before the onset of winter.
         <p>
-          The NSIDC dataset contains ice extent data since 1979. This chart is updated monthly.
+          The NSIDC dataset contains ice extent data since 1979.
+          July 2020 is the lowest month of July ever measured.
+          This chart is updated monthly.
         </p>
       </div>
       <script>
-        plotArcticIce("plotArcticIce");
+        plotArcticIce(document.currentScript.parentNode.getAttribute('id'));
       </script>
     </div>
 
