@@ -734,7 +734,7 @@ function plotEmissionsNorway(elmt) {
   console.log('Norway:', results.data.length);
   insertSourceAndLink(results, id, url);
   let myChart = makeStackedLineChart(id.canvasId,
-    { max: 2018 },
+    { max: 2019 },
     { callback: (value) => Math.trunc(value / 1000) + " Mt" }
   );
   let c = mkColorArray(results.data.length - 1);
