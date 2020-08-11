@@ -1,2 +1,3 @@
 plot*.js
 plot-co2-daily.js
+redis-values.js
