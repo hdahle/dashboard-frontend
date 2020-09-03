@@ -219,20 +219,20 @@ function plotCoronaDeaths3(elmt, json, countries) {
               suggestedMax: 100,
               min: 0
             }
-          }, {
+          }, /*{
             id: 'R',
             position: 'right',
             ticks: {
-              max: 100,
+              suggestedMax: 100,
               min: 0,
               fontColor: mkColorArray(2)[0],
               fontSize: 10,
-              callback: v => v ? v + '%' : v
+              //callback: v => v ? v + '%' : v
             },
             gridLines: {
               display: false
             }
-          }]
+          }*/]
         }
       }
     });
@@ -245,7 +245,7 @@ function plotCoronaDeaths3(elmt, json, countries) {
   json.data.forEach(x => {
     if (!elmt.length) return;
     let ch = makeChart(elmt.pop());
-    ch.data.datasets.push({
+    /*ch.data.datasets.push({
       yAxisID: 'L',
       label: x.country + ': ' + x.total + ' deaths',
       barPercentage: 0.8,
@@ -256,17 +256,17 @@ function plotCoronaDeaths3(elmt, json, countries) {
         t: x.t,
         y: x.d
       }))
-    });
+    });*/
     // Push the line chart of smoothed daily change
     ch.data.datasets.push({
-      yAxisID: 'R',
+      yAxisID: 'L',
       type: 'line',
-      label: 'Daily increase',
+      label: x.country + ': ' + x.total + ' deaths',//7day average',//'Daily increase',
       categoryPercentage: 1,
       fill: false,
       borderColor: c0,
       backgroundColor: c0,
-      tooltipText: ['Daily increase: ', '%'],
+      tooltipText: '7day average: ',//['Daily increase: ', '%'],
       data: x.data,
     });
     ch.update();
