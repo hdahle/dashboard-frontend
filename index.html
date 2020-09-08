@@ -729,6 +729,21 @@
       </script>
     </div>
 
+    <!-- Global Electricity Generation -->
+    <div class="w3-row" id="plotGlobalElectricity">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Global electricity generation, steady increase in Asia</h2>
+        Charts based on data from the US Energy Information Administration EIA.
+        The increase in global electricity generation is mainly due to China.
+        <p>The electricity generation is measured in trillion kWh</p>
+        <p> Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
+        </p>
+      </div>
+      <script>
+        plotEiaFossilFuelProduction("plotGlobalElectricity", "https://api.dashboard.eco/eia-global-electricity");
+      </script>
+    </div>
+
     <!-- Emissions by fuel type -->
     <div class="w3-row" id="plotEmissionsByFuelType">
       <div class="w3-container w3-col m6 l7">

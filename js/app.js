@@ -844,16 +844,17 @@ function plotEiaFossilFuelProduction(elmt, url) {
   if (url.includes('oil')) results = redisEiaGlobalOil;
   else if (url.includes('gas')) results = redisEiaGlobalGas;
   else if (url.includes('coal')) results = redisEiaGlobalCoal;
+  else if (url.includes('electricity')) results = redisEiaGlobalElectricity;
   else return;
 
-  console.log('EIA:', results.series.length);
+  console.log('EIA:', results.series.length, url);
   insertSourceAndLink(results, id, url);
-  let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 }, true);
+  let myChart = makeMultiLineChart(id.canvasId, { max: 2018 }, { callback: v => v / 1000 }, true);
   let c = mkColorArray(results.series.length - 6);
   while (results.series.length) {
     let d = results.series.pop();
     // Don't plot these...too much detail
-    if (['EU28', 'USA', 'Japan', 'China', 'Russia', 'India'].indexOf(d.region) !== -1) {
+    if (['EU28', 'EU27', 'USA', 'Japan', 'Russia', 'India'].indexOf(d.region) !== -1) {
       continue;
     }
     let col = c.pop();

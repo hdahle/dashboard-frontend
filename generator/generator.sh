@@ -127,6 +127,12 @@ echo ";" >> ${JSFILE}
 echo -n "redisEiaGlobalCoal" 
 wc ${JSFILE}
 
+echo "let redisEiaGlobalElectricity =" >> ${JSFILE}
+curl -s "http://api.dashboard.eco/eia-global-electricity" >> ${JSFILE}
+echo ";" >> ${JSFILE}
+echo -n "redisEiaGlobalElectricity" 
+wc ${JSFILE}
+
 echo "let redisEmissionsByFuelType =" >> ${JSFILE}
 curl -s "http://api.dashboard.eco/emissions-by-fuel-type" >> ${JSFILE}
 echo ";" >> ${JSFILE}
