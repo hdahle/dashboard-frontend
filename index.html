@@ -267,7 +267,8 @@
       <script>
         plotDailyCO2(
           document.currentScript.parentNode.getAttribute('id'),
-          "https://api.dashboard.eco/co2-daily"
+          "https://api.dashboard.eco/co2-daily",
+          redisCO2Daily
         );
       </script>
     </div>
@@ -366,7 +367,7 @@
         </p>
       </div>
       <script>
-        plotCoronaDeathsByCapita("plotCoronaDeaths", "https://api.dashboard.eco/covid-deaths-top");
+        plotCoronaDeathsByCapita(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/covid-deaths-top", redisCovidDeathsTop);
       </script>
     </div>
 
@@ -394,7 +395,7 @@
         </p>
       </div>
       <script>
-        plotCircularity("plotCircularity", "https://api.dashboard.eco/circularity-2020");
+        plotCircularity(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/circularity-2020", redisCircularity2020);
       </script>
     </div>
 
@@ -413,7 +414,7 @@
         </p>
       </div>
       <script>
-        plotCO2vsGDP("plotCO2vsGDP");
+        plotCO2vsGDP(document.currentScript.parentNode.getAttribute('id'));
       </script>
     </div>
 
@@ -431,7 +432,7 @@
         <p class="w3-hide-large w3-hide-medium">This particular chart is best viewed in landscape mode.</p>
       </div>
       <script>
-        plotGlaciers("plotGlaciers");
+        plotGlaciers(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/glacier-length-nor-', redisGlaciers);
       </script>
     </div>
 
@@ -459,7 +460,7 @@
         </p>
       </div>
       <script>
-        plotScatter("plotAtmosphericCO2",
+        plotScatter(document.currentScript.parentNode.getAttribute('id'),
           ["https://api.dashboard.eco/maunaloaco2-sm"],
           [redisMaunaLoaCO2Sm],
           ['Atmospheric CO2 in ppm'],
@@ -518,7 +519,7 @@
         </p>
       </div>
       <script>
-        plotScatter("plotVostok",
+        plotScatter(document.currentScript.parentNode.getAttribute('id'),
           ["https://api.dashboard.eco/maunaloa-annual-mean", "https://api.dashboard.eco/law2018co2", "https://api.dashboard.eco/vostok"],
           [redisMaunaLoaAnnualMean, redisLaw2018CO2, redisVostok],
           ["Mauna Loa", "Law Dome", "Vostok"],
@@ -554,7 +555,7 @@
         </p>
       </div>
       <script>
-        plotEmissionsByRegion("plotEmissionsByRegion");
+        plotEmissionsByRegion(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/emissions-by-region', redisEmissionsByRegion);
       </script>
     </div>
 
@@ -584,7 +585,7 @@
         </p>
       </div>
       <script>
-        plotEmissionsNorway("plotEmissionsNorway");
+        plotEmissionsNorway(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/emissions-norway', redisEmissionsNorway);
       </script>
     </div>
 
@@ -608,7 +609,7 @@
         </p>
       </div>
       <script>
-        plotScatter('plotAtmosphericCH4',
+        plotScatter(document.currentScript.parentNode.getAttribute('id'),
           ['https://api.dashboard.eco/maunaloach4-sm'],
           [redisMaunaLoaCH4Sm],
           ['Atmospheric CH4 (methane) in ppb'],
@@ -638,7 +639,7 @@
         </p>
       </div>
       <script>
-        plotArcticIce(document.currentScript.parentNode.getAttribute('id'));
+        plotArcticIce(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/ice-nsidc', redisIceNsidc);
       </script>
     </div>
 
@@ -655,12 +656,12 @@
         </p>
       </div>
       <script>
-        plotWorldPopulation("plotWorldPopulation");
+        plotWorldPopulation(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/WPP2019_TotalPopulationByRegion', redisPopulationByRegion);
       </script>
     </div>
 
     <!-- Global Oil Production -->
-    <div class="w3-row" id="plotOil">
+    <div class="w3-row" id="plotEiaOil">
       <div class="w3-container w3-col m6 l7">
         <h2>Global oil production: 100 million barrels per day, steadily increasing</h2>
         According to January 2020 data from the US Energy Information Administration EIA,
@@ -676,12 +677,12 @@
         </p>
       </div>
       <script>
-        plotEiaFossilFuelProduction("plotOil", "https://api.dashboard.eco/eia-global-oil");
+        plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-oil", redisEiaGlobalOil);
       </script>
     </div>
 
     <!-- Global Gas Production -->
-    <div class="w3-row" id="plotGlobalGas">
+    <div class="w3-row" id="plotEiaGas">
       <div class="w3-container w3-col m6 l7">
         <h2>Global gas production is accelerating</h2>
         According to November 2019 data from the US Energy Information Administration EIA,
@@ -695,12 +696,12 @@
         </p>
       </div>
       <script>
-        plotEiaFossilFuelProduction("plotGlobalGas", "https://api.dashboard.eco/eia-global-gas");
+        plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-gas", redisEiaGlobalGas);
       </script>
     </div>
 
     <!-- Global Coal Production -->
-    <div class="w3-row" id="plotGlobalCoal">
+    <div class="w3-row" id="plotEiaCoal">
       <div class="w3-container w3-col m6 l7">
         <h2>Coal production increasing again</h2>
         According to February 2019 data from the US Energy Information Administration EIA,
@@ -719,22 +720,22 @@
         </p>
       </div>
       <script>
-        plotEiaFossilFuelProduction("plotGlobalCoal", "https://api.dashboard.eco/eia-global-coal");
+        plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-coal", redisEiaGlobalCoal);
       </script>
     </div>
 
     <!-- Global Electricity Generation -->
-    <div class="w3-row" id="plotGlobalElectricity">
+    <div class="w3-row" id="plotEiaEl">
       <div class="w3-container w3-col m6 l7">
         <h2>Global electricity generation, steady increase in Asia</h2>
         Charts based on data from the US Energy Information Administration EIA.
         The increase in global electricity generation is mainly due to China.
-        <p>Electricity generation is measured in trillion kWh</p>
+        <p>Figures in this chart are in 1000 TWh (terawatt hours)</p>
         <p>Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
         </p>
       </div>
       <script>
-        plotEiaFossilFuelProduction("plotGlobalElectricity", "https://api.dashboard.eco/eia-global-electricity");
+        plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-electricity", redisEiaGlobalElectricity);
       </script>
     </div>
 
@@ -756,7 +757,7 @@
         </p>
       </div>
       <script>
-        plotEmissionsByFuelType("plotEmissionsByFuelType");
+        plotEmissionsByFuelType(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/emissions-by-fuel-type', redisEmissionsByFuelType);
       </script>
     </div>
 
@@ -782,7 +783,7 @@
         </p>
       </div>
       <script>
-        plotOzoneHole("plotOzone");
+        plotOzoneHole(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/ozone-nasa', redisOzoneNasa);
       </script>
     </div>
 
@@ -813,7 +814,10 @@
         </p>
       </div>
       <script>
-        plotGlobalTemp("plotGlobalTemp");
+        plotGlobalTemp(document.currentScript.parentNode.getAttribute('id'),
+          ["https://api.dashboard.eco/global-temperature-anomaly", "https://api.dashboard.eco/global-temperature-hadcrut", "https://api.dashboard.eco/global-temperature-uah"],
+          [redisGlobalTemperatureAnomaly, redisGlobalTemperatureHadcrut, redisGlobalTemperatureUah]
+        );
       </script>
     </div>
 
@@ -837,7 +841,7 @@
         </p>
       </div>
       <script>
-        plotSvalbardTemp("plotSvalbardTemp");
+        plotSvalbardTemp(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/temperature-svalbard', redisTemperatureSvalbard);
       </script>
     </div>
 
@@ -863,7 +867,7 @@
         </p>
       </div>
       <script>
-        plotBrazilFires("plotBrazil");
+        plotBrazilFires(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/queimadas-brazil', redisQueimadasBrazil);
       </script>
     </div>
 
@@ -882,7 +886,10 @@
         </p>
       </div>
       <script>
-        plotGlobalSeaLevel("plotSeaLevel");
+        plotGlobalSeaLevel(document.currentScript.parentNode.getAttribute('id'),
+          ['https://api.dashboard.eco/CSIRO_Recons_2015', 'https://api.dashboard.eco/CSIRO_Alt_yearly'],
+          [redisCsiroRecons2015, redisCsiroAltYearly]
+        );
       </script>
     </div>
 
@@ -912,7 +919,7 @@
         </p>
       </div>
       <script>
-        plotCCS("plotCCS");
+        plotBothCCS(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/operational-ccs', redisOperationalCCS);
       </script>
     </div>
 
@@ -950,7 +957,7 @@
         </p>
       </div>
       <script>
-        plotSafety("plotSafety");
+        plotSafety(document.currentScript.parentNode.getAttribute('id'));
       </script>
     </div>
 

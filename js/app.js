@@ -110,7 +110,8 @@ function plotSpainElectricity(elmt, json, urls, yUnit = '') {
 //
 // Daily CO2 per year
 //
-function plotDailyCO2(elmt, url) {
+function plotDailyCO2(elmt, url, results) {
+  console.log("DailyCO2:", url, results.data.length)
   let id = insertAccordionAndCanvas(elmt, false);
   let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'line',
@@ -155,14 +156,12 @@ function plotDailyCO2(elmt, url) {
       }
     }
   });
-
-  let d = redisCO2Daily.data;
-  let cSolid = mkColorArray(d.length);
+  let cSolid = mkColorArray(results.data.length);
   let cAlpha = colorArrayToAlpha(cSolid, 0.6);
-  insertSourceAndLink(redisCO2Daily, id, url);
+  insertSourceAndLink(results, id, url);
   // plot each year as a separate dataset
-  while (d.length) {
-    let x = d.shift();
+  while (results.data.length) {
+    let x = results.data.shift();
     let cS = cSolid.pop();
     let cA = cAlpha.pop();
     myChart.data.datasets.push({
@@ -180,7 +179,7 @@ function plotDailyCO2(elmt, url) {
 //
 // Three Corona charts side-by-side
 //
-function plotCoronaDeaths3(elmt, json, countries) {
+function plotCoronaDeaths3(elmt, json) {
   function makeChart(elementId) {
     return new Chart(document.getElementById(elementId), {
       type: 'bar',
@@ -219,20 +218,7 @@ function plotCoronaDeaths3(elmt, json, countries) {
               suggestedMax: 100,
               min: 0
             }
-          }, /*{
-            id: 'R',
-            position: 'right',
-            ticks: {
-              suggestedMax: 100,
-              min: 0,
-              fontColor: mkColorArray(2)[0],
-              fontSize: 10,
-              //callback: v => v ? v + '%' : v
-            },
-            gridLines: {
-              display: false
-            }
-          }*/]
+          }]
         }
       }
     });
@@ -245,28 +231,16 @@ function plotCoronaDeaths3(elmt, json, countries) {
   json.data.forEach(x => {
     if (!elmt.length) return;
     let ch = makeChart(elmt.pop());
-    /*ch.data.datasets.push({
-      yAxisID: 'L',
-      label: x.country + ': ' + x.total + ' deaths',
-      barPercentage: 0.8,
-      backgroundColor: c1,
-      categoryPercentage: 1,
-      tooltipText: 'Deaths per day: ',
-      data: x.data.map(x => ({
-        t: x.t,
-        y: x.d
-      }))
-    });*/
     // Push the line chart of smoothed daily change
     ch.data.datasets.push({
       yAxisID: 'L',
       type: 'line',
-      label: x.country + ': ' + x.total + ' deaths',//7day average',//'Daily increase',
+      label: x.country + ': ' + x.total + ' deaths',
       categoryPercentage: 1,
       fill: false,
       borderColor: c0,
       backgroundColor: c0,
-      tooltipText: '7day average: ',//['Daily increase: ', '%'],
+      tooltipText: '7day average: ',
       data: x.data,
     });
     ch.update();
@@ -277,7 +251,8 @@ function plotCoronaDeaths3(elmt, json, countries) {
 //
 // Corona cases by capita
 //
-function plotCoronaDeathsByCapita(elmt, url) {
+function plotCoronaDeathsByCapita(elmt, url, results) {
+  console.log("Corona deaths per capita:", url, results.data.length)
   let id = insertAccordionAndCanvas(elmt);
   let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
@@ -310,14 +285,14 @@ function plotCoronaDeathsByCapita(elmt, url) {
       },
     }
   });
-  insertSourceAndLink(redisCovidDeathsTop, id, url);
+  insertSourceAndLink(results, id, url);
   myChart.data.datasets.push({
     backgroundColor: '#c8745e',
     categoryPercentage: 0.5,
-    data: redisCovidDeathsTop.data.percapita,
-    data2: redisCovidDeathsTop.data.total
+    data: results.data.percapita,
+    data2: results.data.total
   });
-  myChart.data.labels = redisCovidDeathsTop.data.countries;
+  myChart.data.labels = results.data.countries;
   myChart.update();
 }
 
@@ -531,7 +506,8 @@ function plotCO2vsGDP(elmt) {
 //
 // Circularity
 //
-function plotCircularity(elmt, url) {
+function plotCircularity(elmt, url, results) {
+  console.log('Circularity:', results.data.length);
   let id = insertAccordionAndCanvas(elmt);
   let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'doughnut',
@@ -569,8 +545,6 @@ function plotCircularity(elmt, url) {
       }
     }
   });
-  let results = redisCircularity2020;
-  console.log('Circularity:', results.data.length);
   insertSourceAndLink(results, id, url);
 
   let legend = results.data[0].data[0].legend;
@@ -589,16 +563,16 @@ function plotCircularity(elmt, url) {
 //
 // Glacier length
 //
-function plotGlaciers(elmt) {
+function plotGlaciers(elmt, baseUrl, results) {
+  console.log('Glaciers:', baseUrl, results.length);
   let id = insertAccordionAndCanvas(elmt, true);
-  let results = redisGlaciers;
   let colors = mkColorArray(results.length);
   let myChart = makeMultiLineChart(id.canvasId, { min: 1900, max: 2020 }, { callback: v => v ? v + 'm' : v }, true, 'right', 'linear', 2);
   let myChartMobile = makeMultiLineChart(id.canvasIdMobile, { min: 1900, max: 2020 }, { callback: v => v ? v + 'm' : v }, false);
 
   while (results.length) {
     let d = results.pop();
-    let url = 'https://api.dashboard.eco/glacier-length-nor-' + d.glacier;
+    let url = baseUrl + d.glacier;
     insertSourceAndLink(results, id, url);
     let col = colors.pop();
     let dataset = {
@@ -698,10 +672,8 @@ function makeStackedLineChart(canvas, xTicks, yTicks) {
 //
 // CO2 by region
 //
-function plotEmissionsByRegion(elmt) {
+function plotEmissionsByRegion(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://api.dashboard.eco/emissions-by-region';
-  let results = redisEmissionsByRegion;
   console.log('CO2 Emissions by region:', results.data.length);
   insertSourceAndLink(results, id, url);
   let myChart = makeStackedLineChart(id.canvasId,
@@ -727,10 +699,8 @@ function plotEmissionsByRegion(elmt) {
 //
 // Norway Annual GHG Emissions
 //
-function plotEmissionsNorway(elmt) {
+function plotEmissionsNorway(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://api.dashboard.eco/emissions-norway';
-  let results = redisEmissionsNorway;
   console.log('Norway:', results.data.length);
   insertSourceAndLink(results, id, url);
   let myChart = makeStackedLineChart(id.canvasId,
@@ -754,10 +724,8 @@ function plotEmissionsNorway(elmt) {
 //
 // Arctic Ice Extent
 //
-function plotArcticIce(elmt) {
+function plotArcticIce(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://api.dashboard.eco/ice-nsidc';
-  let results = redisIceNsidc;
   console.log('ICE NSIDC:', results.data.length);
   insertSourceAndLink(results, id, url);
   let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'right', 'category');
@@ -788,10 +756,8 @@ function plotArcticIce(elmt) {
 //
 // World Population
 //
-function plotWorldPopulation(elmt) {
+function plotWorldPopulation(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://api.dashboard.eco/WPP2019_TotalPopulationByRegion';
-  let results = redisPopulationByRegion;
   console.log('Population:', results.data.length);
   insertSourceAndLink(results, id, url);
   let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 + ' bn' }, true, 'right');
@@ -838,15 +804,8 @@ function makeMultiLineChart(canvas, xTicks, yTicks, showLegend, pos, category, a
 //
 // Global Oil Production
 //
-function plotEiaFossilFuelProduction(elmt, url) {
+function plotEia(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  let results = null;
-  if (url.includes('oil')) results = redisEiaGlobalOil;
-  else if (url.includes('gas')) results = redisEiaGlobalGas;
-  else if (url.includes('coal')) results = redisEiaGlobalCoal;
-  else if (url.includes('electricity')) results = redisEiaGlobalElectricity;
-  else return;
-
   console.log('EIA:', results.series.length, url);
   insertSourceAndLink(results, id, url);
   let myChart = makeMultiLineChart(id.canvasId, { max: 2018 }, { callback: v => v / 1000 }, true);
@@ -872,9 +831,9 @@ function plotEiaFossilFuelProduction(elmt, url) {
 //
 // Emissions by fuel-type
 //
-function plotEmissionsByFuelType(elmt) {
+function plotEmissionsByFuelType(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://api.dashboard.eco/emissions-by-fuel-type';
+  console.log('Emissions by type:', results.data.length);
   let myChart = makeMultiLineChart(id.canvasId, {
     min: 1959,
     max: 2018,
@@ -882,8 +841,6 @@ function plotEmissionsByFuelType(elmt) {
   }, {
     callback: v => (v / 1000) + ' Gt'
   }, true);
-  let results = redisEmissionsByFuelType;
-  console.log('Emissions by type:', results.data.length);
   insertSourceAndLink(results, id, url);
   let c = mkColorArray(results.data.length - 1);
   while (results.data.length) {
@@ -904,10 +861,10 @@ function plotEmissionsByFuelType(elmt) {
 //
 // Ozone Hole Southern Hemisphere
 //
-function plotOzoneHole(elmt) {
+function plotOzoneHole(elmt, url, result) {
   plotScatter(elmt,
-    ['https://api.dashboard.eco/ozone-nasa'],
-    [redisOzoneNasa],
+    [url],
+    [result],
     ["Ozone hole in million sq km"],
     { max: 2020, autoSkip: true, maxTicksLimit: 8 },
     {}
@@ -917,10 +874,8 @@ function plotOzoneHole(elmt) {
 //
 // Global Temperature Anomaly
 //
-function plotGlobalTemp(elmt) {
-  plotScatter(elmt,
-    ["https://api.dashboard.eco/global-temperature-anomaly", "https://api.dashboard.eco/global-temperature-hadcrut", "https://api.dashboard.eco/global-temperature-uah"],
-    [redisGlobalTemperatureAnomaly, redisGlobalTemperatureHadcrut, redisGlobalTemperatureUah],
+function plotGlobalTemp(elmt, urls, results) {
+  plotScatter(elmt, urls, results,
     ["NASA dataset", "HadCRUT dataset", "UAH dataset"],
     { max: 2020, autoSkip: true, maxTicksLimit: 8 },
     { callback: value => Math.round(value * 10) / 10 + "\u00b0" + "C" }
@@ -930,10 +885,10 @@ function plotGlobalTemp(elmt) {
 //
 // Svalbard - Arctic Temperature Development
 //
-function plotSvalbardTemp(elmt) {
+function plotSvalbardTemp(elmt, url, result) {
   plotScatter(elmt,
-    ['https://api.dashboard.eco/temperature-svalbard'],
-    [redisTemperatureSvalbard],
+    [url],
+    [result],
     ["Svalbard Airport annual mean temperature"],
     { min: 1900, max: 2020, autoSkip: true, maxTicksLimit: 8 },
     { callback: (value) => Math.round(value * 10) / 10 + "\u00b0" + "C" }
@@ -943,10 +898,8 @@ function plotSvalbardTemp(elmt) {
 //
 // Brazil Forest Fires
 //
-function plotBrazilFires(elmt) {
+function plotBrazilFires(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  let url = 'https://api.dashboard.eco/queimadas-brazil';
-  let results = redisQueimadasBrazil;
   console.log('Brazil:', results.data.length);
   insertSourceAndLink(results, id, url);
   let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'top', 'category');
@@ -975,10 +928,8 @@ function plotBrazilFires(elmt) {
 //
 // Global Sea Level Rise
 //
-function plotGlobalSeaLevel(elmt) {
-  plotScatter(elmt,
-    ['https://api.dashboard.eco/CSIRO_Recons_2015', 'https://api.dashboard.eco/CSIRO_Alt_yearly'],
-    [redisCsiroRecons2015, redisCsiroAltYearly],
+function plotGlobalSeaLevel(elmt, urls, results) {
+  plotScatter(elmt, urls, results,
     ['Land-based measurements', 'Satellite measurements'],
     { autoSkip: true, maxTicksLimit: 8, min: 1880, max: 2020 },
     { callback: value => value ? value + 'mm' : value });
