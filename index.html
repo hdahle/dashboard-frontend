@@ -154,7 +154,6 @@
       }
     </script>
 
-
     <!-- Placeholder DIV for Latest News -->
     <div class="w3-section">
       <div class="w3-container">
@@ -165,14 +164,69 @@
       </div>
     </div>
 
+    <!-- Plot EIA LCOE -->
+    <div class="w3-row" id="eiaLcoe">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Cost of electricity generation in the United States in 2025: Solar photovoltaic will be the least expensive
+          option</h2>
+        <span class="date-font">September 10, 2020</span>
+        <p>
+          A <a href="https://www.eia.gov/outlooks/aeo/pdf/electricity_generation.pdf" ref="noreferrer" target="_blank"
+            rel="noopener">
+            report
+          </a> from the US Energy Information Administration has estimated the levelised cost of electricity (which
+          includes
+          financial costs, fuel, operations, management and more) generation for new plants coming online in the United
+          States in 2025.
+          Photovoltaic solar plants will be the least expensive, with roughly the same costs as geothermal,
+          combined cycle natural gas, and onshore wind turbines.
+        </p>
+        <p>
+          Coal-fired plants will remain an expensive option.
+        </p>
+      </div>
+      <script>
+        plotEiaLcoe(document.currentScript.parentNode.getAttribute('id'), redisEiaLcoe, 'https://api.dashboard.eco/eia-lcoe-2025');
+      </script>
+    </div>
+
+    <!-- Plot Renewables Cost -->
+    <div class="w3-row" id="renewables">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Cost of renewable power generation decreasing sharply, now competitive with fossil fuel based power
+          generation</h2>
+        <span class="date-font">September 9, 2020</span>
+        <p>
+          IRENA has published a detailed study on the cost of utility-scale power generation at a global level based on
+          renewable
+          resources.
+          The report shows a clear trend in LCOE (levelised cost of electricity, which includes financial costs,
+          operations, management etc) for renewable power generation: New solar and wind power plants are now less
+          expensive than most coal-fired plants. Since 2019, the cost of utility scale solar power has decreased by
+          82&percnt;
+        </p>
+        <p>
+          The grey band in the chart represents the range of costs for fossil fuel based plants.
+        </p>
+        <p>
+          According to IRENA, the comparable costs for fossil fuel based power plants varies from 0.05 $/kWh (new
+          Chinese coal-fired plants located close to coal mines) to 0.177 $/kWh.
+        </p>
+      </div>
+      <script>
+        plotIrena(document.currentScript.parentNode.getAttribute('id'), redisIrena2020, 'https://api.dashboard.eco/irena-2020');
+      </script>
+    </div>
+
     <!-- Plot Schiphol Air Traffic -->
     <div class="w3-row" id="Schiphol">
       <div class="w3-container w3-col m6 l7">
-        <h2>Initial Corona impact on air traffic: 85-90&percnt; decrease at Amsterdam Airport, now at 50&percnt;</h2>
-        <span class="date-font">September 3, 2020<br></span>
-
-        Amsterdam Airport Schiphol usually has about 650 airplane arrivals per day.
-        <p>Since mid-March, the number of airplane arrivals has dropped to about 70-90 per day, a decrease of more than
+        <h2>Initial Corona impact on air traffic: 85-90&percnt; decrease at Amsterdam Airport. Traffic now at 60&percnt;
+          of normal levels</h2>
+        <span class="date-font">September 3, 2020 &nbsp; | &nbsp; Chart updates daily</span>
+        <p>
+          Amsterdam Airport Schiphol usually has about 650 airplane arrivals per day.
+          Since mid-March, the number of airplane arrivals has dropped to about 70-90 per day, a decrease of more than
           85&percnt; </p>
         <p>
           Corona-virus travel restrictions: The Dutch government put in place restrictions
@@ -190,31 +244,6 @@
             'https://api.dashboard.eco/schiphol-flights-2020'
           ]
         );
-      </script>
-    </div>
-
-    <!-- Plot Renewables Cost -->
-    <div class="w3-row" id="LatestNews">
-      <div class="w3-container w3-col m6 l7">
-        <h2>Cost of renewable power generation decreasing sharply, now competitive with fossil fuel based power
-          generation</h2>
-        <span class="date-font">September 9, 2020</span><br>
-        IRENA has published a detailed study on the cost of power generation at utility scale based on renewable
-        resources.
-        The report shows a clear trend in LCOE (levelised cost of electricity, which includes financial costs,
-        operations, management etc) for renewable power generation: New solar and wind power plants are now less
-        expensive than most coal-fired plants. Since 2019, the cost of utility scale solar power has decreased by
-        82&percnt;
-        <p>
-          The grey band in the chart represents the range of costs for fossil fuel based plants.
-        </p>
-        <p>
-          According to IRENA, the comparable costs for fossil fuel based power plants varies from 0.05 $/kWh (new
-          Chinese coal-fired plants close to coal mines) to 0.177 $/kWh.
-        </p>
-      </div>
-      <script>
-        plotIrena(document.currentScript.parentNode.getAttribute('id'), redisIrena2020, 'https://api.dashboard.eco/irena-2020');
       </script>
     </div>
 

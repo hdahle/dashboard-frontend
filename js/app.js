@@ -51,6 +51,57 @@ Chart.defaults.global.responsive = true;
 
 Chart.plugins.unregister(ChartDataLabels);
 
+
+
+//
+// EIA Cost of Electricity Generation USA 2025
+//
+function plotEiaLcoe(elmt, results, url) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('EIA LCOE:', url, results.data.datasets.length);
+  insertSourceAndLink(results, id, url);
+
+  let color = mkColorArray(results.data.datasets.length);
+
+  // Add colors to the datasets
+  results.data.datasets.forEach(d => {
+    d.backgroundColor = color.pop();
+    d.borderWidth = 0;
+  });
+
+  results.data.datasets.forEach(d => {
+    d.data = d.data.map(x => Math.round(x) / 1000)
+  });
+  // Make sure labels can be split
+  results.data.labels = [];
+  results.data.fuels.forEach(fuel => {
+    results.data.labels.push(fuel /*.split(" ")*/);
+  });
+
+  var myChart = new Chart(document.getElementById(id.canvasId), {
+    type: 'bar',
+    options: {
+      aspectRatio: 1,
+      scales: {
+        xAxes: [{
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            fontSize: 10,
+            min: 0,
+            callback: v => v + ' $/kWh'
+          }
+        }]
+
+      }
+    },
+    data: results.data,
+  });
+}
+
 //
 // Irena Cost of Renewable Generation
 //
@@ -120,9 +171,6 @@ function plotIrena(elmt, results, url) {
           }
         }],
         yAxes: [{
-          gridLines: {
-            display: true
-          },
           ticks: {
             fontSize: 10,
             min: 0,
