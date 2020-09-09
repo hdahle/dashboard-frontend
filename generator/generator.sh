@@ -253,3 +253,9 @@ echo ";" >> ${JSFILE}
 echo -n "redisCovidDeathsRegions" 
 wc ${JSFILE}
 
+echo "let redisIrena2020 =" >> ${JSFILE}
+curl -s "http://api.dashboard.eco/irena-2020" >> ${JSFILE}
+echo ";" >> ${JSFILE}
+echo -n "redisIrena2020" 
+wc ${JSFILE}
+
