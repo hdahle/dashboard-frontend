@@ -46,6 +46,15 @@
       font-size: xx-large;
     }
 
+    .date-font {
+      font-family: 'Roboto', sans-serif;
+      font-weight: normal;
+      font-size: small;
+      letter-spacing: 0.3px;
+      text-rendering: optimizeLegibility;
+      color: #777;
+    }
+
     .fp-ppm-font {
       color: rgb(200, 116, 94);
     }
@@ -160,6 +169,8 @@
     <div class="w3-row" id="Schiphol">
       <div class="w3-container w3-col m6 l7">
         <h2>Initial Corona impact on air traffic: 85-90&percnt; decrease at Amsterdam Airport, now at 50&percnt;</h2>
+        <span class="date-font">September 3, 2020<br></span>
+
         Amsterdam Airport Schiphol usually has about 650 airplane arrivals per day.
         <p>Since mid-March, the number of airplane arrivals has dropped to about 70-90 per day, a decrease of more than
           85&percnt; </p>
@@ -179,6 +190,30 @@
             'https://api.dashboard.eco/schiphol-flights-2020'
           ]
         );
+      </script>
+    </div>
+
+    <!-- Plot Renewables Cost -->
+    <div class="w3-row" id="Renewables">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Cost of renewable power generation decreasing sharply, now competitive with fossil fuel based power
+          generation</h2>
+        <span class="date-font">September 9, 2020</span><br>
+        IRENA has published a detailed study on the cost of power generation at utility scale based on renewable
+        resources.
+        The report shows a clear trend in LCOE (levelised cost of electricity, which includes financial costs,
+        operations, management etc) for renewable power generation: New solar and wind power plants are now less
+        expensive than most coal-fired plants.
+        <p>
+          The grey band in the chart represents the range of costs for fossil fuel based plants.
+        </p>
+        <p>
+          According to IRENA, the comparable costs for fossil fuel based power plants varies from 0.05 $/kWh (new
+          Chinese coal-fired plants close to coal mines) to 0.177 $/kWh.
+        </p>
+      </div>
+      <script>
+        plotIrena(document.currentScript.parentNode.getAttribute('id'), redisIrena2020, 'https://api.dashboard.eco/irena-2020');
       </script>
     </div>
 

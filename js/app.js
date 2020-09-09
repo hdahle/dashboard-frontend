@@ -21,6 +21,9 @@ function mkColorArray(num, color) {
 function colorArrayToAlpha(arr, alpha) {
   return arr.map(x => x.replace('rgb', 'rgba').replace(')', ',' + alpha + ')'));
 }
+function colorToAlpha(color, alpha) {
+  return color.replace('rgb', 'rgba').replace(')', ',' + alpha + ')');
+}
 function colorArrayMix(arr) {
   let res = [];
   for (let i = 0; i < arr.length; i++) {
@@ -47,6 +50,90 @@ Chart.defaults.global.aspectRatio = 1;
 Chart.defaults.global.responsive = true;
 
 Chart.plugins.unregister(ChartDataLabels);
+
+//
+// Irena Cost of Renewable Generation
+//
+function plotIrena(elmt, results, url) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('Renewables:', url, results.data.datasets.length);
+  insertSourceAndLink(results, id, url);
+
+  let color = mkColorArray(results.data.datasets.length);
+
+  // add padding to labels
+  results.data.fuels.unshift('');
+
+  results.data.labels = [];
+  results.data.fuels.forEach(fuel => {
+    results.data.labels.push(fuel /*.split(" ")*/);
+  });
+
+  // add padding to datasets
+  results.data.datasets.forEach(d => {
+    d.data.unshift(0);
+  });
+  // Add colors to the datasets
+  results.data.datasets.forEach(d => {
+    d.backgroundColor = color.pop();
+    d.backgroundColor = (d.label == 2010) ? colorToAlpha(d.backgroundColor, 0.3) : d.backgroundColor;
+    d.borderWidth = 0;
+  });
+  results.data.datasets.push({
+    label: 'Fossil fuels, lower bound',
+    type: 'line',
+    pointRadius: 0,
+    backgroundColor: 'white',
+    borderDash: [5, 5],
+    categoryPercentage: 0.5,
+    barPercentage: 1.0,
+    data: [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
+  });
+  results.data.datasets.push({
+    label: 'Fossil fuels, upper bound',
+    type: 'line',
+    pointRadius: 0,
+    borderDash: [5, 5],
+    categoryPercentage: 0.5,
+    barPercentage: 1.0,
+    data: [0.177, 0.177, 0.177, 0.177, 0.177, 0.177, 0.177, 0.177, 0.177],
+  });
+
+  // Make sure labels can be split
+  // results.data.labels = [];
+  // results.data.fuels.forEach(fuel => {
+  //  results.data.labels.push(fuel.split(" "));
+  // });
+
+  let myChart = new Chart(document.getElementById(id.canvasId), {
+    type: 'bar',
+    options: {
+      aspectRatio: 0.8,
+      scales: {
+        xAxes: [{
+          gridLines: {
+            display: false
+          },
+          ticks: {
+            min: 'Biomass',
+            max: 'Wind onshore',
+          }
+        }],
+        yAxes: [{
+          gridLines: {
+            display: true
+          },
+          ticks: {
+            fontSize: 10,
+            min: 0,
+            callback: v => v + ' $/kWh'
+          }
+        }]
+      }
+    },
+    data: results.data,
+  });
+}
 
 //
 // Plot Spain Electricity Consumption last 10 years
