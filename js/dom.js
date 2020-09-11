@@ -26,8 +26,8 @@ function insertAccordionAndCanvas(id, responsive) {
   }
   // Insert the button and accordion for the sources and links
   d.innerHTML += "<div onclick='openAccordion(\"" + ids.accordionId + "\",\"" + ids.arrowId + "\")' "
-    + "class='w3-hide-small w3-button w3-block w3-stretch w3-left-align w3-hover-white w3-text-theme' style='font-size:small'>"
-    + "SOURCES &nbsp; "
+    + "class='w3-hide-small w3-button w3-block w3-stretch w3-left-align fp-small-font'>"
+    + "Sources &nbsp; "
     + "<i class='fa fa-angle-down' id='" + ids.arrowId + "'></i>"
     + "</div>"
     + "<div id='" + ids.accordionId + "' class='w3-hide w3-hide-small' style='font-size:small'></div>";
@@ -42,8 +42,8 @@ function insertAccordionAndCanvas(id, responsive) {
       + "<div class='w3-hide-large w3-hide-medium' id='" + ids.canvasIdMobile + "-wrap'><canvas id='" + ids.canvasIdMobile + "'></canvas></div>"
   }
   html += "<div onclick='openAccordion(\"" + ids.accordionIdMobile + "\",\"" + ids.arrowIdMobile + "\")' "
-    + "class='w3-hide-large w3-hide-medium w3-button w3-block w3-stretch w3-left-align w3-hover-white w3-text-theme' style='font-size:small'>"
-    + "SOURCES &nbsp; "
+    + "class='w3-hide-large w3-hide-medium w3-button w3-block w3-stretch w3-left-align fp-small-font'>"
+    + "Sources &nbsp; "
     + "<i class='fa fa-angle-down' id='" + ids.arrowIdMobile + "'></i>"
     + "</div>"
     + "<div id='" + ids.accordionIdMobile + "' class='w3-hide w3-hide-large w3-hide-medium' style='font-size:small'></div>"

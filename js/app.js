@@ -1129,8 +1129,8 @@ function plotSafety(elmt) {
   insertSourceAndLink(redisMortalityElectricitySovacool, id, 'https://api.dashboard.eco/mortality-electricity-sovacool');
   insertSourceAndLink(redisMortalityElectricityMarkandya, id, 'https://api.dashboard.eco/mortality-electricity-markandya');
   let myChart = makeHorizontalBar(id.canvasId, {}, {});
-  myChart.options.scales.xAxes[0].scaleLabel.labelString = "Deaths per TWh";
-  myChart.options.scales.xAxes[0].scaleLabel.display = true;
+  myChart.options.title.display = true;
+  myChart.options.title.text = 'Deaths per TWh';
   let d = redisMortalityElectricity.data;
   console.log('Safety electricity:', d.length);
   let colors = mkColorArray(2);
