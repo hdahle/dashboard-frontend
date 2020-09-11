@@ -8,9 +8,8 @@
 // 'color' is base color, 'num' is how many colors to create
 // Resulting colors have hues evenly spaced in HSL color space
 function mkColorArray(num, color) {
-  // Color array for #222c3c: Use #db7f67 (coolors red in the palette)
-  // Alternatively a little bit darker c8745e
-  let c = d3.hsl(color === undefined ? '#c8745e' : color);
+  // For the blue sky futureplanet: #00519d
+  let c = d3.hsl(color === undefined ? '#00519d' : color);
   let r = [];
   for (i = 0; i < num; i++) {
     r.push(c + "");
@@ -50,8 +49,6 @@ Chart.defaults.global.aspectRatio = 1;
 Chart.defaults.global.responsive = true;
 
 Chart.plugins.unregister(ChartDataLabels);
-
-
 
 //
 // EIA Cost of Electricity Generation USA 2025
@@ -815,7 +812,7 @@ function plotEmissionsByRegion(elmt, url, results) {
     { min: 1959, max: 2018, callback: x => x === 1960 ? null : x },
     { callback: v => (v / 1000) + ' Gt' }
   );
-  let c = mkColorArray(results.data.length);
+  let c = mkColorArray(results.data.length, '#0076e4');
   c = colorArrayMix(c);
   while (results.data.length) {
     let d = results.data.pop();
@@ -842,7 +839,7 @@ function plotEmissionsNorway(elmt, url, results) {
     { max: 2019 },
     { callback: (value) => Math.trunc(value / 1000) + " Mt" }
   );
-  let c = mkColorArray(results.data.length - 1);
+  let c = mkColorArray(results.data.length - 1, '#0076e4');
   // Plot all datasets except 0 which is the Total
   for (let i = 1; i < results.data.length; i++) {
     myChart.data.datasets.push({
@@ -1112,8 +1109,9 @@ function plotBothCCS(elmt, url, results) {
   var myChart = makeHorizontalBar(id.canvasId, { callback: v => v + 'Mt' }, {});
   // remove any null projects, then sort it
   let d = results.data.filter(x => x.project != null).sort((a, b) => b.capacity - a.capacity);
+  let colors = mkColorArray(2);
   let lineColor = d.map(x => {
-    return x.type === 'EOR' ? '#c8745e' : (x.type == 'Storage' ? '#5ec874' : '#777');
+    return x.type === 'EOR' ? colors[1] : (x.type == 'Storage' ? colors[0] : '#777');
   });
   myChart.data.datasets.push({
     data: d.map(x => x.capacity),
@@ -1133,7 +1131,8 @@ function plotSafety(elmt) {
   let myChart = makeHorizontalBar(id.canvasId, {}, {});
   let d = redisMortalityElectricity.data;
   console.log('Safety electricity:', d.length);
-  let lineColor = d.map(x => x.deaths > 1 ? '#c8745e' : '#5ec874');
+  let colors = mkColorArray(2);
+  let lineColor = d.map(x => x.deaths > 1 ? colors[0] : colors[1]);
   myChart.data.datasets.push({
     data: d.map(x => x.deaths),
     backgroundColor: lineColor,

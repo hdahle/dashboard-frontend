@@ -1,124 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<title>futureplanet.eco</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/w3.css">
+<link rel="stylesheet" href="css/w3-custom-theme.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Roboto+Condensed&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+  body,
+  html {
+    font-family: "Roboto", sans-serif;
+    font-display: swap;
+    height: 100%;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+  }
 
-<head>
-  <title>futureplanet.eco</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="css/w3.css">
-  <link rel="stylesheet" href="css/w3-custom-colors.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400|Roboto+Condensed&display=swap">
+  h2 {
+    font-family: "Roboto Condensed", sans-serif;
+    font-weight: 700;
+    background-color: transparent;
+    color: #444;
+  }
 
-  <style>
-    body,
-    html {
-      font-family: 'Roboto', sans-serif;
+  h4,
+  .fp-small-font {
+    font-weight: normal;
+    background-color: transparent;
+    letter-spacing: 0.5px;
+    font-size: small;
+    text-rendering: optimizeLegibility;
+    color: #777;
+    /*white-space: nowrap;*/
+  }
+
+  .fp-ppm-font {
+    font-weight: 100;
+    font-size: xx-large;
+  }
+
+  .fp-white-font {
+    letter-spacing: 0.5px;
+    color: #fff;
+  }
+
+  .fa-twitter,
+  .fa-instagram {
+    background: white;
+    color: black;
+    text-decoration: none;
+  }
+
+  .w3-row {
+    padding-bottom: 76px;
+  }
+
+  /* Hero-image */
+  .bgimage {
+    background-attachment: fixed;
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #777;
+    min-height: 300px;
+  }
+
+  /* Hero-image for small screens */
+  @media only screen and (max-width:812px) {
+    .bgimage {
+      background-image:
+        url('img/gabriel-miklos-unsplash-600x600.jpg');
+      background-attachment: scroll;
     }
+  }
 
-    h1,
-    h2 {
-      font-family: 'Roboto Condensed', sans-serif;
-      font-weight: 700;
-      color: #333;
+  /* Hero-image for larger screens */
+  @media only screen and (min-width:813px) {
+    .bgimage {
+      background-image:
+        url('img/gabriel-miklos-unsplash-1600x400.jpg');
+      background-attachment: scroll;
     }
+  }
+</style>
 
-    h3,
-    h4 {
-      font-family: 'Roboto Condensed', sans-serif;
-      font-weight: 400;
-      color: #444;
-    }
-
-    a {
-      word-wrap: break-word;
-    }
-
-    .fp-my-font {
-      font-family: 'Roboto Condensed', sans-serif;
-      font-weight: 700;
-    }
-
-    .fp-thin-font,
-    .fp-ppm-font {
-      font-family: 'Roboto', sans-serif;
-      font-weight: 100;
-      font-size: xx-large;
-    }
-
-    .date-font {
-      font-family: 'Roboto', sans-serif;
-      font-weight: normal;
-      font-size: small;
-      letter-spacing: 0.3px;
-      text-rendering: optimizeLegibility;
-      color: #777;
-    }
-
-    .fp-ppm-font {
-      color: rgb(200, 116, 94);
-    }
-
-    .fa-twitter,
-    .fa-instagram {
-      background: white;
-      color: black;
-      text-decoration: none;
-    }
-
-    .w3-row {
-      padding-bottom: 76px;
-    }
-  </style>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
-  <script src="https://d3js.org/d3-color.v1.min.js"></script>
-  <script src="js/redis-values.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/dom.js"></script>
-</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="js/redis-values.js"></script>
+<script src="js/app.js"></script>
+<script src="js/dom.js"></script>
 
 <body>
-  <div class="w3-top" id="top-menu-bar">
-    <div class="w3-bar w3-theme-l1">
-      <div class="w3-content" style="max-width:920px">
+
+  <div class="w3-top">
+    <div class="w3-bar w3-theme">
+      <div>
         <a href="#Top" class="w3-bar-item w3-button">futureplanet.eco</a>
         <a href="#About" class="w3-bar-item w3-button w3-hide-small w3-right">About</a>
         <a href="#API" class="w3-bar-item w3-button w3-hide-small w3-right">API</a>
-        <!-- 
-        <a href="#FossilFuels" class="w3-bar-item w3-button w3-hide-small w3-right">Oil/gas/coal</a>
-        <a href="#Warming" class="w3-bar-item w3-button w3-hide-small w3-right">Warming</a>
-        <a href="#Emissions" class="w3-bar-item w3-button w3-hide-small w3-right">Emissions</a>
-        <a href="#SeaAndIce" class="w3-bar-item w3-button w3-hide-small w3-right">Sea and ice</a>
-        <a href="#Forests" class="w3-bar-item w3-button w3-hide-small w3-right">Forests</a>
-        -->
         <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
-          onclick="clickBurger()">&#9776;</a>
+          onclick="clickBurger()"><i class="fa fa-bars"></i></a>
       </div>
     </div>
   </div>
 
-  <div id="burger" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-theme-l1 w3-top" style="margin-top:38px">
+  <!-- Menu on small screens  -->
+  <div id="burger" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-theme w3-top" style="margin-top:38px">
     <a href="#API" class="w3-bar-item w3-button" onClick="clickBurger()">API</a>
     <a href="#About" class="w3-bar-item w3-button" onClick="clickBurger()">About</a>
   </div>
 
-  <!-- Limit content width to 920px -->
-  <div class="w3-content w3-padding-32" id="Top" style="max-width:920px;">
+  <script>
+    function clickBurger() {
+      var x = document.getElementById("burger");
+      if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+      } else {
+        x.className = x.className.replace(" w3-show", "");
+      }
+    }
+  </script>
 
-    <!-- For tagline -->
-    <div class="w3-row w3-padding-16">
-      <div class="w3-theme-l5">
-        <div class="w3-half w3-container fp-thin-font w3-hide-small">
-          We probably<br>
-          only have<br>
-          one earth
-        </div>
-        <div class="w3-container w3-rest">
+  <!-- Landing page header: Image with parallax-scrolling -->
+
+  <div class="bgimage w3-display-container">
+    <!-- Down-arrow -->
+    <div class="w3-display-bottommiddle w3-center fp-white-font">
+      <h1><i class="fa fa-angle-down"></i></h1>
+    </div>
+    <!-- Text -->
+    <div class="w3-display-bottomright w3-right">
+      <!-- Todays CO2 level -->
+      <div class="w3-content" id="dailyCO2">
+        <div class="w3-container fp-white-font">
           <div class="w3-padding-16 w3-right-align w3-small">
-            Atmospheric CO2 level
+            Atmospheric CO2
             <span id="fp-co2-date"></span><br>
             <span id="fp-co2-ppm" class="fp-ppm-font"></span><br>
             <span id="fp-co2-last"></span> than 1 year ago<br>
@@ -129,7 +148,7 @@
           <script>
             if (1) {
               let d = redisCO2Now.data[0];
-              document.getElementById('fp-co2-date').innerHTML = moment(d.date, 'YYYY-MM-DD').format('dddd MMMM Do');
+              document.getElementById('fp-co2-date').innerHTML = moment(d.date, 'YYYY-MM-DD').format('dddd MMM D');
               document.getElementById('fp-co2-ppm').innerHTML = d.value + ' ppm';
               document.getElementById('fp-co2-last').innerHTML =
                 Math.trunc(1000 * (d.value - d.valueLastYear) / d.valueLastYear) / 10 + '&percnt;' +
@@ -142,47 +161,34 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <script>
-      function myAccordion(id) {
-        var x = document.getElementById(id);
-        if (x.className.indexOf("w3-show") == -1) {
-          x.className += " w3-show";
-        } else {
-          x.className = x.className.replace(" w3-show", "");
-        }
-      }
-    </script>
-
-    <!-- Placeholder DIV for Latest News -->
-    <div class="w3-section">
-      <div class="w3-container">
-        <span class="w3-tag w3-theme-l1 w3-round-small w3-container" style="font-size:small;">
-          LATEST<br>UPDATE</span>
-      </div>
-      <div id="NewsPlaceholder">
-      </div>
-    </div>
+  <!-- Limit content width to 960px -->
+  <div class="w3-content w3-padding-32" id="Top">
 
     <!-- Plot EIA LCOE -->
     <div class="w3-row" id="eiaLcoe">
       <div class="w3-container w3-col m6 l7">
-        <h2>Cost of electricity generation in the United States in 2025: Solar photovoltaic will be the least expensive
-          option</h2>
-        <span class="date-font">September 10, 2020</span>
+        <h2>Cost of electricity generation in the United States in 2025:
+          Solar photovoltaic least expensive technology</h2>
+        <h4>September 10, 2020</h4>
         <p>
           A <a href="https://www.eia.gov/outlooks/aeo/pdf/electricity_generation.pdf" ref="noreferrer" target="_blank"
             rel="noopener">
             report
-          </a> from the US Energy Information Administration has estimated the levelised cost of electricity (which
-          includes
-          financial costs, fuel, operations, management and more) generation for new plants coming online in the United
-          States in 2025.
+          </a> from the US Energy Information Administration has estimated the levelised cost of electricity (LCOE)
+          generation for new plants coming online in the United States in 2025.
+          LCOE includes all aspects of building and running plants such as
+          financial costs, fuel, operations, management and more.
+        </p>
+        <p>
           Photovoltaic solar plants will be the least expensive, with roughly the same costs as geothermal,
           combined cycle natural gas, and onshore wind turbines.
         </p>
         <p>
           Coal-fired plants will remain an expensive option.
+          As another post on our site shows, offshore wind costs are decreasing rapidly but remain high in the near
+          term.
         </p>
       </div>
       <script>
@@ -195,11 +201,13 @@
       <div class="w3-container w3-col m6 l7">
         <h2>Cost of renewable power generation decreasing sharply, now competitive with fossil fuel based power
           generation</h2>
-        <span class="date-font">September 9, 2020</span>
+        <h4>September 9, 2020</h4>
         <p>
-          IRENA has published a detailed study on the cost of utility-scale power generation at a global level based on
-          renewable
-          resources.
+          IRENA has published
+          <a href="https://www.irena.org/publications/2020/Jun/Renewable-Power-Costs-in-2019" ref="noreferrer"
+            target="_blank" rel="noopener">
+            a detailed study
+          </a> on the cost of utility-scale power generation at a global level based on renewable resources.
           The report shows a clear trend in LCOE (levelised cost of electricity, which includes financial costs,
           operations, management etc) for renewable power generation: New solar and wind power plants are now less
           expensive than most coal-fired plants. Since 2019, the cost of utility scale solar power has decreased by
@@ -221,9 +229,10 @@
     <!-- Plot Schiphol Air Traffic -->
     <div class="w3-row" id="Schiphol">
       <div class="w3-container w3-col m6 l7">
-        <h2>Initial Corona impact on air traffic: 85-90&percnt; decrease at Amsterdam Airport. Traffic now at 60&percnt;
+        <h2>Initial Corona impact on air traffic: 85-90&percnt; decrease at Amsterdam Airport. Traffic now at
+          60&percnt;
           of normal levels</h2>
-        <span class="date-font">September 3, 2020 &nbsp; | &nbsp; Chart updates daily</span>
+        <h4>September 3, 2020 &nbsp; | &nbsp; Chart updates daily</h4>
         <p>
           Amsterdam Airport Schiphol usually has about 650 airplane arrivals per day.
           Since mid-March, the number of airplane arrivals has dropped to about 70-90 per day, a decrease of more than
@@ -1026,22 +1035,14 @@
       </script>
     </div>
 
-    <!-- NEWS -->
-
-    <script>
-      let elmtLatest = document.getElementById("LatestNews");
-      let elmtPlaceholder = document.getElementById("NewsPlaceholder");
-      elmtPlaceholder.parentNode.insertBefore(elmtLatest, elmtPlaceholder);
-    </script>
-
     <!-- API -->
 
     <div class="w3-container w3-section" id="API">
     </div>
-    <div class="w3-container w3-section">
+    <div class="w3-container w3-section fp-api-links">
       <h2>API</h2>
-      The rather basic REST API returns self-explanatory JSON payloads.
-      <p id='API-list'>
+      These API calls return self-explanatory JSON payloads for all charts on this page
+      <p id='API-list' style="font-size:small;">
       </p>
       <script>
         insertFpUrls('API-list');
@@ -1058,57 +1059,35 @@
       <p>H&aring;kon Dahle, Oslo, Norway, 2020</p>
 
     </div>
+
+    <!-- end w3-content -->
   </div>
 
-  <!-- FOOTER -->
 
-  <div class="w3-container w3-center w3-section fp-my-font">
-    <p> design by futureplanet.eco </p>
-    &nbsp;
-    <a href="https://www.linkedin.com/company/futureplanet-eco/" class="fa fa-linkedin" target="_blank"
-      rel="noopener"></a>
-    &nbsp;
-    <a href="https://www.instagram.com/futureplanet.eco/" class="fa fa-instagram" target="_blank" rel="noopener"></a>
-    &nbsp;
-    <a href="https://profiles.eco/dashboard" ref="noreferrer" target="_blank" rel="noopener">
-      <img style="width:16px" src="eco-mark.svg">
-    </a>
-  </div>
-  <div class="w3-container w3-center w3-section">
-    We probably only have one earth
-  </div>
+  <!-- Footer with social media icons and credits -->
 
-  <!-- BURGER MENU -->
+  <footer class="w3-center w3-padding">
+    <div class="w3-large w3-section">
+      <a href="https://www.linkedin.com/company/futureplanet-eco/" class="fa fa-linkedin" target="_blank"
+        rel="noopener"></a>
+      &nbsp;
+      <a href="https://www.instagram.com/futureplanet.eco/" class="fa fa-instagram" target="_blank" rel="noopener"></a>
+      &nbsp;
+      <a href="https://profiles.eco/dashboard" ref="noreferrer" target="_blank" rel="noopener">
+        <img style="width:16px" src="eco-mark.svg">
+      </a>
+    </div>
+    <p>
+    <div class="w3-center w3-padding fp-small-font">
+      design by futureplanet.eco
+      <br>
+      photos by
+      <a rel="noopener noreferrer" href="https://unsplash.com/">
+        gabriel miklos, unsplash.com
+      </a>
+    </div>
+  </footer>
 
-  <script>
-    function clickBurger() {
-      var x = document.getElementById("burger");
-      if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-      } else {
-        x.className = x.className.replace(" w3-show", "");
-      }
-    }
-  </script>
-
-  <!-- API BUTTONS 
-
-  <script>
-    function tryUrl(url) {
-      var myWindow = window.open();
-      myWindow.document.write("<html><body><pre><code>")
-      fetch(url)
-        .then(status)
-        .then(json)
-        .then(results => {
-          myWindow.document.write(JSON.stringify(results, 0, 2));
-          myWindow.document.write("</code></pre></body></html>")
-          myWindow.document.close();
-        })
-        .catch(err => console.log(err));
-    }
-  </script>
--->
 </body>
 
 </html>
