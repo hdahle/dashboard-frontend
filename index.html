@@ -40,8 +40,10 @@
     font-size: xx-large;
   }
 
-  .fp-white-font {
-    letter-spacing: 0.5px;
+  .fp-white-font,
+  .fp-logo-font {
+    letter-spacing: 1px;
+    text-rendering: optimizeLegibility;
     color: #fff;
   }
 
@@ -98,7 +100,7 @@
   <div class="w3-top">
     <div class="w3-bar w3-theme">
       <div>
-        <a href="#Top" class="w3-bar-item w3-button">futureplanet.eco</a>
+        <a href="#Top" class="w3-bar-item w3-button fp-logo-font">futureplanet.eco</a>
         <a href="#About" class="w3-bar-item w3-button w3-hide-small w3-right">About</a>
         <a href="#API" class="w3-bar-item w3-button w3-hide-small w3-right">API</a>
         <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
@@ -126,7 +128,7 @@
 
   <!-- Landing page header: Image with parallax-scrolling -->
 
-  <div class="bgimage w3-display-container">
+  <div class="bgimage w3-display-container" id="Top">
     <!-- Down-arrow -->
     <div class="w3-display-bottommiddle w3-center fp-white-font">
       <h1><i class="fa fa-angle-down"></i></h1>
@@ -164,7 +166,7 @@
   </div>
 
   <!-- Limit content width to 960px -->
-  <div class="w3-content w3-padding-32" id="Top">
+  <div class="w3-content w3-padding-32">
 
     <!-- Plot EIA LCOE -->
     <div class="w3-row" id="eiaLcoe">
