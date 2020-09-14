@@ -11,10 +11,8 @@
   body,
   html {
     font-family: "Roboto", sans-serif;
-    font-display: swap;
     height: 100%;
     word-wrap: break-word;
-    text-overflow: ellipsis;
   }
 
   h2 {
@@ -32,7 +30,6 @@
     font-size: small;
     text-rendering: optimizeLegibility;
     color: #777;
-    /*white-space: nowrap;*/
   }
 
   .fp-ppm-font {
@@ -40,9 +37,23 @@
     font-size: xx-large;
   }
 
-  .fp-white-font,
-  .fp-logo-font {
+  .fp-white-font {
     letter-spacing: 1px;
+    text-rendering: optimizeLegibility;
+    color: #fff;
+  }
+
+  .fp-logo-font {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-rendering: optimizeLegibility;
+    color: #fff;
+  }
+
+  .fp-logo-eco-font {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
     text-rendering: optimizeLegibility;
     color: #fff;
   }
@@ -100,7 +111,9 @@
   <div class="w3-top">
     <div class="w3-bar w3-theme">
       <div>
-        <a href="#Top" class="w3-bar-item w3-button fp-logo-font">futureplanet.eco</a>
+        <a href="#Top" class="w3-bar-item w3-button fp-logo-font">
+          futureplanet<span class="fp-logo-eco-font">.eco</span>
+        </a>
         <a href="#About" class="w3-bar-item w3-button w3-hide-small w3-right">About</a>
         <a href="#API" class="w3-bar-item w3-button w3-hide-small w3-right">API</a>
         <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
