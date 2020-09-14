@@ -342,7 +342,7 @@ function plotCoronaDeaths3(elmt, json) {
   //insertSourceAndLink(results, elementSource, url);
   let c = mkColorArray(2);
   let c0 = c[0];
-  let c1 = c[1].replace('rgb', 'rgba').replace(')', ',0.6)');
+  //let ch = makeChart(elmt.pop());
   json.data.forEach(x => {
     if (!elmt.length) return;
     let ch = makeChart(elmt.pop());
@@ -350,7 +350,7 @@ function plotCoronaDeaths3(elmt, json) {
     ch.data.datasets.push({
       yAxisID: 'L',
       type: 'line',
-      label: x.country + ': ' + x.total + ' deaths',
+      label: x.country + ': ' + x.total,
       categoryPercentage: 1,
       fill: false,
       borderColor: c0,
@@ -359,6 +359,56 @@ function plotCoronaDeaths3(elmt, json) {
       data: x.data,
     });
     ch.update();
+  });
+}
+
+function plotCoronaDeathsMulti(elmt, results, url) {
+  console.log("Corona deaths global:", url, results.data.length)
+  let id = insertAccordionAndCanvas(elmt, false);
+  let myChart = new Chart(document.getElementById(id.canvasId), {
+    type: 'bar',
+    options: {
+      aspectRatio: 1.3,
+      legend: {
+        position: 'top'
+      },
+      scales: {
+        xAxes: [{
+          offset: true,
+          type: 'time',
+          time: {
+            unit: 'month',
+            displayFormats: {
+              month: 'MMM'
+            }
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            min: 0
+          }
+        }]
+      }
+    }
+  });
+
+  insertSourceAndLink(results, id, url);
+  let c = colorArrayToAlpha(mkColorArray(results.data.length), 0.6);
+  results.data.forEach(x => {
+    color = c.pop();
+    let country = x.country;//.replace("America", "Am")
+    let d = x.data.map(xd => ({ t: xd.t, y: Math.trunc(100 * xd.y / x.population) / 100 }));
+    console.log(x.data, d);
+    myChart.data.datasets.push({
+      type: 'line',
+      label: country + ': ' + x.total,
+      fill: false,
+      borderColor: color,
+      backgroundColor: color,
+      tooltipText: '7 day average: ',
+      data: d//x.data,
+    });
+    myChart.update();
   });
 }
 
