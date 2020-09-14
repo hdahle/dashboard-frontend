@@ -398,7 +398,6 @@ function plotCoronaDeathsMulti(elmt, results, url) {
     color = c.pop();
     let country = x.country;//.replace("America", "Am")
     let d = x.data.map(xd => ({ t: xd.t, y: Math.trunc(100 * xd.y / x.population) / 100 }));
-    console.log(x.data, d);
     myChart.data.datasets.push({
       type: 'line',
       label: country + ': ' + x.total,
