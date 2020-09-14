@@ -92,7 +92,6 @@ function plotEiaLcoe(elmt, results, url) {
             callback: v => v + ' $/kWh'
           }
         }]
-
       }
     },
     data: results.data,
@@ -111,12 +110,7 @@ function plotIrena(elmt, results, url) {
 
   // add padding to labels
   results.data.fuels.unshift('');
-
-  results.data.labels = [];
-  results.data.fuels.forEach(fuel => {
-    results.data.labels.push(fuel /*.split(" ")*/);
-  });
-
+  results.data.labels = results.data.fuels;
   // add padding to datasets
   results.data.datasets.forEach(d => {
     d.data.unshift(0);
@@ -133,8 +127,6 @@ function plotIrena(elmt, results, url) {
     pointRadius: 0,
     backgroundColor: 'white',
     borderDash: [5, 5],
-    categoryPercentage: 0.5,
-    barPercentage: 1.0,
     data: [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
   });
   results.data.datasets.push({
@@ -142,16 +134,8 @@ function plotIrena(elmt, results, url) {
     type: 'line',
     pointRadius: 0,
     borderDash: [5, 5],
-    categoryPercentage: 0.5,
-    barPercentage: 1.0,
     data: [0.177, 0.177, 0.177, 0.177, 0.177, 0.177, 0.177, 0.177, 0.177],
   });
-
-  // Make sure labels can be split
-  // results.data.labels = [];
-  // results.data.fuels.forEach(fuel => {
-  //  results.data.labels.push(fuel.split(" "));
-  // });
 
   let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'bar',
@@ -294,12 +278,11 @@ function plotDailyCO2(elmt, url, results) {
   // plot each year as a separate dataset
   while (results.data.length) {
     let x = results.data.shift();
-    let cS = cSolid.pop();
-    let cA = cAlpha.pop();
+    let c = cAlpha.pop();
     myChart.data.datasets.push({
       label: x.year,
-      borderColor: x.year == 2020 ? cS : cA,
-      backgroundColor: cS,
+      borderColor: c,//x.year == 2020 ? cS : cA,
+      backgroundColor: c,
       showLine: true,
       fill: false,
       data: x.data
@@ -860,14 +843,13 @@ function plotArcticIce(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('ICE NSIDC:', results.data.length);
   insertSourceAndLink(results, id, url);
-  let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'right', 'category');
+  let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'top', 'category');
   myChart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  let yrs = [1979, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2016, 2017, 2018, 2019, 2020];
-  let cSolid = mkColorArray(yrs.length);
-  let cAlpha = colorArrayToAlpha(cSolid, 0.4);
-  while (yrs.length) {
-    let year = yrs.pop();
-    // Extract a subset of data for a particular year
+  myChart.options.tooltips.enabled = false;
+  let cSolid = mkColorArray(Math.trunc(1.5 * results.data.length / 12));//yrs.length);
+  let cAlpha = colorArrayToAlpha(cSolid, 0.1);
+  for (let year = 1979; year <= parseInt(moment().format('YYYY')); year++) {
+    // Extract data for a particular year
     let tmp = results.data.filter(x => x.year === year);
     // Then create a table that only contains the datapoints
     let resval = tmp.map(x => x.extent);
@@ -1035,20 +1017,20 @@ function plotBrazilFires(elmt, url, results) {
   console.log('Brazil:', results.data.length);
   insertSourceAndLink(results, id, url);
   let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'top', 'category');
-  let c = mkColorArray(3);
+  let c = mkColorArray(Math.trunc(results.data.length * 1.5));
+  let cAlpha = colorArrayToAlpha(c, 0.2);
+
   while (results.data.length) {
     let x = results.data.pop();
     let values = x.data;
-    // Too much data here. Let us just look at 2019 and Average
-    if (x.year != 2019 && x.year != 2020 && x.year != "Average") { // && x.year != "Maximum" && x.year != "Minimum") 
-      continue;
-    }
+    if (x.year == "Maximum" || x.year == "Minimum" || x.year == "Average") continue;
     let col = c.pop();
+    let colAlpha = cAlpha.pop();
     myChart.data.datasets.push({
       data: values,
       label: x.year,
       pointRadius: x.year == 2020 ? 4 : 0,
-      borderColor: col,
+      borderColor: x.year == 2020 ? col : colAlpha,
       backgroundColor: col,
       fill: false
     });
