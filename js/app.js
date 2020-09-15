@@ -366,7 +366,7 @@ function plotCoronaDeathsMulti(elmt, results, url) {
   console.log("Corona deaths global:", url, results.data.length)
   let id = insertAccordionAndCanvas(elmt, false);
   let myChart = new Chart(document.getElementById(id.canvasId), {
-    type: 'bar',
+    type: 'line',
     options: {
       aspectRatio: 1.3,
       legend: {
@@ -391,15 +391,13 @@ function plotCoronaDeathsMulti(elmt, results, url) {
       }
     }
   });
-
   insertSourceAndLink(results, id, url);
   let c = colorArrayToAlpha(mkColorArray(results.data.length), 0.6);
   results.data.forEach(x => {
     color = c.pop();
     let country = x.country;//.replace("America", "Am")
-    let d = x.data.map(xd => ({ t: xd.t, y: Math.trunc(100 * xd.y / x.population) / 100 }));
+    let d = x.data.map(xd => ({ t: xd.t, y: Math.trunc(1000 * xd.y / x.population) / 1000 }));
     myChart.data.datasets.push({
-      type: 'line',
       label: country + ': ' + x.total,
       fill: false,
       borderColor: color,
