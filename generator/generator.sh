@@ -217,6 +217,12 @@ echo ";" >> ${JSFILE}
 echo -n "redisCsiroAltYearly" 
 wc ${JSFILE}
 
+echo "let redisCsiroAlt =" >> ${JSFILE}
+curl -s "http://api.dashboard.eco/CSIRO_Alt" >> ${JSFILE}
+echo ";" >> ${JSFILE}
+echo -n "redisCsiroAlt" 
+wc ${JSFILE}
+
 echo "let redisNorwayTrafficSmestad=[" >> ${JSFILE}
 for STATION in 'smestad-2020' 'smestad-2019'
 do

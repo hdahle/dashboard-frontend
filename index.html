@@ -139,10 +139,6 @@
   <!-- Landing page header: Image with parallax-scrolling -->
 
   <div class="bgimage w3-display-container" id="Top">
-    <!-- Down-arrow -->
-    <div class="w3-display-bottommiddle w3-center fp-white-font">
-      <h1><i class="fa fa-angle-down"></i></h1>
-    </div>
     <!-- Text -->
     <div class="w3-display-bottomright w3-right">
       <!-- Todays CO2 level -->
@@ -363,6 +359,7 @@
     <div class="w3-row" id="plotCoronaDeathsMulti">
       <div class="w3-container w3-col m4 l5">
         <h2>Covid-19 confirmed deaths per million per day per region</h2>
+        <h4>September 16, 2020&nbsp; |&nbsp; Chart updates daily</h4>
         This chart uses data from
         <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
           Johns Hopkins University Center for
@@ -382,44 +379,6 @@
         );
       </script>
     </div>
-
-
-    <!-- Plot Corona Deaths Regions  -->
-    <!--     <div id="plotCoronaDeathsRegions">
-      <div class="w3-row" style="padding-bottom:16px;">
-        <div class="w3-container">
-          <h2>Covid-19 confirmed deaths are increasing in Asia, Oceania and Europe</h2>
-          This chart uses data from
-          <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
-            Johns Hopkins University Center for
-            Systems Science and Engineering </a> (JHU CSSE)
-          and shows the daily number of confirmed Covid-19 Coronavirus deaths. The chart is updated every 24 hours.
-          <p>
-            In these charts, Northern America consists of USA, Canada, Greenland, Bermuda and St Pierre and Miquelon.
-            Latin America
-            consists of all countries south of the USA, including the Caribbean countries.
-          </p>
-        </div>
-      </div>
-      <div class="w3-row">
-        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch1"></canvas></div>
-        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch2"></canvas></div>
-        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch3"></canvas></div>
-      </div>
-      <div class="w3-row">
-        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch4"></canvas></div>
-        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch5"></canvas></div>
-        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="regions-ch6"></canvas></div>
-      </div>
-      <script>
-        plotCoronaDeaths3(
-          ["regions-ch1", "regions-ch2", "regions-ch3", "regions-ch4", "regions-ch5", "regions-ch6"],
-          redisCovidDeathsRegions,
-          []
-        );
-      </script>
-    </div>
-    -->
 
     <!-- Plot Corona Deaths 3 Charts -->
     <div id="plotCoronaDeathsMultiChart">
@@ -1000,8 +959,8 @@
       </div>
       <script>
         plotGlobalSeaLevel(document.currentScript.parentNode.getAttribute('id'),
-          ['https://api.dashboard.eco/CSIRO_Recons_2015', 'https://api.dashboard.eco/CSIRO_Alt_yearly'],
-          [redisCsiroRecons2015, redisCsiroAltYearly]
+          ['https://api.dashboard.eco/CSIRO_Recons_2015', 'https://api.dashboard.eco/CSIRO_Alt'],
+          [redisCsiroRecons2015, redisCsiroAlt]
         );
       </script>
     </div>

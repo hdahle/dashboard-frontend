@@ -50,6 +50,8 @@ Chart.defaults.global.responsive = true;
 
 Chart.plugins.unregister(ChartDataLabels);
 
+let currentYear = moment().format('YYYY');
+
 //
 // EIA Cost of Electricity Generation USA 2025
 //
@@ -362,7 +364,7 @@ function plotCoronaDeaths3(elmt, json) {
   });
 }
 
-function plotCoronaDeathsMulti(elmt, results, url) {
+function plotCoronaDeathsMulti(elmt, results, url, deathsPerMillion = true) {
   console.log("Corona deaths global:", url, results.data.length)
   let id = insertAccordionAndCanvas(elmt, false);
   let myChart = new Chart(document.getElementById(id.canvasId), {
@@ -370,7 +372,7 @@ function plotCoronaDeathsMulti(elmt, results, url) {
     options: {
       aspectRatio: 1.3,
       legend: {
-        position: 'top'
+        position: 'right'
       },
       scales: {
         xAxes: [{
@@ -393,12 +395,21 @@ function plotCoronaDeathsMulti(elmt, results, url) {
   });
   insertSourceAndLink(results, id, url);
   let c = colorArrayToAlpha(mkColorArray(results.data.length), 0.6);
+
+  // Sort regions in descending order so that legend looks nice next to graphs
+  results.data.sort((b, a) =>
+    a.data[a.data.length - 1].y / a.population - b.data[b.data.length - 1].y / b.population
+  );
+
   results.data.forEach(x => {
     color = c.pop();
-    let country = x.country;//.replace("America", "Am")
-    let d = x.data.map(xd => ({ t: xd.t, y: Math.trunc(1000 * xd.y / x.population) / 1000 }));
+    let country = x.country;
+    let d = x.data;
+    if (deathsPerMillion) {
+      d = x.data.map(xd => ({ t: xd.t, y: Math.trunc(1000 * xd.y / x.population) / 1000 }));
+    }
     myChart.data.datasets.push({
-      label: country + ': ' + x.total,
+      label: country.replace("Northern", "North"),
       fill: false,
       borderColor: color,
       backgroundColor: color,
@@ -895,7 +906,7 @@ function plotArcticIce(elmt, url, results) {
   myChart.options.tooltips.enabled = false;
   let cSolid = mkColorArray(Math.trunc(1.5 * results.data.length / 12));//yrs.length);
   let cAlpha = colorArrayToAlpha(cSolid, 0.1);
-  for (let year = 1979; year <= parseInt(moment().format('YYYY')); year++) {
+  for (let year = 1979; year <= parseInt(currentYear); year++) {
     // Extract data for a particular year
     let tmp = results.data.filter(x => x.year === year);
     // Then create a table that only contains the datapoints
@@ -904,9 +915,9 @@ function plotArcticIce(elmt, url, results) {
       data: resval,
       label: year,
       fill: false,
-      borderColor: year == 2020 ? cSolid[0] : cAlpha[0],
+      borderColor: year == currentYear ? cSolid[0] : cAlpha[0],
       backgroundColor: cAlpha[0],
-      pointRadius: year == 2020 ? 4 : 0,
+      pointRadius: year == currentYear ? 4 : 0,
     });
     cSolid.shift();
     cAlpha.shift();
@@ -1064,20 +1075,19 @@ function plotBrazilFires(elmt, url, results) {
   console.log('Brazil:', results.data.length);
   insertSourceAndLink(results, id, url);
   let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'top', 'category');
-  let c = mkColorArray(Math.trunc(results.data.length * 1.5));
-  let cAlpha = colorArrayToAlpha(c, 0.2);
+  let c = colorArrayToAlpha(mkColorArray(Math.trunc(results.data.length * 1.5)), 0.4);
 
   while (results.data.length) {
     let x = results.data.pop();
     let values = x.data;
     if (x.year == "Maximum" || x.year == "Minimum" || x.year == "Average") continue;
     let col = c.pop();
-    let colAlpha = cAlpha.pop();
     myChart.data.datasets.push({
       data: values,
       label: x.year,
-      pointRadius: x.year == 2020 ? 4 : 0,
-      borderColor: x.year == 2020 ? col : colAlpha,
+      pointRadius: x.year == currentYear ? 4 : 0,
+      borderWidth: x.year == currentYear ? 2 : 1,
+      borderColor: col,
       backgroundColor: col,
       fill: false
     });
@@ -1090,10 +1100,44 @@ function plotBrazilFires(elmt, url, results) {
 // Global Sea Level Rise
 //
 function plotGlobalSeaLevel(elmt, urls, results) {
-  plotScatter(elmt, urls, results,
-    ['Land-based measurements', 'Satellite measurements'],
-    { autoSkip: true, maxTicksLimit: 8, min: 1880, max: 2020 },
-    { callback: value => value ? value + 'mm' : value });
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('Sealevel:', results[1].data.length);
+  insertSourceAndLink(results[1], id, urls);
+  let colors = colorArrayToAlpha(mkColorArray(2), 0.5);
+  let myChart = new Chart(document.getElementById(id.canvasId), {
+    type: 'line',
+    options: {
+      scales: {
+        xAxes: [{
+          type: 'time',
+          time: {
+            unit: 'month',
+            displayFormats: {
+              month: 'YYYY'
+            }
+          }
+        }]
+      }
+    },
+    data: {
+      datasets: [{
+        label: "Satellite measurements",
+        data: results[1].data.map(d => ({ t: d.t, y: d.y + 50 })),
+        showLine: true,
+        borderColor: colors[0],
+        borderWidth: 1,
+        fill: false
+      }, {
+        label: "Land-based measurements",
+        data: results[0].data.map(d => ({ t: d.x.toString() + "-06-30", y: d.y })),
+        showLine: true,
+        borderColor: colors[1],
+        borderWidth: 1,
+        fill: false
+      }]
+    }
+  });
+  myChart.update();
 }
 
 //
@@ -1152,6 +1196,9 @@ function plotBothCCS(elmt, url, results) {
   myChart.update();
 }
 
+//
+// Safety in electricity generation
+//
 function plotSafety(elmt) {
   let id = insertAccordionAndCanvas(elmt);
   insertSourceAndLink(redisMortalityElectricity, id, 'https://api.dashboard.eco/mortality-electricity');
