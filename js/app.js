@@ -976,11 +976,11 @@ function makeMultiLineChart(canvas, xTicks, yTicks, showLegend, pos, category, a
 //
 // Global Oil Production
 //
-function plotEia(elmt, url, results) {
+function plotEia(elmt, url, results, maxYear = 2020) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('EIA:', results.series.length, url);
   insertSourceAndLink(results, id, url);
-  let myChart = makeMultiLineChart(id.canvasId, { max: 2018 }, { callback: v => v / 1000 }, true);
+  let myChart = makeMultiLineChart(id.canvasId, { max: maxYear }, { callback: v => v / 1000 }, true);
   let c = mkColorArray(results.series.length - 6);
   while (results.series.length) {
     let d = results.series.pop();
@@ -1111,10 +1111,14 @@ function plotGlobalSeaLevel(elmt, urls, results) {
         xAxes: [{
           type: 'time',
           time: {
-            unit: 'month',
+            unit: 'year',
             displayFormats: {
-              month: 'YYYY'
+              year: 'YYYY'
             }
+          },
+          ticks: {
+            maxTicksLimit: 15,
+            min: "1880-01-01",
           }
         }]
       }
