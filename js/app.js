@@ -679,11 +679,9 @@ function plotCO2vsGDP(elmt) {
 //
 // Circularity
 //
-function plotCircularity(elmt, url, results) {
-  console.log('Circularity:', results.data.length);
-  let id = insertAccordionAndCanvas(elmt);
-  let myChart = new Chart(document.getElementById(id.canvasId), {
-    type: 'doughnut',
+function makeDoughnutChart(element) {
+  return new Chart(document.getElementById(element), {
+    type: 'pie',
     plugins: [ChartDataLabels],
     options: {
       tooltips: {
@@ -718,8 +716,88 @@ function plotCircularity(elmt, url, results) {
       }
     }
   });
+}
+
+function plotWri(elmt, url, results) {
+  console.log('World Resource Institute:', results.data.length);
+  let id = insertAccordionAndCanvas(elmt);
   insertSourceAndLink(results, id, url);
 
+  let myChart = new Chart(document.getElementById(id.canvasId), {
+    type: 'doughnut',
+    plugins: [ChartDataLabels],
+    options: {
+      plugins: {
+        datalabels: {
+          color: '#fff',
+          font: {
+            size: 10
+          },
+          labels: {
+            title: {
+              textAlign: 'center', // important for multiline labels
+              align: 'center',
+              formatter: (value, ctx) => {
+                let str = ctx.dataset.label[ctx.dataIndex] + "\n" + value + "%";
+                // This is pretty awful, but we need to split some text depending on content and position
+                if (str.includes("Buildings")) {
+                  str = "\n \n " + str
+                }
+                if (str.includes("Energy:")) {
+                  return str.replace(": ", ":\n")
+                }
+                if (str.includes("Land Use Change")) {
+                  return str.split(", ")
+                }
+                if (str.includes("Industrial Processes")) {
+                  return str.replace("Industrial ", "Industrial\n")
+                }
+                if (str.includes("Waste")) {
+                  return str + "\n \n \n "
+                }
+                return str
+              }
+            },
+            /*            
+            value: {
+              formatter: (value) => value + '%'
+            }*/
+          }
+        }
+      },
+      tooltips: {
+        enabled: true
+      },
+      title: {
+        display: true,
+        position: 'bottom',
+      },
+      legend: {
+        display: false,
+        position: 'right'
+      }
+    }
+  });
+
+  let legend = results.data[0].legend;
+  let values = results.data[0].values;
+  let c = mkColorArray(values.length);
+  myChart.data.datasets.push({
+    label: legend,
+    data: values,
+    backgroundColor: c,
+  });
+  myChart.data.labels = legend;
+  let tot = results.data[0].total;
+  myChart.options.title.text = 'GHG Emitted 2016: ' + tot + ' Gt CO2 equivalents';
+  myChart.update();
+}
+
+function plotCircularity(elmt, url, results) {
+  console.log('Circularity:', results.data.length);
+  let id = insertAccordionAndCanvas(elmt);
+  let myChart = makeDoughnutChart(id.canvasId);
+  insertSourceAndLink(results, id, url);
   let legend = results.data[0].data[0].legend;
   let values = results.data[0].data[0].values;
   let c = mkColorArray(values.length);
