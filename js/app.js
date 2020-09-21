@@ -776,6 +776,7 @@ function plotOxfam(elmt, url, results) {
     label: legend,
     data: values,
     backgroundColor: c,
+    borderColor: c,
   });
   myChart.data.labels = legend;
   myChart.options.title.text = 'CO2 Emissions 1990-2015 by income group';
@@ -852,6 +853,7 @@ function plotWri(elmt, url, results) {
     label: legend,
     data: values,
     backgroundColor: c,
+    borderColor: c
   });
   myChart.data.labels = legend;
   let tot = results.data[0].total;
@@ -871,6 +873,7 @@ function plotCircularity(elmt, url, results) {
     label: legend,
     data: values,
     backgroundColor: c,
+    borderColor: c
   });
   let tot = results.data[0].data[0].total;
   myChart.options.title.text = 'Resources consumed: ' + tot + ' Gt (billion tons)';
