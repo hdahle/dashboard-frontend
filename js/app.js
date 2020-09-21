@@ -718,11 +718,68 @@ function makeDoughnutChart(element) {
   });
 }
 
+function plotOxfam(elmt, url, results) {
+  console.log('Oxfam:', results.data.length);
+  let id = insertAccordionAndCanvas(elmt);
+  insertSourceAndLink(results, id, url);
+
+  let myChart = new Chart(document.getElementById(id.canvasId), {
+    type: 'doughnut',
+    plugins: [ChartDataLabels],
+    options: {
+      plugins: {
+        datalabels: {
+          color: '#fff',
+          font: {
+            size: 12
+          },
+          labels: {
+            title: {
+              textAlign: 'center', // important for multiline labels
+              align: 'center',
+              formatter: (value, ctx) => {
+                let str = ctx.dataset.label[ctx.dataIndex];// + "\n" + value + "%";
+                return str
+              }
+            },
+            /*            
+            value: {
+              formatter: (value) => value + '%'
+            }*/
+          }
+        }
+      },
+      tooltips: {
+        enabled: true
+      },
+      title: {
+        display: true,
+        position: 'bottom',
+      },
+      legend: {
+        display: false,
+        position: 'right'
+      }
+    }
+  });
+
+  let legend = results.data[0].legend;
+  let values = results.data[0].percentages;
+  let c = mkColorArray(values.length);
+  myChart.data.datasets.push({
+    label: legend,
+    data: values,
+    backgroundColor: c,
+  });
+  myChart.data.labels = legend;
+  myChart.options.title.text = 'CO2 Emissions 1990-2015 by income group';
+  myChart.update();
+}
+
 function plotWri(elmt, url, results) {
   console.log('World Resource Institute:', results.data.length);
   let id = insertAccordionAndCanvas(elmt);
   insertSourceAndLink(results, id, url);
-
   let myChart = new Chart(document.getElementById(id.canvasId), {
     type: 'doughnut',
     plugins: [ChartDataLabels],

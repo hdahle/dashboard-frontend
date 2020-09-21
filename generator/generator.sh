@@ -277,3 +277,9 @@ curl -s "http://api.dashboard.eco/wri-2016" >> ${JSFILE}
 echo ";" >> ${JSFILE}
 echo -n "redisWri2016" 
 wc ${JSFILE}
+
+echo "let redisOxfam2020 =" >> ${JSFILE}
+curl -s "http://api.dashboard.eco/oxfam-2020" >> ${JSFILE}
+echo ";" >> ${JSFILE}
+echo -n "redisOxfam2020" 
+wc ${JSFILE}

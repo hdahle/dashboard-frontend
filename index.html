@@ -174,6 +174,30 @@
   <!-- Limit content width to 960px -->
   <div class="w3-content w3-padding-32">
 
+    <!-- Emissions by income -->
+    <div class="w3-row" id="plotOxfam2020">
+      <div class="w3-container w3-col m6 l7">
+        <h2>CO2 emissions by global income group: The 10&percnt; richest people on earth are responsible for more than
+          half of all CO2 emissions</h2>
+        <h4>September 21, 2020</h4>
+        <p>This chart uses data from the
+          <a href="https://www.oxfam.org" target="_blank">Oxfam</a> and
+          <a href="https://www.sei.org/" target="_blank">Stockholm Environment Institute</a> joint research report on
+          how CO2 emissions
+          are distributed by income groups.
+        </p>
+        <p> The report shows that over the period from 1990 to 2015, the top 10&percnt; richest people on earth were
+          responsible
+          for more than half (52&percnt;) of all CO2 emitted in the period.
+          The poorest 50&percnt; contributed only 7&percnt; of cumulative emissions. The middle 40&percnt; income group
+          were behind 41&percnt; of all CO2 emissions.
+        </p>
+      </div>
+      <script>
+        plotOxfam(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/oxfam-2020', redisOxfam2020);
+      </script>
+    </div>
+
     <!-- Emissions by sector 2016 -->
     <div class="w3-row" id="plotWriEmissions">
       <div class="w3-container w3-col m6 l7">
@@ -187,7 +211,7 @@
         <p>
           WRI provides an even more detailed analysis into each sector. As an example, while 15.9&percnt; of emissions
           are from transport, road transport is by far the largest contributor (11.9&percnt;)
-          with air transport at 1.9&percnt; and ship at 1.7&percent. Rail contributes only 0.4&percnt;
+          with air transport at 1.9&percnt; and ship at 1.7&percnt;. Rail contributes only 0.4&percnt;
         </p>
       </div>
       <script>
