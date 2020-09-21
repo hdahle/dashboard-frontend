@@ -718,6 +718,9 @@ function makeDoughnutChart(element) {
   });
 }
 
+//
+// Oxfam/SEI 2020 report
+//
 function plotOxfam(elmt, url, results) {
   console.log('Oxfam:', results.data.length);
   let id = insertAccordionAndCanvas(elmt);
@@ -776,6 +779,9 @@ function plotOxfam(elmt, url, results) {
   myChart.update();
 }
 
+//
+// World Resources Institute 2016
+//
 function plotWri(elmt, url, results) {
   console.log('World Resource Institute:', results.data.length);
   let id = insertAccordionAndCanvas(elmt);
@@ -934,7 +940,6 @@ function plotScatter(elmt, urls, res, labels, xTicks = {}, yTicks = {}, xAxesTyp
   });
   let c = mkColorArray(urls.length);
   if ((urls.length !== res.length) || (labels.length !== res.length)) return;
-
   while (res.length) {
     let url = urls.shift();
     let lbl = labels.shift();
