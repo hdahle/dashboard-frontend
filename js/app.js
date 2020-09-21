@@ -742,6 +742,9 @@ function plotOxfam(elmt, url, results) {
               align: 'center',
               formatter: (value, ctx) => {
                 let str = ctx.dataset.label[ctx.dataIndex];// + "\n" + value + "%";
+                if (str.includes("Poorest")) {
+                  return str.replace(" ", "\n")
+                }
                 return str
               }
             },
