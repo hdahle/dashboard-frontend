@@ -32,6 +32,8 @@
     color: #777;
   }
 
+  .fp-chart {}
+
   .fp-ppm-font {
     font-weight: 100;
     font-size: xx-large;
@@ -101,10 +103,13 @@
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
 <script src="js/redis-values.js"></script>
 <script src="js/app.js"></script>
+<script src="js/cb.js "></script>
 <script src="js/dom.js"></script>
 
 <body>
+  <div id="pngPlaceHolder" class="w3-hide">
 
+  </div>
   <div class="w3-top">
     <div class="w3-bar w3-theme">
       <div>
@@ -157,7 +162,7 @@
             if (1) {
               let d = redisCO2Now.data[0];
               document.getElementById('fp-co2-date').innerHTML = moment(d.date, 'YYYY-MM-DD').format('dddd MMM D');
-              document.getElementById('fp-co2-ppm').innerHTML = d.value + ' ppm';
+              document.getElementById('fp-co2-ppm').innerHTML = Math.trunc(d.value) + ' ppm';
               document.getElementById('fp-co2-last').innerHTML =
                 Math.trunc(1000 * (d.value - d.valueLastYear) / d.valueLastYear) / 10 + '&percnt;' +
                 ((d.value > d.valueLastYear) ? ' higher' : ' lower');
@@ -175,7 +180,7 @@
   <div class="w3-content w3-padding-32">
 
     <!-- Emissions by income -->
-    <div class="w3-row" id="plotOxfam2020">
+    <div class="w3-row" id="oxfam-2020">
       <div class="w3-container w3-col m6 l7">
         <h2>CO2 emissions by global income group: The 10&percnt; richest people on earth are responsible for more than
           half of all CO2 emissions</h2>
@@ -199,7 +204,7 @@
     </div>
 
     <!-- Emissions by sector 2016 -->
-    <div class="w3-row" id="plotWriEmissions">
+    <div class="w3-row" id="wri-emissions-2016">
       <div class="w3-container w3-col m6 l7">
         <h2>Greenhouse Gas emissions by sector, 2016</h2>
         <h4>September 17, 2020</h4>
@@ -220,7 +225,7 @@
     </div>
 
     <!-- Plot EIA LCOE -->
-    <div class="w3-row" id="eiaLcoe">
+    <div class="w3-row" id="eia-cost-of-electricity">
       <div class="w3-container w3-col m6 l7">
         <h2>Cost of electricity generation in the United States in 2025:
           Solar photovoltaic least expensive technology</h2>
@@ -250,7 +255,7 @@
     </div>
 
     <!-- Plot Renewables Cost -->
-    <div class="w3-row" id="renewables">
+    <div class="w3-row" id="irena-cost-of-renewables">
       <div class="w3-container w3-col m6 l7">
         <h2>Cost of renewable power generation decreasing sharply, now competitive with fossil fuel based power
           generation</h2>
@@ -280,7 +285,7 @@
     </div>
 
     <!-- Plot Schiphol Air Traffic -->
-    <div class="w3-row" id="Schiphol">
+    <div class="w3-row" id="schiphol-air-traffic">
       <div class="w3-container w3-col m6 l7">
         <h2>Initial Covid-19 impact on air traffic: 85-90&percnt; decrease at Amsterdam Airport. Traffic now at
           60&percnt;
@@ -310,7 +315,7 @@
     </div>
 
     <!-- Plot Spain Electricity -->
-    <div class="w3-row" id="plotSpainElectricity">
+    <div class="w3-row" id="spain-electricity-consumption">
       <div class="w3-container w3-col m6 l7">
         <h2>Covid-19 impact in Spain: Electricity consumption down about 20&percnt;, now back to normal</h2>
         The chart uses data from <a href="https://www.ree.es/en" target="_blank" rel="noopener">Red Electrica de
@@ -343,7 +348,7 @@
     </div>
 
     <!-- Plot Norway Traffic -->
-    <div class="w3-row" id="plotNorwayTraffic">
+    <div class="w3-row" id="norway-traffic">
       <div class="w3-container w3-col m6 l7">
         <h2>Covid-19 impact in Norway: Reduced road traffic, but now above normal levels</h2>
         The
@@ -371,7 +376,7 @@
     </div>
 
     <!-- Plot CO2 multiple annual charts -->
-    <div class="w3-row" id="plotMultipleAnnual">
+    <div class="w3-row" id="co2-annual">
       <div class="w3-container w3-col m6 l7">
         <h2>Will the Covid-19 pandemic cause a reduction in CO2 levels? No.</h2>
         With reduced travel and reduced economic activity,
@@ -401,7 +406,7 @@
     </div>
 
     <!-- Corona Deaths Global -->
-    <div class="w3-row" id="plotCoronaDeathsMulti">
+    <div class="w3-row" id="corona-deaths-per-capita">
       <div class="w3-container w3-col m4 l5">
         <h2>Covid-19 confirmed deaths per million per day per region</h2>
         <h4>September 16, 2020&nbsp; |&nbsp; Chart updates daily</h4>
@@ -466,7 +471,7 @@
 
 
     <!-- Plot Corona Deaths Per Capita -->
-    <div class="w3-row" id="plotCoronaDeaths">
+    <div class="w3-row" id="corona-deaths-top-20">
       <div class="w3-container w3-col m6 l7">
         <h2>Covid-19 deaths per capita: Top 20 countries</h2>
         This chart uses data from
@@ -487,7 +492,7 @@
     </div>
 
     <!-- Plot Resource Consumption -->
-    <div class="w3-row" id="plotCircularity">
+    <div class="w3-row" id="circularity-resource-waste-2020">
       <div class="w3-container w3-col m6 l7">
         <h2>We use 100 billion tons of resources per year. Half of it goes straight to waste.</h2>
         According to the
@@ -515,7 +520,7 @@
     </div>
 
     <!-- Plot CO2 vs GDP -->
-    <div class="w3-row" id="plotCO2vsGDP">
+    <div class="w3-row" id="co2-vs-gdp">
       <div class="w3-container">
         <!-- w3-col m6 l7" -->
         <h2>CO2 emissions and GDP</h2>
@@ -534,7 +539,7 @@
     </div>
 
     <!-- Plot Glaciers -->
-    <div class="w3-row" id="plotGlaciers">
+    <div class="w3-row" id="norway-glaciers">
       <div class="w3-container">
         <h2>Glaciers in Norway are shrinking</h2>
         All glaciers tracked by

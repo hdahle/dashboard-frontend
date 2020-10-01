@@ -35,7 +35,7 @@ function insertAccordionAndCanvas(id, responsive) {
   // Insert the canvas for the chart , and button and accordion for mobile          
   let html = "<div class='w3-rest w3-container'>";
   if (responsive === undefined || responsive === false) {
-    html += "<div id='" + ids.canvasId + "-wrap'><canvas id='" + ids.canvasId + "'></canvas></div>";
+    html += "<div id='" + ids.canvasId + "-wrap'><canvas class='fp-chart' id='" + ids.canvasId + "'></canvas></div>";
   } else {
     // create two divs/two canvases, one for small and one for medium/large screens
     html += "<div class='w3-hide-small' id='" + ids.canvasId + "-wrap'><canvas id='" + ids.canvasId + "'></canvas></div>"

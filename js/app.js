@@ -47,6 +47,8 @@ Chart.defaults.global.legend.labels.boxWidth = 10;
 Chart.defaults.global.legend.display = true;
 Chart.defaults.global.aspectRatio = 1;
 Chart.defaults.global.responsive = true;
+Chart.defaults.global.animation.duration = 0;
+//Chart.defaults.global.animation.onComplete = (e) => onCompleteCallback(e.chart);
 
 Chart.plugins.unregister(ChartDataLabels);
 
@@ -59,7 +61,6 @@ function plotEiaLcoe(elmt, results, url) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('EIA LCOE:', url, results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-
   let color = mkColorArray(results.data.datasets.length);
 
   // Add colors to the datasets
@@ -67,17 +68,12 @@ function plotEiaLcoe(elmt, results, url) {
     d.backgroundColor = color.pop();
     d.borderWidth = 0;
   });
-
   results.data.datasets.forEach(d => {
     d.data = d.data.map(x => Math.round(x) / 1000)
   });
-  // Make sure labels can be split
-  results.data.labels = [];
-  results.data.fuels.forEach(fuel => {
-    results.data.labels.push(fuel /*.split(" ")*/);
-  });
+  results.data.labels = results.data.fuels;
 
-  var myChart = new Chart(document.getElementById(id.canvasId), {
+  new Chart(document.getElementById(id.canvasId), {
     type: 'bar',
     options: {
       aspectRatio: 1,
@@ -171,8 +167,31 @@ function plotIrena(elmt, results, url) {
 //
 function plotSpainElectricity(elmt, json, urls, yUnit = '') {
   let id = insertAccordionAndCanvas(elmt, false);
-  let myChart = new Chart(document.getElementById(id.canvasId), {
+  let cSolid = mkColorArray(json.length);
+  let cAlpha = colorArrayToAlpha(cSolid, 0.3);
+  let c2020 = cSolid[0];
+  insertSourceAndLink(json[0], id, urls);
+  // Build the dataset
+  let datasets = [];
+  while (json.length) {
+    let results = json.pop();
+    // Just plot the days since start of year until end of current month
+    let d = results.data.slice(1, parseInt(moment().endOf('month').format('DDD')));
+    let year = results.year;
+    datasets.push({
+      label: year,
+      borderColor: year == 2020 ? c2020 : cAlpha.pop(),
+      backgroundColor: year == 2020 ? c2020 : cSolid.pop(),
+      showLine: true,
+      fill: false,
+      data: d
+    });
+  }
+  new Chart(document.getElementById(id.canvasId), {
     type: 'line',
+    data: {
+      datasets: datasets
+    },
     options: {
       scales: {
         yAxes: [{
@@ -203,26 +222,6 @@ function plotSpainElectricity(elmt, json, urls, yUnit = '') {
       }
     }
   });
-  let cSolid = mkColorArray(json.length);
-  let cAlpha = colorArrayToAlpha(cSolid, 0.3);
-  let c2020 = cSolid[0];
-  insertSourceAndLink(json[0], id, urls);
-
-  while (json.length) {
-    let results = json.pop();
-    // Just plot the days since start of year until end of current month
-    let d = results.data.slice(1, parseInt(moment().endOf('month').format('DDD')));
-    let year = results.year;
-    myChart.data.datasets.push({
-      label: year,
-      borderColor: year == 2020 ? c2020 : cAlpha.pop(),
-      backgroundColor: year == 2020 ? c2020 : cSolid.pop(),
-      showLine: true,
-      fill: false,
-      data: d
-    });
-  }
-  myChart.update();
 }
 
 //
@@ -231,8 +230,28 @@ function plotSpainElectricity(elmt, json, urls, yUnit = '') {
 function plotDailyCO2(elmt, url, results) {
   console.log("DailyCO2:", url, results.data.length)
   let id = insertAccordionAndCanvas(elmt, false);
-  let myChart = new Chart(document.getElementById(id.canvasId), {
+  let cSolid = mkColorArray(results.data.length);
+  let cAlpha = colorArrayToAlpha(cSolid, 0.6);
+  insertSourceAndLink(results, id, url);
+  // Build the datasets, one per year
+  let datasets = [];
+  while (results.data.length) {
+    let x = results.data.shift();
+    let c = cAlpha.pop();
+    datasets.push({
+      label: x.year,
+      borderColor: c,//x.year == 2020 ? cS : cA,
+      backgroundColor: c,
+      showLine: true,
+      fill: false,
+      data: x.data
+    });
+  }
+  new Chart(document.getElementById(id.canvasId), {
     type: 'line',
+    data: {
+      datasets: datasets
+    },
     options: {
       legend: {
         position: 'right'
@@ -257,14 +276,14 @@ function plotDailyCO2(elmt, url, results) {
       tooltips: {
         mode: 'index',
         callbacks: {
-          title: (tooltip) => {
+          title: (tooltip, data) => {
             if (tooltip[0].datasetIndex === 0) {
               let diff = tooltip[0].value - tooltip[1].value;
               let chg = Math.floor(1000 * diff / tooltip[1].value) / 10;
               return [
                 moment(tooltip[0].xLabel, 'MM-DD').format('MMMM D'),
                 "2020 compared to " +
-                myChart.data.datasets[tooltip[1].datasetIndex].label +
+                data.datasets[tooltip[1].datasetIndex].label +
                 ": " + (chg > 0 ? '+' : '') + chg + "%"
               ]
             }
@@ -274,32 +293,18 @@ function plotDailyCO2(elmt, url, results) {
       }
     }
   });
-  let cSolid = mkColorArray(results.data.length);
-  let cAlpha = colorArrayToAlpha(cSolid, 0.6);
-  insertSourceAndLink(results, id, url);
-  // plot each year as a separate dataset
-  while (results.data.length) {
-    let x = results.data.shift();
-    let c = cAlpha.pop();
-    myChart.data.datasets.push({
-      label: x.year,
-      borderColor: c,//x.year == 2020 ? cS : cA,
-      backgroundColor: c,
-      showLine: true,
-      fill: false,
-      data: x.data
-    });
-  }
-  myChart.update();
 }
 
 //
 // Three Corona charts side-by-side
 //
 function plotCoronaDeaths3(elmt, json) {
-  function makeChart(elementId) {
+  function makeChart(elementId, datasets) {
     return new Chart(document.getElementById(elementId), {
       type: 'bar',
+      data: {
+        datasets: datasets
+      },
       options: {
         aspectRatio: 1.3,
         tooltips: {
@@ -322,9 +327,9 @@ function plotCoronaDeaths3(elmt, json) {
             offset: true,
             type: 'time',
             time: {
-              unit: 'week',
+              unit: 'month',
               displayFormats: {
-                week: 'MMM D'
+                month: 'MMM'
               }
             }
           }],
@@ -347,9 +352,8 @@ function plotCoronaDeaths3(elmt, json) {
   //let ch = makeChart(elmt.pop());
   json.data.forEach(x => {
     if (!elmt.length) return;
-    let ch = makeChart(elmt.pop());
     // Push the line chart of smoothed daily change
-    ch.data.datasets.push({
+    makeChart(elmt.pop(), [{
       yAxisID: 'L',
       type: 'line',
       label: x.country + ': ' + x.total,
@@ -359,16 +363,39 @@ function plotCoronaDeaths3(elmt, json) {
       backgroundColor: c0,
       tooltipText: '7day average: ',
       data: x.data,
-    });
-    ch.update();
+    }]);
   });
 }
 
 function plotCoronaDeathsMulti(elmt, results, url, deathsPerMillion = true) {
   console.log("Corona deaths global:", url, results.data.length)
   let id = insertAccordionAndCanvas(elmt, false);
-  let myChart = new Chart(document.getElementById(id.canvasId), {
+  insertSourceAndLink(results, id, url);
+  let c = colorArrayToAlpha(mkColorArray(results.data.length), 0.6);
+  // Sort regions in descending order so that legend looks nice next to graphs
+  results.data.sort((b, a) =>
+    a.data[a.data.length - 1].y / a.population - b.data[b.data.length - 1].y / b.population
+  );
+  let datasets = [];
+  results.data.forEach(x => {
+    color = c.pop();
+    let country = x.country;
+    let d = x.data;
+    if (deathsPerMillion) {
+      d = x.data.map(xd => ({ t: xd.t, y: Math.trunc(1000 * xd.y / x.population) / 1000 }));
+    }
+    datasets.push({
+      label: country.replace("Northern", "North"),
+      fill: false,
+      borderColor: color,
+      backgroundColor: color,
+      tooltipText: '7 day average: ',
+      data: d//x.data,
+    });
+  });
+  new Chart(document.getElementById(id.canvasId), {
     type: 'line',
+    data: { datasets: datasets },
     options: {
       aspectRatio: 1.3,
       legend: {
@@ -393,33 +420,7 @@ function plotCoronaDeathsMulti(elmt, results, url, deathsPerMillion = true) {
       }
     }
   });
-  insertSourceAndLink(results, id, url);
-  let c = colorArrayToAlpha(mkColorArray(results.data.length), 0.6);
-
-  // Sort regions in descending order so that legend looks nice next to graphs
-  results.data.sort((b, a) =>
-    a.data[a.data.length - 1].y / a.population - b.data[b.data.length - 1].y / b.population
-  );
-
-  results.data.forEach(x => {
-    color = c.pop();
-    let country = x.country;
-    let d = x.data;
-    if (deathsPerMillion) {
-      d = x.data.map(xd => ({ t: xd.t, y: Math.trunc(1000 * xd.y / x.population) / 1000 }));
-    }
-    myChart.data.datasets.push({
-      label: country.replace("Northern", "North"),
-      fill: false,
-      borderColor: color,
-      backgroundColor: color,
-      tooltipText: '7 day average: ',
-      data: d//x.data,
-    });
-    myChart.update();
-  });
 }
-
 
 //
 // Corona cases by capita
@@ -427,8 +428,19 @@ function plotCoronaDeathsMulti(elmt, results, url, deathsPerMillion = true) {
 function plotCoronaDeathsByCapita(elmt, url, results) {
   console.log("Corona deaths per capita:", url, results.data.length)
   let id = insertAccordionAndCanvas(elmt);
-  let myChart = new Chart(document.getElementById(id.canvasId), {
+  insertSourceAndLink(results, id, url);
+
+  new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
+    data: {
+      labels: results.data.countries,
+      datasets: [{
+        backgroundColor: '#c8745e',
+        categoryPercentage: 0.5,
+        data: results.data.percapita,
+        data2: results.data.total
+      }]
+    },
     options: {
       title: {
         display: true,
@@ -451,22 +463,13 @@ function plotCoronaDeathsByCapita(elmt, url, results) {
         displayColors: false,
         callbacks: {
           label: function (tooltipItem, data) {
-            let n = myChart.data.datasets[tooltipItem.datasetIndex].data2[tooltipItem.index];
-            return [tooltipItem.xLabel + ' per million', n + '  total'];
+            let n = data.datasets[tooltipItem.datasetIndex].data2[tooltipItem.index];
+            return [tooltipItem.xLabel + ' deaths per million', n + '  total deaths'];
           }
         }
       },
     }
   });
-  insertSourceAndLink(results, id, url);
-  myChart.data.datasets.push({
-    backgroundColor: '#c8745e',
-    categoryPercentage: 0.5,
-    data: results.data.percapita,
-    data2: results.data.total
-  });
-  myChart.data.labels = results.data.countries;
-  myChart.update();
 }
 
 //
@@ -474,9 +477,12 @@ function plotCoronaDeathsByCapita(elmt, url, results) {
 //
 function plotCO2vsGDP(elmt) {
   let id = insertAccordionAndCanvas(elmt, true);
-  function makeBubbleChart(elmt, mobile = false) {
+  function makeBubbleChart(elmt, mobile = false, datasets) {
     return new Chart(document.getElementById(elmt), {
       type: 'bubble',
+      data: {
+        datasets: datasets
+      },
       options: {
         tooltips: {
           intersect: true,
@@ -554,8 +560,9 @@ function plotCO2vsGDP(elmt) {
       }
     });
   }
-  let myChart = makeBubbleChart(id.canvasId);
-  let myChartMobile = makeBubbleChart(id.canvasIdMobile, true);
+  let datasets = [];
+  let mdatasets = [];
+
   let data = [{
     l: 'USA',
     partof: 'North America',
@@ -659,63 +666,21 @@ function plotCO2vsGDP(elmt) {
     pop: x.pop,
     col: colors.pop() //x.color
   })).forEach(item => {
-    myChart.data.datasets.push({
+    datasets.push({
       data: [item],
       label: item.l,
       backgroundColor: item.col.replace('rgb', 'rgba').replace(')', ',0.7)'),
       borderColor: item.col.replace('rgb', 'rgba').replace(')', ',1)')
     })
-    myChartMobile.data.datasets.push({
+    mdatasets.push({
       data: [item],
       label: item.l,
       backgroundColor: item.col.replace('rgb', 'rgba').replace(')', ',0.7)'),
       borderColor: item.col.replace('rgb', 'rgba').replace(')', ',1)')
     })
   });
-  myChart.update();
-  myChartMobile.update();
-}
-
-//
-// Circularity
-//
-function makeDoughnutChart(element) {
-  return new Chart(document.getElementById(element), {
-    type: 'pie',
-    plugins: [ChartDataLabels],
-    options: {
-      tooltips: {
-        enabled: false
-      },
-      title: {
-        display: true,
-        position: 'bottom',
-        fontStyle: 'normal'
-      },
-      plugins: {
-        datalabels: {
-          labels: {
-            title: {
-              align: 'top',
-              color: '#fff',
-              formatter: (value, ctx) => ctx.dataset.label[ctx.dataIndex]
-            },
-            value: {
-              offset: 8,
-              color: '#fff',
-              font: {
-                size: 16
-              },
-              formatter: (value) => value + ' Gt'
-            }
-          }
-        }
-      },
-      legend: {
-        display: false
-      }
-    }
-  });
+  makeBubbleChart(id.canvasId, false, datasets);
+  makeBubbleChart(id.canvasIdMobile, true, mdatasets);
 }
 
 //
@@ -725,9 +690,17 @@ function plotOxfam(elmt, url, results) {
   console.log('Oxfam:', results.data.length);
   let id = insertAccordionAndCanvas(elmt);
   insertSourceAndLink(results, id, url);
-
-  let myChart = new Chart(document.getElementById(id.canvasId), {
+  let c = mkColorArray(results.data[0].percentages.length);
+  new Chart(document.getElementById(id.canvasId), {
     type: 'doughnut',
+    data: {
+      datasets: [{
+        label: results.data[0].legend,
+        data: results.data[0].percentages,
+        backgroundColor: c,
+        borderColor: c
+      }]
+    },
     plugins: [ChartDataLabels],
     options: {
       plugins: {
@@ -748,10 +721,6 @@ function plotOxfam(elmt, url, results) {
                 return str
               }
             },
-            /*            
-            value: {
-              formatter: (value) => value + '%'
-            }*/
           }
         }
       },
@@ -759,28 +728,15 @@ function plotOxfam(elmt, url, results) {
         enabled: true
       },
       title: {
+        text: 'CO2 Emissions 1990-2015 by income group',
         display: true,
         position: 'bottom',
       },
       legend: {
-        display: false,
-        position: 'right'
+        display: false
       }
     }
   });
-
-  let legend = results.data[0].legend;
-  let values = results.data[0].percentages;
-  let c = mkColorArray(values.length);
-  myChart.data.datasets.push({
-    label: legend,
-    data: values,
-    backgroundColor: c,
-    borderColor: c,
-  });
-  myChart.data.labels = legend;
-  myChart.options.title.text = 'CO2 Emissions 1990-2015 by income group';
-  myChart.update();
 }
 
 //
@@ -790,8 +746,17 @@ function plotWri(elmt, url, results) {
   console.log('World Resource Institute:', results.data.length);
   let id = insertAccordionAndCanvas(elmt);
   insertSourceAndLink(results, id, url);
-  let myChart = new Chart(document.getElementById(id.canvasId), {
+  let c = mkColorArray(results.data[0].values.length);
+  new Chart(document.getElementById(id.canvasId), {
     type: 'doughnut',
+    data: {
+      datasets: [{
+        label: results.data[0].legend,
+        data: results.data[0].values,
+        backgroundColor: c,
+        borderColor: c
+      }]
+    },
     plugins: [ChartDataLabels],
     options: {
       plugins: {
@@ -825,10 +790,6 @@ function plotWri(elmt, url, results) {
                 return str
               }
             },
-            /*            
-            value: {
-              formatter: (value) => value + '%'
-            }*/
           }
         }
       },
@@ -836,48 +797,71 @@ function plotWri(elmt, url, results) {
         enabled: true
       },
       title: {
+        text: 'GHG Emitted 2016: ' + results.data[0].total + ' Gt CO2 equivalents',
         display: true,
         position: 'bottom',
       },
       legend: {
-        display: false,
-        position: 'right'
+        display: false
       }
     }
   });
-
-  let legend = results.data[0].legend;
-  let values = results.data[0].values;
-  let c = mkColorArray(values.length);
-  myChart.data.datasets.push({
-    label: legend,
-    data: values,
-    backgroundColor: c,
-    borderColor: c
-  });
-  myChart.data.labels = legend;
-  let tot = results.data[0].total;
-  myChart.options.title.text = 'GHG Emitted 2016: ' + tot + ' Gt CO2 equivalents';
-  myChart.update();
 }
 
+//
+// Circularity
+//
 function plotCircularity(elmt, url, results) {
   console.log('Circularity:', results.data.length);
   let id = insertAccordionAndCanvas(elmt);
-  let myChart = makeDoughnutChart(id.canvasId);
   insertSourceAndLink(results, id, url);
-  let legend = results.data[0].data[0].legend;
-  let values = results.data[0].data[0].values;
-  let c = mkColorArray(values.length);
-  myChart.data.datasets.push({
-    label: legend,
-    data: values,
-    backgroundColor: c,
-    borderColor: c
-  });
+  let c = mkColorArray(results.data[0].data[0].values.length);
   let tot = results.data[0].data[0].total;
-  myChart.options.title.text = 'Resources consumed: ' + tot + ' Gt (billion tons)';
-  myChart.update();
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'pie',
+    data: {
+      datasets: [{
+        label: results.data[0].data[0].legend,
+        data: results.data[0].data[0].values,
+        backgroundColor: c,
+        borderColor: c
+      }]
+    },
+    plugins: [ChartDataLabels],
+    options: {
+      tooltips: {
+        enabled: false
+      },
+      title: {
+        text: 'Resources consumed: ' + tot + ' Gt (billion tons)',
+        display: true,
+        position: 'bottom',
+        fontStyle: 'normal'
+      },
+      plugins: {
+        datalabels: {
+          labels: {
+            title: {
+              align: 'top',
+              color: '#fff',
+              formatter: (value, ctx) => ctx.dataset.label[ctx.dataIndex]
+            },
+            value: {
+              offset: 8,
+              color: '#fff',
+              font: {
+                size: 16
+              },
+              formatter: (value) => value + ' Gt'
+            }
+          }
+        }
+      },
+      legend: {
+        display: false
+      }
+    }
+  });
 }
 
 //
@@ -887,27 +871,21 @@ function plotGlaciers(elmt, baseUrl, results) {
   console.log('Glaciers:', baseUrl, results.length);
   let id = insertAccordionAndCanvas(elmt, true);
   let colors = mkColorArray(results.length);
-  let myChart = makeMultiLineChart(id.canvasId, { min: 1900, max: 2020 }, { callback: v => v ? v + 'm' : v }, true, 'right', 'linear', 2);
-  let myChartMobile = makeMultiLineChart(id.canvasIdMobile, { min: 1900, max: 2020 }, { callback: v => v ? v + 'm' : v }, false);
-
-  while (results.length) {
-    let d = results.pop();
-    let url = baseUrl + d.glacier;
-    insertSourceAndLink(results, id, url);
+  let datasets = [];
+  results.forEach(d => {
+    insertSourceAndLink(results, id, baseUrl + d.glacier);
     let col = colors.pop();
-    let dataset = {
+    datasets.push({
       data: d.data,
       fill: false,
       borderColor: col,
       backgroundColor: col,
       showLine: true,
       label: d.glacier
-    };
-    myChart.data.datasets.push(dataset);
-    myChartMobile.data.datasets.push(dataset);
-  }
-  myChart.update();
-  myChartMobile.update();
+    });
+  })
+  makeMultiLineChart(id.canvasId, { min: 1900, max: 2020 }, { callback: v => v ? v + 'm' : v }, true, 'right', 'linear', 2, datasets);
+  makeMultiLineChart(id.canvasIdMobile, { min: 1900, max: 2020 }, { callback: v => v ? v + 'm' : v }, false, 'top', 'linear', 1, datasets);
 }
 
 // 
@@ -915,8 +893,31 @@ function plotGlaciers(elmt, baseUrl, results) {
 //
 function plotScatter(elmt, urls, res, labels, xTicks = {}, yTicks = {}, xAxesType = 'linear', parser = 'YYYY-MM-DD') {
   let id = insertAccordionAndCanvas(elmt);
-  var myChart = new Chart(document.getElementById(id.canvasId), {
+  if ((urls.length !== res.length) || (labels.length !== res.length)) return;
+  let c = mkColorArray(urls.length);
+  // Build datasets
+  let datasets = [];
+  while (res.length) {
+    let url = urls.shift();
+    let lbl = labels.shift();
+    let results = res.shift();
+    insertSourceAndLink(results, id, url);
+    let col = c.pop();
+    datasets.push({
+      data: results.data,
+      fill: false,
+      borderColor: col,
+      backgroundColor: col,
+      showLine: true,
+      label: lbl
+    });
+  }
+  new Chart(document.getElementById(id.canvasId), {
     type: 'scatter',
+    data: {
+      labels: labels,
+      datasets: datasets
+    },
     options: {
       tooltips: {
         callbacks: {
@@ -944,31 +945,15 @@ function plotScatter(elmt, urls, res, labels, xTicks = {}, yTicks = {}, xAxesTyp
       }
     }
   });
-  let c = mkColorArray(urls.length);
-  if ((urls.length !== res.length) || (labels.length !== res.length)) return;
-  while (res.length) {
-    let url = urls.shift();
-    let lbl = labels.shift();
-    let results = res.shift();
-    insertSourceAndLink(results, id, url);
-    let col = c.pop();
-    myChart.data.datasets.push({
-      data: results.data,
-      fill: false,
-      borderColor: col,
-      backgroundColor: col,
-      showLine: true,
-      label: lbl
-    });
-  }
-  myChart.data.labels = labels;
-  myChart.update();
 }
 
 
-function makeStackedLineChart(canvas, xTicks, yTicks) {
+function makeStackedLineChart(canvas, xTicks, yTicks, datasets = []) {
   return new Chart(document.getElementById(canvas), {
     type: 'line',
+    data: {
+      datasets: datasets
+    },
     options: {
       legend: {
         reverse: true,
@@ -995,15 +980,11 @@ function plotEmissionsByRegion(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('CO2 Emissions by region:', results.data.length);
   insertSourceAndLink(results, id, url);
-  let myChart = makeStackedLineChart(id.canvasId,
-    { min: 1959, max: 2018, callback: x => x === 1960 ? null : x },
-    { callback: v => (v / 1000) + ' Gt' }
-  );
   let c = mkColorArray(results.data.length, '#0076e4');
   c = colorArrayMix(c);
-  while (results.data.length) {
-    let d = results.data.pop();
-    myChart.data.datasets.push({
+  let datasets = [];
+  results.data.forEach(d => {
+    datasets.push({
       label: d.country,
       fill: true,
       borderColor: c[0],
@@ -1011,8 +992,12 @@ function plotEmissionsByRegion(elmt, url, results) {
       data: d.data
     });
     c.shift();
-  }
-  myChart.update();
+  })
+  makeStackedLineChart(id.canvasId,
+    { min: 1959, max: 2018, callback: x => x === 1960 ? null : x },
+    { callback: v => (v / 1000) + ' Gt' },
+    datasets
+  );
 }
 
 //
@@ -1022,22 +1007,24 @@ function plotEmissionsNorway(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Norway:', results.data.length);
   insertSourceAndLink(results, id, url);
-  let myChart = makeStackedLineChart(id.canvasId,
-    { max: 2019 },
-    { callback: (value) => Math.trunc(value / 1000) + " Mt" }
-  );
-  let c = mkColorArray(results.data.length - 1, '#0076e4');
+  let c = mkColorArray(results.data.length, '#0076e4');
+  let datasets = [];
   // Plot all datasets except 0 which is the Total
-  for (let i = 1; i < results.data.length; i++) {
-    myChart.data.datasets.push({
-      data: results.data[i].values,//.map(x => ({ x: x.t, /* + "-12-31"*/ y: x.y })),
+  results.data.shift();
+  results.data.forEach(d => {
+    datasets.push({
+      data: d.values,//.map(x => ({ x: x.t, /* + "-12-31"*/ y: x.y })),
       backgroundColor: c[0],
       borderColor: c[0],
-      label: results.data[i].name
+      label: d.name
     })
     c.shift();
-  }
-  myChart.update();
+  });
+  makeStackedLineChart(id.canvasId,
+    { max: 2019 },
+    { callback: (value) => Math.trunc(value / 1000) + " Mt" },
+    datasets
+  );
 }
 
 //
@@ -1047,18 +1034,14 @@ function plotArcticIce(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('ICE NSIDC:', results.data.length);
   insertSourceAndLink(results, id, url);
-  let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'top', 'category');
-  myChart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  myChart.options.tooltips.enabled = false;
   let cSolid = mkColorArray(Math.trunc(1.5 * results.data.length / 12));//yrs.length);
   let cAlpha = colorArrayToAlpha(cSolid, 0.1);
+  let datasets = [];
   for (let year = 1979; year <= parseInt(currentYear); year++) {
     // Extract data for a particular year
     let tmp = results.data.filter(x => x.year === year);
-    // Then create a table that only contains the datapoints
-    let resval = tmp.map(x => x.extent);
-    myChart.data.datasets.push({
-      data: resval,
+    datasets.push({
+      data: tmp.map(x => x.extent),
       label: year,
       fill: false,
       borderColor: year == currentYear ? cSolid[0] : cAlpha[0],
@@ -1068,7 +1051,21 @@ function plotArcticIce(elmt, url, results) {
     cSolid.shift();
     cAlpha.shift();
   }
-  myChart.update();
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'line',
+    data: {
+      datasets: datasets,
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    },
+    options: {
+      tooltips: {
+        enabled: false
+      },
+      legend: {
+        position: 'top'
+      }
+    }
+  });
 }
 
 //
@@ -1078,13 +1075,13 @@ function plotWorldPopulation(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Population:', results.data.length);
   insertSourceAndLink(results, id, url);
-  let myChart = makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 + ' bn' }, true, 'right');
   let c = mkColorArray(results.data.length);
+  let datasets = [];
   while (results.data.length) {
     let x = results.data.pop();
     x.region = x.region.replace('Latin America and the Caribbean', 'S America');
     x.region = x.region.replace('Northern America', 'N America');
-    myChart.data.datasets.push({
+    datasets.push({
       label: x.region,
       data: x.data,
       borderColor: c[0],
@@ -1093,13 +1090,16 @@ function plotWorldPopulation(elmt, url, results) {
     });
     c.shift();
   }
-  myChart.update();
+  makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 + ' bn' }, true, 'right', 'linear', 1, datasets);
 }
 
 
-function makeMultiLineChart(canvas, xTicks, yTicks, showLegend, pos, category, aspect) {
+function makeMultiLineChart(canvas, xTicks, yTicks, showLegend, pos, category, aspect, datasets = []) {
   return new Chart(document.getElementById(canvas), {
     type: 'line',
+    data: {
+      datasets: datasets
+    },
     options: {
       aspectRatio: aspect === undefined ? 1 : aspect,
       legend: {
@@ -1126,24 +1126,23 @@ function plotEia(elmt, url, results, maxYear = 2020) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('EIA:', results.series.length, url);
   insertSourceAndLink(results, id, url);
-  let myChart = makeMultiLineChart(id.canvasId, { max: maxYear }, { callback: v => v / 1000 }, true);
-  let c = mkColorArray(results.series.length - 6);
-  while (results.series.length) {
-    let d = results.series.pop();
+  let c = mkColorArray(results.series.length - 5);
+  let datasets = [];
+  results.series.forEach(d => {
     // Don't plot these...too much detail
     if (['EU28', 'EU27', 'USA', 'Japan', 'Russia', 'India'].indexOf(d.region) !== -1) {
-      continue;
+      return;
     }
     let col = c.pop();
-    myChart.data.datasets.push({
+    datasets.push({
       label: d.region,
       data: d.data,
       borderColor: col,
       backgroundColor: col,
       fill: false
     });
-  }
-  myChart.update();
+  })
+  makeMultiLineChart(id.canvasId, { max: maxYear }, { callback: v => v / 1000 }, true, 'top', 'linear', 1, datasets);
 }
 
 //
@@ -1152,28 +1151,27 @@ function plotEia(elmt, url, results, maxYear = 2020) {
 function plotEmissionsByFuelType(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Emissions by type:', results.data.length);
-  let myChart = makeMultiLineChart(id.canvasId, {
-    min: 1959,
-    max: 2018,
-    callback: x => x === 1960 ? null : x
-  }, {
-    callback: v => (v / 1000) + ' Gt'
-  }, true);
   insertSourceAndLink(results, id, url);
   let c = mkColorArray(results.data.length - 1);
-  while (results.data.length) {
-    let d = results.data.shift();
-    if (d.fuel === 'Per Capita') continue;
+  let datasets = [];
+  results.data.forEach(d => {
+    if (d.fuel === 'Per Capita') return;
     let col = c.pop();
-    myChart.data.datasets.push({
+    datasets.push({
       label: d.fuel,
       fill: false,
       borderColor: col,
       backgroundColor: col,
       data: d.data
     });
-  }
-  myChart.update();
+  })
+  makeMultiLineChart(id.canvasId, {
+    min: 1959,
+    max: 2020,
+    callback: x => x === 1960 ? null : x
+  }, {
+    callback: v => (v / 1000) + ' Gt'
+  }, true, 'top', 'linear', 1, datasets);
 }
 
 //
@@ -1220,16 +1218,13 @@ function plotBrazilFires(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Brazil:', results.data.length);
   insertSourceAndLink(results, id, url);
-  let myChart = makeMultiLineChart(id.canvasId, {}, {}, true, 'top', 'category');
   let c = colorArrayToAlpha(mkColorArray(Math.trunc(results.data.length * 1.5)), 0.4);
-
-  while (results.data.length) {
-    let x = results.data.pop();
-    let values = x.data;
-    if (x.year == "Maximum" || x.year == "Minimum" || x.year == "Average") continue;
+  let datasets = [];
+  results.data.forEach(x => {
+    if (x.year == "Maximum" || x.year == "Minimum" || x.year == "Average") return;
     let col = c.pop();
-    myChart.data.datasets.push({
-      data: values,
+    datasets.push({
+      data: x.data,
       label: x.year,
       pointRadius: x.year == currentYear ? 4 : 0,
       borderWidth: x.year == currentYear ? 2 : 1,
@@ -1237,9 +1232,22 @@ function plotBrazilFires(elmt, url, results) {
       backgroundColor: col,
       fill: false
     });
-  }
-  myChart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  myChart.update();
+  });
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'line',
+    data: {
+      datasets: datasets,
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    },
+    options: {
+      tooltips: {
+        enabled: false
+      },
+      legend: {
+        position: 'top'
+      }
+    }
+  });
 }
 
 //
@@ -1250,7 +1258,7 @@ function plotGlobalSeaLevel(elmt, urls, results) {
   console.log('Sealevel:', results[1].data.length);
   insertSourceAndLink(results[1], id, urls);
   let colors = colorArrayToAlpha(mkColorArray(2), 0.5);
-  let myChart = new Chart(document.getElementById(id.canvasId), {
+  new Chart(document.getElementById(id.canvasId), {
     type: 'line',
     options: {
       scales: {
@@ -1287,7 +1295,6 @@ function plotGlobalSeaLevel(elmt, urls, results) {
       }]
     }
   });
-  myChart.update();
 }
 
 //
@@ -1299,51 +1306,46 @@ function plotCCS(elmt) {
 function plotPlannedCCS(elmt) {
   plotBothCCS(elmt, 'https://api.dashboard.eco/planned-ccs', redisPlannedCCS)
 }
-function makeHorizontalBar(canvas, xTicks, yTicks) {
-  return new Chart(document.getElementById(canvas), {
-    type: 'horizontalBar',
-    plugins: [],
-    options: {
-      scales: {
-        xAxes: [{
-          ticks: xTicks
-        }],
-        yAxes: [{
-          ticks: yTicks,
-          gridLines: {
-            display: false
-          }
-        }]
-      },
-      tooltips: {
-        axis: 'y'
-      },
-      legend: {
-        display: false
-      }
-    }
-  });
-}
 
 function plotBothCCS(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('CCS:', results.data.length);
   insertSourceAndLink(results, id, url);
-  var myChart = makeHorizontalBar(id.canvasId, { callback: v => v + 'Mt' }, {});
   // remove any null projects, then sort it
   let d = results.data.filter(x => x.project != null).sort((a, b) => b.capacity - a.capacity);
   let colors = mkColorArray(2);
   let lineColor = d.map(x => {
     return x.type === 'EOR' ? colors[1] : (x.type == 'Storage' ? colors[0] : '#777');
   });
-  myChart.data.datasets.push({
-    data: d.map(x => x.capacity),
-    backgroundColor: lineColor,
-    borderColor: lineColor,
-    categoryPercentage: 0.5,
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'horizontalBar',
+    data: {
+      labels: d.map(x => x.project + ", " + x.country),
+      datasets: [{
+        data: d.map(x => x.capacity),
+        backgroundColor: lineColor,
+        borderColor: lineColor,
+        categoryPercentage: 0.5,
+      }]
+    },
+    plugins: [],
+    options: {
+      scales: {
+        xAxes: [{
+          ticks: { callback: v => v + 'Mt' }
+        }]
+      },
+      tooltips: {
+        axis: 'y',
+        callbacks: {
+          label: (tooltipItem) => tooltipItem.value + ' Mt CO2 captured'
+        }
+      },
+      legend: {
+        display: false
+      }
+    }
   });
-  myChart.data.labels = d.map(x => x.project + ", " + x.country);
-  myChart.update();
 }
 
 //
@@ -1354,20 +1356,35 @@ function plotSafety(elmt) {
   insertSourceAndLink(redisMortalityElectricity, id, 'https://api.dashboard.eco/mortality-electricity');
   insertSourceAndLink(redisMortalityElectricitySovacool, id, 'https://api.dashboard.eco/mortality-electricity-sovacool');
   insertSourceAndLink(redisMortalityElectricityMarkandya, id, 'https://api.dashboard.eco/mortality-electricity-markandya');
-  let myChart = makeHorizontalBar(id.canvasId, {}, {});
-  myChart.options.title.display = true;
-  myChart.options.title.text = 'Deaths per TWh';
   let d = redisMortalityElectricity.data;
   console.log('Safety electricity:', d.length);
   let colors = mkColorArray(2);
   let lineColor = d.map(x => x.deaths > 1 ? colors[0] : colors[1]);
-  myChart.data.datasets.push({
-    data: d.map(x => x.deaths),
-    backgroundColor: lineColor,
-    borderColor: lineColor,
-    minBarLength: 3,
-    categoryPercentage: 0.5,
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'horizontalBar',
+    data: {
+      labels: d.map(x => x.resource),
+      datasets: [{
+        data: d.map(x => x.deaths),
+        backgroundColor: lineColor,
+        borderColor: lineColor,
+        minBarLength: 3,
+        categoryPercentage: 0.5,
+      }]
+    },
+    plugins: [],
+    options: {
+      tooltips: {
+        axis: 'y'
+      },
+      legend: {
+        display: false
+      },
+      title: {
+        text: 'Deaths per TWh',
+        display: true,
+        position: 'bottom'
+      }
+    }
   });
-  myChart.data.labels = d.map(x => x.resource);
-  myChart.update();
 }
