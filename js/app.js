@@ -96,6 +96,48 @@ function plotEiaLcoe(elmt, results, url) {
   });
 }
 
+
+//
+// Global E Waste
+//
+function plotGlobalEwaste(elmt, results, url) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('GlobalEwaste:', url, results.data.datasets.length);
+  insertSourceAndLink(results, id, url);
+
+  let color = colorArrayToAlpha(mkColorArray(results.data.datasets.length), 0.8);
+
+  // Add colors to the datasets
+  results.data.datasets.forEach(d => {
+    d.backgroundColor = color.pop();
+    d.borderWidth = 0;
+  });
+
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'bar',
+    options: {
+      aspectRatio: 1,
+      tooltips: {
+        callbacks: {
+          label: (tooltipItem) => tooltipItem.value + ' kg per capita'
+        }
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontSize: 10,
+            min: 0,
+            callback: v => v + ' kg/capita'
+          }
+        }]
+      }
+    },
+    data: results.data,
+  });
+}
+
+
+
 //
 // Irena Cost of Renewable Generation
 //

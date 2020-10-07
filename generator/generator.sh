@@ -283,3 +283,9 @@ curl -s "http://api.dashboard.eco/oxfam-2020" >> ${JSFILE}
 echo ";" >> ${JSFILE}
 echo -n "redisOxfam2020" 
 wc ${JSFILE}
+
+echo "let redisGlobalEwaste =" >> ${JSFILE}
+curl -s "http://api.dashboard.eco/globalewaste-2020" >> ${JSFILE}
+echo ";" >> ${JSFILE}
+echo -n "redisGlobalEwaste" 
+wc ${JSFILE}
