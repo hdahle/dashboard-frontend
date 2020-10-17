@@ -1,8 +1,7 @@
 #!/bin/sh
 
 JSFILE=redis-values.js
-PERFFILE=perf-values.js
-
+JSFILE2=redis-values2.js
 echo `date` " Generator starting"
 
 echo "let redisCO2Daily=" > ${JSFILE}
@@ -289,3 +288,16 @@ curl -s "http://api.dashboard.eco/globalewaste-2020" >> ${JSFILE}
 echo ";" >> ${JSFILE}
 echo -n "redisGlobalEwaste" 
 wc ${JSFILE}
+
+
+echo "let redisCovidDeathsSummary =" >> ${JSFILE2}
+curl -s "http://api.dashboard.eco/covid-deaths-summary" >> ${JSFILE2}
+echo ";" >> ${JSFILE2}
+echo -n "redisCovidDeathsSummary" 
+wc ${JSFILE2}
+
+echo "let redisCovidConfirmedSummary =" >> ${JSFILE2}
+curl -s "http://api.dashboard.eco/covid-confirmed-summary" >> ${JSFILE2}
+echo ";" >> ${JSFILE2}
+echo -n "redisCovidConfirmedSummary" 
+wc ${JSFILE2}
