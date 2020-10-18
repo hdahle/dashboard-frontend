@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>futureplanet.eco</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" as="font" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+<style>
+  body,
+  html {
+    font-family: '"Roboto", sans-serif';
+    height: 100%;
+    color: #bfb5af;
+  }
+
+  .chartSize {
+    width: 1000px;
+    height: 700px;
+  }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="js/redis-values2.js"></script>
+
+<body>
+  Hello
+  <div id="pngPlaceHolder"></div>
+  <!-- Plot Corona Deaths 3 Charts -->
+  <div id="plotCorona">
+  </div>
+
+  <script>
+
+    Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif";
+    Chart.defaults.global.defaultFontSize = 24;
+    Chart.defaults.global.elements.point.radius = 0;
+    Chart.defaults.global.elements.line.borderWidth = 2;
+    Chart.defaults.global.animation.duration = 0;
+    Chart.defaults.scale.gridLines.drawOnChartArea = true;
+    Chart.defaults.global.defaultFontColor = '#bebcb7';
+    const leftColor = '#ffa600';
+    const leftColorText = '#e79d2f';
+    const rightColor = '#738198'//bc5090';
+    const rightColorText = '#a1b1ca';
+
+    //Chart.defaults.global.animation.onComplete = (e) => onCompleteCallback(e.chart);
+
+    function onCompleteCallback(id) {
+      let div = document.getElementById("pngPlaceHolder");
+      let img = document.createElement("IMG");
+      img.className = "fp-image";
+      img.id = 'covid-' + id.canvas.id;
+      img.src = id.toBase64Image();
+      div.appendChild(img);
+    }
+
+
+    function makePNG(ch, filename) {
+      let div = document.getElementById("pngPlaceHolder");
+      let img = document.createElement("IMG");
+      img.className = "fp-image";
+      img.id = 'covid-' + filename;
+      img.src = ch.toBase64Image();
+      div.appendChild(img);
+    }
+
+
+    function fillCanvasBackgroundWithColor(canvas, color) {
+      // Get the 2D drawing context from the provided canvas.
+      const context = canvas.getContext('2d');
+      // We're going to modify the context state, so it's
+      // good practice to save the current state first.
+      context.save();
+      // Normally when you draw on a canvas, the new drawing
+      // covers up any previous drawing it overlaps. This is
+      // because the default `globalCompositeOperation` is
+      // 'source-over'. By changing this to 'destination-over',
+      // our new drawing goes behind the existing drawing. 
+      context.globalCompositeOperation = 'destination-over';
+      // Fill in the background
+      context.fillStyle = color;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      // Restore the original context state from `context.save()`
+      context.restore();
+    }
+
+
+    redisCovidDeathsSummary.data.forEach(r => {
+      let filename = r.country.replace(/[^a-z]/gi, "_");
+      console.log(filename);
+      // Create a DIV to hold the CANVAS
+      let chartDiv = document.createElement('DIV');
+      //chartDiv.className = 'fixed-size-div'
+      // Append the DIV to the DOM
+      document.getElementById('plotCorona').appendChild(chartDiv);
+      // Create a CANVAS inside the chartDiv, the ID is unique and will be used as filename when saving PNG
+      chartDiv.innerHTML = '<canvas class="ch" id="' + filename + '"></canvas>'
+      // Now get the second dataset with the same COUNTRY 
+      let c = redisCovidConfirmedSummary.data.find(x => x.country == r.country);
+
+      let ch = new Chart(chartDiv.firstChild, {
+        type: 'bar',
+        data: {
+          datasets: [
+            datasetDeaths(r),
+            datasetCases(c)
+          ]
+        },
+        options: {
+          tooltips: {
+            enabled: false
+          },
+          legend: {
+            labels: {
+              boxWidth: 16,
+              fontSize: 26,
+              fontColor: '#fff'
+            }
+          },
+          title: {
+            display: true,
+            fontSize: 52,
+            fontColor: '#eee',
+            position: 'top',
+            text: r.country
+          },
+          aspectRatio: 1.5,
+          scales: {
+            xAxes: [{
+              scaleLabel: {
+                display: false,
+                fontColor: "#eee",
+                labelString: 'Deaths as of ' + moment(redisCovidDeathsSummary.accessed).format('dddd MMM D') + ': ' + r.total
+              },
+              gridLines: {
+                display: false
+              },
+              offset: true,
+              type: 'time',
+              time: {
+                unit: 'month',
+                displayFormats: {
+                  month: 'MMM'
+                }
+              }
+            }],
+            yAxes: [{
+              id: 'L',
+              position: 'left',
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                suggestedMax: 50,
+                min: 0,
+                fontColor: leftColorText
+              }
+            }, {
+              id: 'R',
+              position: 'right',
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                suggestedMax: 50,
+                min: 0,
+                fontColor: rightColorText
+              },
+            }]
+          }
+        }
+      });
+      // Set background
+      fillCanvasBackgroundWithColor(chartDiv.firstChild, '#222c3c');
+      // Create the PNG
+      makePNG(ch, filename);
+    });
+
+
+    function datasetDeaths(r) {
+      if (r === undefined) return;
+      let r14 = [];
+      for (let i = 0; i < r.data.length; i++) {
+        // extract only relevant data for most recent 7 days
+        let d = r.data.map(d => ({
+          t: d.t,
+          y: d.d
+        })).slice(i - 7, i);
+        // get rate per 100.000 pop
+        r14.push({
+          t: r.data[i].t,
+          y: d.reduce((total, num) => total + num.y, 0) / 7
+        })
+      }
+      return {
+        yAxisID: 'L',
+        label: 'Deaths per day',
+        type: 'line',
+        fill: false,
+        backgroundColor: leftColorText,
+        borderColor: leftColor,
+        data: r14
+      };
+    }
+
+
+    function datasetCases(r) {
+      if (r === undefined) return;
+      let r14 = [];
+      for (let i = 0; i < r.data.length; i += 1) {
+        // extract only relevant data for most recent 14 days
+        let d = r.data.map(d => ({
+          t: d.t,
+          y: d.d
+        })).slice(i - 14, i);
+        // get rate per 100.000 pop
+        r14.push({
+          t: r.data[i].t,
+          y: d.reduce((total, num) => total + num.y, 0) / r.population / 10
+        })
+      }
+      return {
+        yAxisID: 'R',
+        label: 'Cases per 100.000 last 14 days',
+        borderWidth: 0,
+        backgroundColor: rightColor,
+        borderColor: rightColorText,
+        data: r14
+      };
+    }
+
+  </script>
+
+</body>
+
+</html>
