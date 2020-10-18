@@ -290,7 +290,7 @@ echo -n "redisGlobalEwaste"
 wc ${JSFILE}
 
 
-echo "let redisCovidDeathsSummary =" >> ${JSFILE2}
+echo "let redisCovidDeathsSummary =" > ${JSFILE2}
 curl -s "http://api.dashboard.eco/covid-deaths-summary" >> ${JSFILE2}
 echo ";" >> ${JSFILE2}
 echo -n "redisCovidDeathsSummary" 
