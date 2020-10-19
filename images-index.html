@@ -128,9 +128,10 @@
           scales: {
             xAxes: [{
               scaleLabel: {
-                display: false,
-                fontColor: "#eee",
-                labelString: 'Deaths as of ' + moment(redisCovidDeathsSummary.accessed).format('dddd MMM D') + ': ' + r.total
+                display: true,
+                fontColor: "#ccc",
+                fontSize: 18,
+                labelString: 'Source: Johns Hopkins University, ' + moment(redisCovidDeathsSummary.accessed).format('MMMM D YYYY')
               },
               gridLines: {
                 display: false
