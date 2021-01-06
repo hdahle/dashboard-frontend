@@ -307,8 +307,8 @@ function plotDailyCO2(elmt, url, results) {
         xAxes: [{
           type: 'time',
           time: {
-            parser: 'MM-DD',
-            unit: 'month',
+            //            parser: 'MM-DD',
+            //            unit: 'day',
             displayFormats: {
               month: 'MMM'
             }
