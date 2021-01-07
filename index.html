@@ -179,6 +179,30 @@
   <!-- Limit content width to 960px -->
   <div class="w3-content w3-padding-32">
 
+    <!-- Plastic Waste -->
+    <div class="w3-row" id="plastic-waste">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Plastic Waste: Top Countries 2016</h2>
+        <h4>January 7, 20021</h4>
+        <p>
+          According to research by K.L.Law et.al. the top plastic waste producing countries in the world, on a per
+          capita basis, are USA and UK. USA generates 130 kg plastic waste per person every year - this is about 2.5 kg
+          per person per week.
+        </p>
+        <p>
+          While EU citizens generate less than half of the waste compared to Americans, it is still more than 1 kg per
+          week for every person.
+
+          India and China are also big polluters, but not on a per capita basis with about 20 kg and 16 kg per person
+          per year.
+        </p>
+      </div>
+      <script>
+        plotPlasticWaste(document.currentScript.parentNode.getAttribute('id'), redisPlasticWaste, 'https://api.dashboard.eco/plastic-waste-2016');
+      </script>
+    </div>
+
+
     <!-- Global E-Waste -->
     <div class="w3-row" id="globalewaste-2020">
       <div class="w3-container w3-col m6 l7">

@@ -136,7 +136,40 @@ function plotGlobalEwaste(elmt, results, url) {
   });
 }
 
+//
+// Plastic Waste
+//
+function plotPlasticWaste(elmt, results, url) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('Plastic waste:', url, results.data.datasets.length);
+  insertSourceAndLink(results, id, url);
+  console.log(id.canvasId);
 
+  let n = 3;
+  let color = mkColorArray(n);
+
+  results.data.datasets[0].backgroundColor = color[Math.floor(Math.random() * n)];
+
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'horizontalBar',
+    options: {
+      aspectRatio: 1,
+      scales: {
+        xAxes: [{
+          ticks: {
+            callback: v => v + ' kg'
+          }
+        }]
+      }
+    },
+    data: {
+      labels: results.data.labels,
+      datasets: [
+        results.data.datasets[0]
+      ]
+    }
+  });
+}
 
 //
 // Irena Cost of Renewable Generation
@@ -286,7 +319,7 @@ function plotDailyCO2(elmt, url, results) {
       backgroundColor: c,
       showLine: true,
       fill: false,
-      data: x.data
+      data: x.data.map(d => ({ t: '2000-' + d.t, y: d.y }))
     });
   }
   new Chart(document.getElementById(id.canvasId), {
@@ -307,8 +340,6 @@ function plotDailyCO2(elmt, url, results) {
         xAxes: [{
           type: 'time',
           time: {
-            //            parser: 'MM-DD',
-            //            unit: 'day',
             displayFormats: {
               month: 'MMM'
             }
