@@ -354,13 +354,13 @@ function plotDailyCO2(elmt, url, results) {
               let diff = tooltip[0].value - tooltip[1].value;
               let chg = Math.floor(1000 * diff / tooltip[1].value) / 10;
               return [
-                moment(tooltip[0].xLabel, 'MM-DD').format('MMMM D'),
+                moment(tooltip[0].xLabel, 'YYYY-MM-DD').format('MMMM D'),
                 "2021 compared to " +
                 data.datasets[tooltip[1].datasetIndex].label +
                 ": " + (chg > 0 ? '+' : '') + chg + "%"
               ]
             }
-            return moment(tooltip[0].xLabel, 'MM-DD').format('MMMM D')
+            return moment(tooltip[0].xLabel, 'YYYY-MM-DD').format('MMMM D')
           }
         }
       }
@@ -798,7 +798,16 @@ function plotOxfam(elmt, url, results) {
         }
       },
       tooltips: {
-        enabled: true
+        enabled: true,
+        callbacks: {
+          title: (i, d) => {
+            return d.datasets[i[0].datasetIndex].label[i[0].index]
+          },
+          label: (i, d) => {
+            let data = d.datasets[i.datasetIndex].data[i.index];
+            return "Share of CO2 emissions: " + data + "%"
+          }
+        }
       },
       title: {
         text: 'CO2 Emissions 1990-2015 by income group',
@@ -867,7 +876,16 @@ function plotWri(elmt, url, results) {
         }
       },
       tooltips: {
-        enabled: true
+        enabled: true,
+        callbacks: {
+          title: (i, d) => {
+            return d.datasets[i[0].datasetIndex].label[i[0].index]
+          },
+          label: (i, d) => {
+            let data = d.datasets[i.datasetIndex].data[i.index];
+            return "Share of CO2 emissions: " + data + "%"
+          }
+        }
       },
       title: {
         text: 'GHG Emitted 2016: ' + results.data[0].total + ' Gt CO2 equivalents',
