@@ -1085,7 +1085,7 @@ function plotEmissionsByRegion(elmt, url, results) {
     c.shift();
   })
   makeStackedLineChart(id.canvasId,
-    { min: 1959, max: 2018, callback: x => x === 1960 ? null : x },
+    { min: 1959, max: 2019, callback: x => x === 1960 ? null : x },
     { callback: v => (v / 1000) + ' Gt' },
     datasets
   );
@@ -1233,7 +1233,7 @@ function plotEia(elmt, url, results, maxYear = 2020) {
       fill: false
     });
   })
-  makeMultiLineChart(id.canvasId, { max: maxYear }, { callback: v => v / 1000 }, true, 'top', 'linear', 1, datasets);
+  makeMultiLineChart(id.canvasId, { min: 1980, max: maxYear }, { callback: v => v / 1000 }, true, 'top', 'linear', 1, datasets);
 }
 
 //
