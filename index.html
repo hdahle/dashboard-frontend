@@ -156,7 +156,7 @@
             <span id="fp-co2-last"></span> than 1 year ago<br>
             <span id="fp-co2-ten"></span> than 10 years ago<br>
             Source:
-            <a href="https://esrl.noaa.gov/gmd/" target="_blank" rel="noopener">NOAA ESRL</a>
+            <a href="https://esrl.noaa.gov/gmd/" rel="noopener">NOAA ESRL</a>
           </div>
           <script>
             if (1) {
@@ -204,6 +204,44 @@
     </div>
   -->
 
+    <!-- Global Temperature Anomaly -->
+    <div class="w3-row" id="plotGlobalTemp">
+      <div class="w3-container w3-col m6 l7">
+        <h2>NASA: 2020 and 2016 were the warmest years on record; 1.2&deg;C higher than global average surface
+          temperature in the late 1800's.</h2>
+        <h4>Updated January 15, 2021</h4>
+
+        The
+        <a href="https://data.giss.nasa.gov/gistemp/" rel="noopener">NASA GISTEMPv4 dataset</a>
+        shows that the global average surface temperature in 2020 was equal to the temperature in 2016 - these are the
+        two warmest years ever.
+        Read the NASA post <a href="https://www.giss.nasa.gov/research/news/20210114/" rel="noopener">here</a>
+        <p>
+          The HadCRUT4 dataset from
+          <a href="https://uea.ac.uk/" rel="noopener">Climatic Research Unit, Univ of East
+            Anglia</a>
+          and
+          <a href="https://www.metoffice.gov.uk/weather/climate-change/organisations-and-reports/met-office-hadley-centre"
+            rel="noopener">Hadley Centre (UK Met Office)</a>
+          shows the same trend. Note that the HadCRUT dataset refers to the average of 1961-1990,
+          so it is slightly offset compared to the NASA dataset.
+          This chart is updated monthly.
+        </p>
+        <p>The UAH datset from
+          <a href="https://www.nsstc.uah.edu/nsstc/" rel="noopener">NSSTC, University of Alabama</a>
+          uses 1981-2010 as the reference so it offset from the other datasets, but is shows a similar increase in
+          global temperatures.
+        </p>
+      </div>
+      <script>
+        plotGlobalTemp(document.currentScript.parentNode.getAttribute('id'),
+          ["https://api.dashboard.eco/global-temperature-anomaly", "https://api.dashboard.eco/global-temperature-hadcrut", "https://api.dashboard.eco/global-temperature-uah"],
+          [redisGlobalTemperatureAnomaly, redisGlobalTemperatureHadcrut, redisGlobalTemperatureUah]
+        );
+      </script>
+    </div>
+
+
     <!-- Global E-Waste -->
     <div class="w3-row" id="globalewaste-2020">
       <div class="w3-container w3-col m6 l7">
@@ -211,7 +249,7 @@
           per person</h2>
         <h4>October 7, 2020</h4>
         <p>The Global E-Waste Statistics Partnership has published the
-          <a href="https://globalewaste.org/" target="_blank">Global E-Waste Monitor 2020</a>
+          <a href="https://globalewaste.org/">Global E-Waste Monitor 2020</a>
           which shows that in 2019, the world generated 53.6 million tons of e-waste, or 7.3 kg of e-waste per person on
           earth.
         </p>
@@ -233,8 +271,8 @@
           half of all CO2 emissions</h2>
         <h4>September 21, 2020</h4>
         <p>This chart uses data from the
-          <a href="https://www.oxfam.org" target="_blank">Oxfam</a> and
-          <a href="https://www.sei.org/" target="_blank">Stockholm Environment Institute</a> joint research report on
+          <a href="https://www.oxfam.org">Oxfam</a> and
+          <a href="https://www.sei.org/">Stockholm Environment Institute</a> joint research report on
           how CO2 emissions
           are distributed between income groups.
         </p>
@@ -256,7 +294,7 @@
         <h2>Greenhouse Gas emissions by sector, 2016</h2>
         <h4>September 17, 2020</h4>
         <p>This chart uses data from
-          <a href="https://www.wri.org" target="_blank">World Resources Institute</a> and shows
+          <a href="https://www.wri.org">World Resources Institute</a> and shows
           which sectors greenhouse gas (CO2, CH4, N20, etc)
           emissions originate from.
         </p>
@@ -278,8 +316,7 @@
           Solar photovoltaic least expensive technology</h2>
         <h4>September 10, 2020</h4>
         <p>
-          A <a href="https://www.eia.gov/outlooks/aeo/pdf/electricity_generation.pdf" ref="noreferrer" target="_blank"
-            rel="noopener">
+          A <a href="https://www.eia.gov/outlooks/aeo/pdf/electricity_generation.pdf" ref="noreferrer" rel="noopener">
             report
           </a> from the US Energy Information Administration has estimated the levelised cost of electricity (LCOE)
           generation for new plants coming online in the United States in 2025.
@@ -310,7 +347,7 @@
         <p>
           IRENA has published
           <a href="https://www.irena.org/publications/2020/Jun/Renewable-Power-Costs-in-2019" ref="noreferrer"
-            target="_blank" rel="noopener">
+            rel="noopener">
             a detailed study
           </a> on the cost of utility-scale power generation at a global level based on renewable resources.
           The report shows a clear trend in LCOE (levelised cost of electricity, which includes financial costs,
@@ -365,7 +402,7 @@
     <div class="w3-row" id="spain-electricity-consumption">
       <div class="w3-container w3-col m6 l7">
         <h2>Covid-19 impact in Spain: Electricity consumption down about 20&percnt;, now back to normal</h2>
-        The chart uses data from <a href="https://www.ree.es/en" target="_blank" rel="noopener">Red Electrica de
+        The chart uses data from <a href="https://www.ree.es/en"   rel="noopener">Red Electrica de
           Espana</a>,
         the operator of the Spanish electricity grid.
         The chart shows the daily electricity consumption for this year compared to the last five years.
@@ -962,39 +999,6 @@
       </script>
     </div>
 
-    <!-- Global Temperature Anomaly -->
-    <div class="w3-row" id="plotGlobalTemp">
-      <div class="w3-container w3-col m6 l7">
-        <h2>The global mean temperature in 2019 was 1&deg;C higher than the average of 1951-1980.</h2>
-        The
-        <a href="https://data.giss.nasa.gov/gistemp/" target="_blank" rel="noopener">NASA GISTEMPv4 dataset</a>
-        shows that the earth is now about 1&deg; hotter than the period 1951-1980.
-        According to NASA, 2019 was the second hottest year since measurements began in 1880.
-        As the chart indicates, the hottest year recorded is 2016.
-        <p>
-          The HadCRUT4 dataset from
-          <a href="https://uea.ac.uk/" target="_blank" rel="noopener">Climatic Research Unit, Univ of East
-            Anglia</a>
-          and
-          <a href="https://www.metoffice.gov.uk/weather/climate-change/organisations-and-reports/met-office-hadley-centre"
-            target="_blank" rel="noopener">Hadley Centre (UK Met Office)</a>
-          shows the same trend. Note that the HadCRUT dataset refers to the average of 1961-1990,
-          so it is slightly offset compared to the NASA dataset.
-          This chart is updated monthly.
-        </p>
-        <p>The UAH datset from
-          <a href="https://www.nsstc.uah.edu/nsstc/" target="_blank" rel="noopener">NSSTC, University of Alabama</a>
-          uses 1981-2010 as the reference so it offset from the other datasets, but is shows a similar increase in
-          global temperatures.
-        </p>
-      </div>
-      <script>
-        plotGlobalTemp(document.currentScript.parentNode.getAttribute('id'),
-          ["https://api.dashboard.eco/global-temperature-anomaly", "https://api.dashboard.eco/global-temperature-hadcrut", "https://api.dashboard.eco/global-temperature-uah"],
-          [redisGlobalTemperatureAnomaly, redisGlobalTemperatureHadcrut, redisGlobalTemperatureUah]
-        );
-      </script>
-    </div>
 
     <!-- Svalbard Temperature Anomaly -->
     <div class="w3-row" id="plotSvalbardTemp">
@@ -1009,7 +1013,7 @@
         <p>
           The report
           <a href="https://cms.met.no/site/2/klimaservicesenteret/climate-in-svalbard-2100/_attachment/14428?_ts=169fd13ff23"
-            target="_blank" rel="noopener">
+            rel="noopener">
             Climate in Svalbard 2100 by NCCS
           </a>
           is an excellent overview of future climate impact in the Arctic.
@@ -1026,7 +1030,7 @@
         <h2>Forest fire activity in the Amazon: 2019 and 2020 below average. 2007 remains record year</h2>
         <h4>Updated September 14, 2020</h4>
         Brazil's
-        <a href="https://queimadas.dgi.inpe.br/queimadas/portal" target="_blank" rel="noopener">
+        <a href="https://queimadas.dgi.inpe.br/queimadas/portal" rel="noopener">
           National Institute for Space Research (INPE)
         </a>
         monitors forest fire activity in Latin America daily using satellites.
@@ -1073,7 +1077,7 @@
       <div class="w3-container w3-col m6 l7">
         <h2>Carbon Capture and Storage: CCS creates more CO2 than it captures</h2>
         According to
-        <a href="https://www.globalccsinstitute.com/" target="_blank" rel="noopener">
+        <a href="https://www.globalccsinstitute.com/" rel="noopener">
           Global CCS Institute
         </a>
         there are 19 large-scale CCS projects in operation at end-of-2019,
@@ -1082,8 +1086,7 @@
         <p>
           Most of the captured CO2 (30 million tons) is used for EOR - Enhanced Oil Recovery:
           Injection of CO2 into oil wells in order to extract more oil.
-          <a href="https://www.iea.org/commentaries/can-co2-eor-really-provide-carbon-negative-oil" target="_blank"
-            rel="noopener">
+          <a href="https://www.iea.org/commentaries/can-co2-eor-really-provide-carbon-negative-oil" rel="noopener">
             IEA
           </a>
           estimates that this accounts for an extra 500.000 barrels of oil per day,
@@ -1105,7 +1108,7 @@
         <h2>Electricity generation: Natural gas is 100 times more deadly than renewables. Coal? 1000 times more deadly
         </h2>
         University of Oxford's
-        <a href="https://ourworldindata.org/safest-sources-of-energy" target="_blank" rel="noopener">
+        <a href="https://ourworldindata.org/safest-sources-of-energy" rel="noopener">
           Our World in Data
         </a>
         has looked at the number of deaths per TWh (terawatt-hour) of electricity
@@ -1124,11 +1127,10 @@
           Nuclear power has a relatively low mortality rate,
           even when the Chernobyl and Fukushima accidents are included.
           Our World in Data uses the
-          <a href="https://www.iaea.org/newscenter/pressreleases/chernobyl-true-scale-accident"
-            target="_blank">IAEA/WHO</a>
+          <a href="https://www.iaea.org/newscenter/pressreleases/chernobyl-true-scale-accident">IAEA/WHO</a>
           estimate for Chernobyl-related deaths, 4000.
           This chart uses a higher estimate, 45.000, based on the
-          <a href="https://www.chernobylreport.org/" target="_blank" rel="noopener">TORCH report</a>
+          <a href="https://www.chernobylreport.org/" rel="noopener">TORCH report</a>
         </p>
       </div>
       <script>
@@ -1169,12 +1171,11 @@
 
   <footer class="w3-center w3-padding">
     <div class="w3-large w3-section">
-      <a href="https://www.linkedin.com/company/futureplanet-eco/" class="fa fa-linkedin" target="_blank"
-        rel="noopener"></a>
+      <a href="https://www.linkedin.com/company/futureplanet-eco/" class="fa fa-linkedin" rel="noopener"></a>
       &nbsp;
-      <a href="https://www.instagram.com/futureplanet.eco/" class="fa fa-instagram" target="_blank" rel="noopener"></a>
+      <a href="https://www.instagram.com/futureplanet.eco/" class="fa fa-instagram" rel="noopener"></a>
       &nbsp;
-      <a href="https://profiles.eco/dashboard" ref="noreferrer" target="_blank" rel="noopener">
+      <a href="https://profiles.eco/dashboard" ref="noreferrer" rel="noopener">
         <img style="width:16px" src="eco-mark.svg">
       </a>
     </div>

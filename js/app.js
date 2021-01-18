@@ -383,9 +383,7 @@ function plotCoronaDeaths3(elmt, json) {
         tooltips: {
           mode: 'index',
           callbacks: {
-            title: (tooltip) => {
-              return moment(tooltip[0].xLabel, 'YYYY-MM-DD').format('MMMM D')
-            },
+            title: (tooltip) => moment(tooltip[0].xLabel, 'YYYY-MM-DD').format('MMMM D, YYYY'),
             label: (tooltipItem, data) => {
               let t = data.datasets[tooltipItem.datasetIndex].tooltipText;
               t = (t === undefined) || (t === null) ? '' : t;
@@ -471,6 +469,11 @@ function plotCoronaDeathsMulti(elmt, results, url, deathsPerMillion = true) {
     data: { datasets: datasets },
     options: {
       aspectRatio: 1.3,
+      tooltips: {
+        callbacks: {
+          title: (tooltip) => moment(tooltip[0].xLabel, 'YYYY-MM-DD').format('MMMM D, YYYY')
+        }
+      },
       legend: {
         position: 'right'
       },

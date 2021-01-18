@@ -88,7 +88,7 @@ function insertSourceAndLink(res, elmtId, url) {
       s += "<p>Data retrieved: " + res.updated + "</p>";
     }
     if (res.link !== undefined && res.link !== null && res.link !== "") {
-      s += "<div class='w3-button'><i class='fa fa-link'></i>&nbsp;<a target='_blank' rel='noopener' href='";
+      s += "<div class='w3-button'><i class='fa fa-link'></i>&nbsp;<a rel='noopener' href='";
       s += res.link + "'>" + res.link + "</a></div><br>";
     }
     if (Array.isArray(url)) {
