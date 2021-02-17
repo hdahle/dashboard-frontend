@@ -308,3 +308,8 @@ echo ";" >> ${JSFILE2}
 echo -n "redisCovidConfirmedSummary" 
 wc ${JSFILE2}
 
+echo "let redisBitcoinPower =" >> ${JSFILE2}
+curl -s "http://api.dashboard.eco/bitcoin-power" >> ${JSFILE2}
+echo ";" >> ${JSFILE2}
+echo -n "redisBitcoinPower" 
+wc ${JSFILE2}
