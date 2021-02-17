@@ -204,6 +204,30 @@
     </div>
   -->
 
+    <!-- Bitcoin power consumption -->
+    <div class="w3-row" id="bitcoin-power">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Bitcoin power consumption is about 0.5&percnt; of global electricity consumption</h2>
+        <h4>February 17, 2021</h4>
+        <p>
+          This chart shows the Cambridge Bitcoin Electricity Consumption Index (CBECI) as estimated by the
+          <a href="https://cbeci.org/" rel="noopener">Cambridge Centre for Alternative Finance.</a>
+          If Bitcoin power consumption is 120 TWh per year, this is almost 0.5&percnt; of global electricity generation
+          which was about 25 000 TWh in 2018 (see another chart on this page).
+        </p>
+        <p>This chart is updated daily.</p>
+      </div>
+      <script>
+        plotScatter(document.currentScript.parentNode.getAttribute('id'),
+          ["https://api.dashboard.eco/bitcoin-power"],
+          [redisBitcoinPower],
+          ['Bitcoin electricity usage, annualized'],
+          {},
+          { callback: v => v = v + 'TWh' },
+          'time');
+      </script>
+    </div>
+
     <!-- Global Temperature Anomaly -->
     <div class="w3-row" id="plotGlobalTemp">
       <div class="w3-container w3-col m6 l7">

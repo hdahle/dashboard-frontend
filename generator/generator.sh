@@ -295,6 +295,12 @@ echo ";" >> ${JSFILE}
 echo -n "redisPlasticWaste" 
 wc ${JSFILE}
 
+echo "let redisBitcoinPower =" >> ${JSFILE}
+curl -s "http://api.dashboard.eco/bitcoin-power" >> ${JSFILE}
+echo ";" >> ${JSFILE}
+echo -n "redisBitcoinPower" 
+wc ${JSFILE}
+
 
 echo "let redisCovidDeathsSummary =" > ${JSFILE2}
 curl -s "http://api.dashboard.eco/covid-deaths-summary" >> ${JSFILE2}
@@ -308,8 +314,3 @@ echo ";" >> ${JSFILE2}
 echo -n "redisCovidConfirmedSummary" 
 wc ${JSFILE2}
 
-echo "let redisBitcoinPower =" >> ${JSFILE2}
-curl -s "http://api.dashboard.eco/bitcoin-power" >> ${JSFILE2}
-echo ";" >> ${JSFILE2}
-echo -n "redisBitcoinPower" 
-wc ${JSFILE2}
