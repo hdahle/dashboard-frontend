@@ -32,8 +32,6 @@
     color: #777;
   }
 
-  .fp-chart {}
-
   .fp-ppm-font {
     font-weight: 100;
     font-size: xx-large;
@@ -183,7 +181,7 @@
     <div class="w3-row" id="plastic-waste">
       <div class="w3-container w3-col m6 l7">
         <h2>Plastic Waste: Top Countries 2016</h2>
-        <h4>January 7, 20021</h4>
+        <h4>January 7, 2021</h4>
         <p>
           According to research by K.L.Law et.al. the top plastic waste producing countries in the world are USA and
           United Kingdom.
@@ -234,7 +232,6 @@
         <h2>NASA: 2020 and 2016 were the warmest years on record; 1.2&deg;C higher than global average surface
           temperature in the late 1800's.</h2>
         <h4>Updated January 15, 2021</h4>
-
         The
         <a href="https://data.giss.nasa.gov/gistemp/" rel="noopener">NASA GISTEMPv4 dataset</a>
         shows that the global average surface temperature in 2020 was equal to the temperature in 2016 - these are the
@@ -756,8 +753,9 @@
           {
             autoSkip: true,
             maxTicksLimit: 8,
+            min: -420000,
             max: 2020,
-            callback: (x) => (x == 2000 || x == 0) ? null : x
+            callback: (x) => (x == 2000 || x == 0 || x == -400000) ? null : x
           }, {
           callback: (y) => y += "ppm"
         });
