@@ -96,6 +96,42 @@ function plotEiaLcoe(elmt, results, url) {
   });
 }
 
+//
+// Polestar Life cycle data
+//
+function plotPolestar(elmt, url, results) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('Polestar:', url);
+  insertSourceAndLink(results, id, url);
+
+  let color = colorArrayToAlpha(mkColorArray(results.data.datasets.length), 0.7);
+  results.data.datasets.forEach(d => {
+    d.backgroundColor = color.pop()
+  });
+
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'bar',
+    options: {
+      aspectRatio: 1,
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true,
+          ticks: {
+            fontSize: 10,
+            min: 0,
+            callback: v => v + ' tons CO2'
+          }
+        }]
+      }
+    },
+    data: results.data,
+  })
+}
+
 
 //
 // Global E Waste
