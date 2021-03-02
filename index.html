@@ -243,13 +243,10 @@
         <p>This chart is updated daily.</p>
       </div>
       <script>
-        plotScatter(document.currentScript.parentNode.getAttribute('id'),
-          ["https://api.dashboard.eco/bitcoin-power"],
-          [redisBitcoinPower],
-          ['Bitcoin electricity usage, annualized'],
-          {},
-          { callback: v => v = v + 'TWh' },
-          'time');
+        plotBitcoin(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/bitcoin-power",
+          "https://api.dashboard.eco/bitcoin-price",
+          redisBitcoinPower, redisBitcoinPrice);
       </script>
     </div>
 

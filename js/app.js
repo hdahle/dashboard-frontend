@@ -132,6 +132,71 @@ function plotPolestar(elmt, url, results) {
   })
 }
 
+//
+// Polestar Life cycle data
+//
+function plotBitcoin(elmt, url, url2, results, results2) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('Polestar:', url);
+  insertSourceAndLink(results, id, url);
+  insertSourceAndLink(results2, id, url2);
+
+
+  let datasets = [results.data.datasets.pop(), results2.data.datasets.pop()];
+  const leftColor = 'rgba(140,40,40,0.9)';
+  const leftColorSoft = 'rgba(140,40,40,0.1)';
+  const rightColor = 'rgba(40,140,40,0.9)';
+  const rightColorSoft = 'rgba(40,140,40,0.1)';
+  datasets[0].borderColor = leftColor;
+  datasets[0].backgroundColor = leftColorSoft;
+  datasets[0].yAxisID = 'L'
+  datasets[1].borderColor = rightColor;
+  datasets[1].backgroundColor = rightColorSoft;
+  datasets[1].yAxisID = 'R';
+
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'line',
+    data: {
+      datasets: datasets
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          id: 'L',
+          position: 'left',
+          ticks: {
+            min: 0,
+            fontColor: leftColor
+          },
+          gridLines: {
+            color: leftColorSoft
+          }
+        }, {
+          id: 'R',
+          position: 'right',
+          ticks: {
+            min: 0,
+            fontColor: rightColor
+          },
+          gridLines: {
+            color: rightColorSoft
+          }
+        }],
+        xAxes: [{
+          type: 'time',
+          time: {
+            unit: 'year',
+            displayFormats: {
+              year: 'YYYY'
+            }
+          }
+        }]
+      }
+    }
+  });
+}
+
+
 
 //
 // Global E Waste
