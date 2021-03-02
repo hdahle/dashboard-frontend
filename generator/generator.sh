@@ -313,6 +313,12 @@ echo ";" >> ${JSFILE}
 echo -n "redisPolestar" 
 wc ${JSFILE}
 
+echo "let redisEindhoven =" >> ${JSFILE}
+curl -s "http://api.dashboard.eco/eindhoven" >> ${JSFILE}
+echo ";" >> ${JSFILE}
+echo -n "redisEindhoven" 
+wc ${JSFILE}
+
 echo "let redisCovidDeathsSummary =" > ${JSFILE2}
 curl -s "http://api.dashboard.eco/covid-deaths-summary" >> ${JSFILE2}
 echo ";" >> ${JSFILE2}
