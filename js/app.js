@@ -141,7 +141,6 @@ function plotBitcoin(elmt, url, url2, results, results2) {
   insertSourceAndLink(results, id, url);
   insertSourceAndLink(results2, id, url2);
 
-
   let datasets = [results.data.datasets.pop(), results2.data.datasets.pop()];
   const leftColor = 'rgba(140,40,40,0.9)';
   const leftColorSoft = 'rgba(140,40,40,0.1)';
@@ -1190,7 +1189,7 @@ function plotEmissionsByRegion(elmt, url, results) {
   })
   makeStackedLineChart(id.canvasId,
     { min: 1959, max: 2019, callback: x => x === 1960 ? null : x },
-    { callback: v => (v / 1000) + ' Gt' },
+    { callback: v => v + ' Gt' },
     datasets
   );
 }
