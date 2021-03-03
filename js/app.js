@@ -114,6 +114,10 @@ function plotPolestar(elmt, url, results) {
     options: {
       aspectRatio: 1,
       responsive: true,
+      tooltips: {
+        mode: 'label',
+        itemSort: (a, b) => b.datasetIndex - a.datasetIndex,
+      },
       scales: {
         xAxes: [{
           stacked: true,
