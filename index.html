@@ -202,6 +202,26 @@
     </div>
   -->
 
+    <!-- EMA Antibiotics in food production -->
+    <div class="w3-row" id="antibiotics">
+      <div class="w3-container w3-col m6 l7">
+        <h2>European Medicines Agency: Sales of antibiotics for food-producing animals in 31 European countries</h2>
+        <h4>March 25, 2021</h4>
+        <p>
+          A 2020 report from EMA shows that sales of antibiotics declined by 34&percnt; between 2011 and 2018.
+          Figures are reported as 'mg per PCU', where 1 PCU a metric ton of slaughtered animals (includes
+          farmed fish).
+        </p>
+        <p>Usage of antibiotics varies widely between countries.</p>
+      </div>
+      <script>
+        plotAntibiotics(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/eu-antibiotics-details-2018",
+          redisEuAntibioticsDetails2018);
+      </script>
+    </div>
+
+
     <!-- Eindhoven University Life cycle analysis -->
     <div class="w3-row" id="eindhoven">
       <div class="w3-container w3-col m6 l7">
@@ -978,7 +998,7 @@
         </p>
       </div>
       <script>
-        plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-gas", redisEiaGlobalGas);
+        plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-gas", redisEiaGlobalGas, 2018);
       </script>
     </div>
 

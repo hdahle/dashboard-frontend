@@ -97,6 +97,46 @@ function plotEiaLcoe(elmt, results, url) {
 }
 
 //
+//
+//
+function plotAntibiotics(elmt, url, results) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('Antibiotics:', url);
+  insertSourceAndLink(results, id, url);
+  results.data.datasets.pop(); // remove the Totals dataset
+  let color = colorArrayToAlpha(mkColorArray(results.data.datasets.length), 0.7);
+  results.data.datasets.forEach(d => {
+    d.backgroundColor = color.pop()
+  });
+
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'horizontalBar',
+    options: {
+      aspectRatio: 1,
+      legend: {
+        display: false,
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true,
+          ticks: {
+            fontSize: 10
+          }
+        }]
+      }
+    },
+    data: results.data
+  });
+}
+
+
+
+
+//
 // Polestar Life cycle data
 //
 function plotPolestar(elmt, url, results) {
@@ -137,7 +177,7 @@ function plotPolestar(elmt, url, results) {
 }
 
 //
-// Polestar Life cycle data
+//Bitcoin
 //
 function plotBitcoin(elmt, url, url2, results, results2) {
   let id = insertAccordionAndCanvas(elmt);
