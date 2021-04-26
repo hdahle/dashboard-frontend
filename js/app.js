@@ -54,6 +54,56 @@ Chart.plugins.unregister(ChartDataLabels);
 
 let currentYear = moment().format('YYYY');
 
+
+
+//
+// OECD Meat Consumption 2020
+//
+function plotOecdMeat(elmt, url, results) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('OECD Meat:', url, results.data.length);
+  insertSourceAndLink(results, id, url);
+
+  let country = results.data.find(x => {
+    return x.country === "WLD"
+  });
+  console.log(country);
+  let color = mkColorArray(country.datasets.length);
+
+  // Add colors to the datasets
+  country.datasets.forEach(d => {
+    d.backgroundColor = color.pop();
+    //d.borderWidth = 0;
+    fill = true;
+    showLine = true;
+  });
+
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'line',
+    options: {
+      aspectRatio: 1,
+      scales: {
+        xAxes: [{
+          type: 'linear',
+          ticks: { max: 2020, min: 1991 }
+        }],
+        yAxes: [{
+          stacked: true,
+          ticks: {
+            fontSize: 10,
+            min: 0,
+            callback: v => v + ' kg'
+          }
+        }]
+      }
+    },
+    data: {
+      datasets: country.datasets
+    }
+  });
+}
+
+
 //
 // EIA Cost of Electricity Generation USA 2025
 //

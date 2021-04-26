@@ -202,6 +202,28 @@
     </div>
   -->
 
+    <!-- OECD Meat -->
+    <div class="w3-row" id="oecd-meat-2020">
+      <div class="w3-container w3-col m6 l7">
+        <h2>OECD/FAO: Global meat consumption keeps increasing, but consumption in 2019 was reduced due to African Swine
+          Fever outbreak in Asia </h2>
+        <h4>April 26, 2021</h4>
+        <p>
+          OECD/FAO agricultural outlook shows how meat consumption is increasing globally. The reduction in consumption
+          in 2019 is due to the <a href="http://www.fao.org/ag/againfo/programmes/en/empres/ASF/situation_update.html"
+            rel="noopener"></a>African Swine Fever outbreak in Asia.</a>
+        </p>
+        <p>
+          Consumption data is reported in kilograms per capita, using ready-to-cook retail weight.
+        </p>
+      </div>
+      <script>
+        plotOecdMeat(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/oecd-meat-2020",
+          redisOecdMeat2020);
+      </script>
+    </div>
+
     <!-- EMA Antibiotics in food production -->
     <div class="w3-row" id="antibiotics">
       <div class="w3-container w3-col m6 l7">
