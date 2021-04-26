@@ -73,7 +73,6 @@ function plotOecdMeat(elmt, url, results) {
   // Add colors to the datasets
   country.datasets.forEach(d => {
     d.backgroundColor = color.pop();
-    //d.borderWidth = 0;
     fill = true;
     showLine = true;
   });
@@ -85,7 +84,7 @@ function plotOecdMeat(elmt, url, results) {
       scales: {
         xAxes: [{
           type: 'linear',
-          ticks: { max: 2020, min: 1991 }
+          ticks: { max: 2019, min: 1991 }
         }],
         yAxes: [{
           stacked: true,
