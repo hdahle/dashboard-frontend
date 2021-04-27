@@ -64,7 +64,7 @@ function plotOecdMeatSorted2019(elmt, url, results) {
   console.log('OECD Meat Sorted:', url, results.data.length);
   insertSourceAndLink(results, id, url);
 
-  let color = mkColorArray(4);
+  let color = colorArrayToAlpha(mkColorArray(4), 0.7);
   // Add colors to the datasets
   results.data.datasets.forEach(d => {
     d.backgroundColor = color.pop();
@@ -76,6 +76,12 @@ function plotOecdMeatSorted2019(elmt, url, results) {
     type: 'horizontalBar',
     data: results.data,
     options: {
+      tooltips: {
+        mode: 'label',
+        callbacks: {
+          label: (tooltipItem, data) => data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value + ' kg'
+        }
+      },
       scales: {
         yAxes: [{
           stacked: true,
@@ -104,24 +110,26 @@ function plotOecdMeat(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('OECD Meat:', url, results.data.length);
   insertSourceAndLink(results, id, url);
-
+  // We only want the World dataset
   let country = results.data.find(x => {
     return x.country === "WLD"
   });
-  console.log(country);
-
-  let color = mkColorArray(country.datasets.length);
+  let color = colorArrayToAlpha(mkColorArray(country.datasets.length), 0.8);
   // Add colors to the datasets
   country.datasets.forEach(d => {
     d.backgroundColor = color.pop();
     fill = true;
     showLine = true;
   });
-
   new Chart(document.getElementById(id.canvasId), {
     type: 'line',
     options: {
       aspectRatio: 1,
+      tooltips: {
+        callbacks: {
+          label: (tooltipItem, data) => data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value + ' kg'
+        }
+      },
       scales: {
         xAxes: [{
           type: 'linear',
@@ -233,12 +241,10 @@ function plotPolestar(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Polestar:', url);
   insertSourceAndLink(results, id, url);
-
   let color = colorArrayToAlpha(mkColorArray(results.data.datasets.length), 0.7);
   results.data.datasets.forEach(d => {
     d.backgroundColor = color.pop()
   });
-
   new Chart(document.getElementById(id.canvasId), {
     type: 'bar',
     options: {
