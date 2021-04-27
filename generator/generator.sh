@@ -331,6 +331,12 @@ echo ";" >> ${JSFILE}
 echo -n "redisOecdMeat2020" 
 wc ${JSFILE}
 
+echo "let redisOecdMeatSorted2019 =" >> ${JSFILE}
+curl -s "http://api.dashboard.eco/oecd-meat-sorted-2019" >> ${JSFILE}
+echo ";" >> ${JSFILE}
+echo -n "redisOecdMeatSorted2019" 
+wc ${JSFILE}
+
 echo "let redisCovidDeathsSummary =" > ${JSFILE2}
 curl -s "http://api.dashboard.eco/covid-deaths-summary" >> ${JSFILE2}
 echo ";" >> ${JSFILE2}
