@@ -224,6 +224,28 @@
       </script>
     </div>
 
+    <!-- OECD Meat Sorted List for a Single Year-->
+    <div class="w3-row" id="oecd-meat-sorted-2019">
+      <div class="w3-container w3-col m6 l7">
+        <h2>OECD/FAO: US meat consumption at 3 times world average and 30 times that of some developing countries </h2>
+        <h4>April 27, 2021</h4>
+        <p>
+          OECD/FAO agricultural outlook shows how western countries consume far more meat than the world average.
+          Top meat consuming countries are USA, Israel, Argentina, Australia with 90-100 kg meat per capita per year.
+          Argentina is the top beef-consuming country with almost 40 kg beef per capita. Israel is top poultry consumer
+          with 64 kg per capita.
+        </p>
+        <p>
+          Consumption data is reported in kilograms per capita, using ready-to-cook retail weight.
+        </p>
+      </div>
+      <script>
+        plotOecdMeatSorted2019(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/oecd-meat-sorted-2019",
+          redisOecdMeatSorted2019);
+      </script>
+    </div>
+
     <!-- EMA Antibiotics in food production -->
     <div class="w3-row" id="antibiotics">
       <div class="w3-container w3-col m6 l7">

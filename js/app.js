@@ -59,6 +59,47 @@ let currentYear = moment().format('YYYY');
 //
 // OECD Meat Consumption 2020
 //
+function plotOecdMeatSorted2019(elmt, url, results) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('OECD Meat Sorted:', url, results.data.length);
+  insertSourceAndLink(results, id, url);
+
+  let color = mkColorArray(4);
+  // Add colors to the datasets
+  results.data.datasets.forEach(d => {
+    d.backgroundColor = color.pop();
+    fill = true;
+    showLine = true;
+  });
+
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'horizontalBar',
+    data: results.data,
+    options: {
+      scales: {
+        yAxes: [{
+          stacked: true,
+          ticks: {
+            fontSize: 8
+          }
+        }],
+        xAxes: [{
+          stacked: true,
+          ticks: {
+            fontSize: 10,
+            callback: v => v + ' kg'
+          }
+        }]
+      }
+    }
+  });
+}
+
+
+
+//
+// OECD Meat Consumption 2020
+//
 function plotOecdMeat(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('OECD Meat:', url, results.data.length);
@@ -68,8 +109,8 @@ function plotOecdMeat(elmt, url, results) {
     return x.country === "WLD"
   });
   console.log(country);
-  let color = mkColorArray(country.datasets.length);
 
+  let color = mkColorArray(country.datasets.length);
   // Add colors to the datasets
   country.datasets.forEach(d => {
     d.backgroundColor = color.pop();
