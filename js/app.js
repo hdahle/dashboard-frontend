@@ -76,6 +76,7 @@ function plotOecdMeatSorted2019(elmt, url, results) {
     type: 'horizontalBar',
     data: results.data,
     options: {
+      aspectRatio: 0.8,
       tooltips: {
         mode: 'label',
         callbacks: {
@@ -92,7 +93,6 @@ function plotOecdMeatSorted2019(elmt, url, results) {
         xAxes: [{
           stacked: true,
           ticks: {
-            fontSize: 10,
             callback: v => v + ' kg'
           }
         }]
@@ -100,7 +100,6 @@ function plotOecdMeatSorted2019(elmt, url, results) {
     }
   });
 }
-
 
 
 //
@@ -124,7 +123,6 @@ function plotOecdMeat(elmt, url, results) {
   new Chart(document.getElementById(id.canvasId), {
     type: 'line',
     options: {
-      aspectRatio: 1,
       tooltips: {
         callbacks: {
           label: (tooltipItem, data) => data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value + ' kg'
@@ -139,7 +137,6 @@ function plotOecdMeat(elmt, url, results) {
           stacked: true,
           ticks: {
             fontSize: 10,
-            min: 0,
             callback: v => v + ' kg'
           }
         }]
@@ -174,7 +171,6 @@ function plotEiaLcoe(elmt, results, url) {
   new Chart(document.getElementById(id.canvasId), {
     type: 'bar',
     options: {
-      aspectRatio: 1,
       scales: {
         xAxes: [{
           gridLines: {
@@ -195,7 +191,7 @@ function plotEiaLcoe(elmt, results, url) {
 }
 
 //
-//
+// Antibiotics
 //
 function plotAntibiotics(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
@@ -210,11 +206,10 @@ function plotAntibiotics(elmt, url, results) {
   new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
     options: {
-      aspectRatio: 1,
+      aspectRatio: 0.8,
       legend: {
         display: false,
       },
-      responsive: true,
       scales: {
         xAxes: [{
           stacked: true,
@@ -248,8 +243,6 @@ function plotPolestar(elmt, url, results) {
   new Chart(document.getElementById(id.canvasId), {
     type: 'bar',
     options: {
-      aspectRatio: 1,
-      responsive: true,
       tooltips: {
         mode: 'label',
         itemSort: (a, b) => b.datasetIndex - a.datasetIndex,
@@ -356,7 +349,6 @@ function plotGlobalEwaste(elmt, results, url) {
   new Chart(document.getElementById(id.canvasId), {
     type: 'bar',
     options: {
-      aspectRatio: 1,
       tooltips: {
         callbacks: {
           label: (tooltipItem) => tooltipItem.value + ' kg per capita'
@@ -393,7 +385,6 @@ function plotPlasticWaste(elmt, results, url) {
   new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
     options: {
-      aspectRatio: 1,
       scales: {
         xAxes: [{
           ticks: {
