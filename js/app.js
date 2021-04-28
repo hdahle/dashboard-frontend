@@ -62,9 +62,7 @@ function plotOecdMeat(elmt, url, results) {
   console.log('OECD Meat:', url, results.data.length);
   insertSourceAndLink(results, id, url);
   // We only want the World dataset
-  let country = results.data.find(x => {
-    return x.country === "WLD"
-  });
+  let country = results.data.find(x => x.country === "WLD");
   let color = colorArrayToAlpha(mkColorArray(country.datasets.length), 0.8);
   // Add colors to the datasets
   country.datasets.forEach(d => {
@@ -91,7 +89,7 @@ function plotOecdMeat(elmt, url, results) {
           stacked: true,
           ticks: {
             fontSize: 10,
-            callback: v => v + ' kg'
+            callback: v => (v) ? v + ' kg' : null
           }
         }]
       }
@@ -124,7 +122,8 @@ function plotOecdMeatSorted2019(elmt, url, results) {
     options: {
       aspectRatio: 0.8,
       tooltips: {
-        mode: 'label',
+        //mode: 'label',
+        itemSort: (a, b) => b.datasetIndex - a.datasetIndex,
         callbacks: {
           label: (ttItem, data) => data.datasets[ttItem.datasetIndex].label + ': ' + Math.round(ttItem.value * 10) / 10 + ' kg',
           title: (ttItem) => {
@@ -153,9 +152,6 @@ function plotOecdMeatSorted2019(elmt, url, results) {
 }
 
 
-
-
-
 //
 // EIA Cost of Electricity Generation USA 2025
 //
@@ -169,15 +165,20 @@ function plotEiaLcoe(elmt, results, url) {
   results.data.datasets.forEach(d => {
     d.backgroundColor = color.pop();
     d.borderWidth = 0;
-  });
+  });/*
   results.data.datasets.forEach(d => {
     d.data = d.data.map(x => Math.round(x) / 1000)
-  });
+  });*/
   results.data.labels = results.data.fuels;
 
   new Chart(document.getElementById(id.canvasId), {
     type: 'bar',
     options: {
+      tooltips: {
+        callbacks: {
+          label: (ttItem) => Math.trunc(ttItem.value) / 1000 + ' $/kWh'
+        }
+      },
       scales: {
         xAxes: [{
           gridLines: {
@@ -188,7 +189,7 @@ function plotEiaLcoe(elmt, results, url) {
           ticks: {
             fontSize: 10,
             min: 0,
-            callback: v => v + ' $/kWh'
+            callback: v => (v) ? v / 1000 + ' $/kWh' : null
           }
         }]
       }
@@ -209,7 +210,6 @@ function plotAntibiotics(elmt, url, results) {
   results.data.datasets.forEach(d => {
     d.backgroundColor = color.pop()
   });
-
   new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
     options: {
@@ -232,8 +232,6 @@ function plotAntibiotics(elmt, url, results) {
     data: results.data
   });
 }
-
-
 
 
 //
@@ -454,7 +452,11 @@ function plotIrena(elmt, results, url) {
       tooltips: {
         mode: 'label',
         callbacks: {
-          label: (ttItem) => ttItem.value + ' $/kWh'
+          label: (ttItem) => {
+            if (ttItem.datasetIndex > 1) return null;
+            let year = (ttItem.datasetIndex == 0) ? "2010" : "2019";
+            return year + ': ' + ttItem.value + ' $/kWh'
+          }
         }
       },
       scales: {
@@ -471,7 +473,7 @@ function plotIrena(elmt, results, url) {
           ticks: {
             fontSize: 10,
             min: 0,
-            callback: v => v ? v + ' $/kWh' : v
+            callback: v => v ? v + ' $/kWh' : null
           }
         }]
       }
@@ -781,9 +783,9 @@ function plotCoronaDeathsByCapita(elmt, url, results) {
         mode: 'index',
         displayColors: false,
         callbacks: {
-          label: function (tooltipItem, data) {
-            let n = data.datasets[tooltipItem.datasetIndex].data2[tooltipItem.index];
-            return [tooltipItem.xLabel + ' deaths per million', n + '  total deaths'];
+          label: (ttItem, data) => {
+            let n = data.datasets[ttItem.datasetIndex].data2[ttItem.index];
+            return [Math.trunc(ttItem.xLabel) + ' deaths per million', n + '  total deaths'];
           }
         }
       },
@@ -806,11 +808,11 @@ function plotCO2vsGDP(elmt) {
         tooltips: {
           intersect: true,
           callbacks: {
-            title: (i, d) => {
-              return d.datasets[i[0].datasetIndex].label
+            title: (ttItem, d) => {
+              return d.datasets[ttItem[0].datasetIndex].label
             },
-            label: (i, d) => {
-              let data = d.datasets[i.datasetIndex].data[0];
+            label: (ttItem, d) => {
+              let data = d.datasets[ttItem.datasetIndex].data[0];
               return [
                 'GDP per capita: $' + data.x,
                 'CO2 per capita: ' + data.y + ' kg',
@@ -1046,13 +1048,8 @@ function plotOxfam(elmt, url, results) {
       tooltips: {
         enabled: true,
         callbacks: {
-          title: (i, d) => {
-            return d.datasets[i[0].datasetIndex].label[i[0].index]
-          },
-          label: (i, d) => {
-            let data = d.datasets[i.datasetIndex].data[i.index];
-            return "Share of CO2 emissions: " + data + "%"
-          }
+          title: (i, d) => d.datasets[i[0].datasetIndex].label[i[0].index],
+          label: (i, d) => "Share of CO2 emissions: " + d.datasets[i.datasetIndex].data[i.index] + "%"
         }
       },
       title: {
@@ -1124,13 +1121,8 @@ function plotWri(elmt, url, results) {
       tooltips: {
         enabled: true,
         callbacks: {
-          title: (i, d) => {
-            return d.datasets[i[0].datasetIndex].label[i[0].index]
-          },
-          label: (i, d) => {
-            let data = d.datasets[i.datasetIndex].data[i.index];
-            return "Share of CO2 emissions: " + data + "%"
-          }
+          title: (i, d) => d.datasets[i[0].datasetIndex].label[i[0].index],
+          label: (i, d) => "Share of CO2 emissions: " + d.datasets[i.datasetIndex].data[i.index] + "%"
         }
       },
       title: {
