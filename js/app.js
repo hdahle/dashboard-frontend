@@ -54,7 +54,53 @@ Chart.plugins.unregister(ChartDataLabels);
 
 let currentYear = moment().format('YYYY');
 
-
+//
+// OECD Meat Consumption 2020
+//
+function plotOecdMeat(elmt, url, results) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('OECD Meat:', url, results.data.length);
+  insertSourceAndLink(results, id, url);
+  // We only want the World dataset
+  let country = results.data.find(x => {
+    return x.country === "WLD"
+  });
+  let color = colorArrayToAlpha(mkColorArray(country.datasets.length), 0.8);
+  // Add colors to the datasets
+  country.datasets.forEach(d => {
+    d.backgroundColor = color.pop();
+    fill = true;
+    showLine = true;
+  });
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'line',
+    options: {
+      tooltips: {
+        itemSort: (a, b) => b.datasetIndex - a.datasetIndex,
+        callbacks: {
+          label: (tooltipItem, data) =>
+            data.datasets[tooltipItem.datasetIndex].label + ': ' + Math.round(tooltipItem.value * 10) / 10 + ' kg'
+        }
+      },
+      scales: {
+        xAxes: [{
+          type: 'linear',
+          ticks: { max: 2019, min: 1991 }
+        }],
+        yAxes: [{
+          stacked: true,
+          ticks: {
+            fontSize: 10,
+            callback: v => v + ' kg'
+          }
+        }]
+      }
+    },
+    data: {
+      datasets: country.datasets
+    }
+  });
+}
 
 //
 // OECD Meat Consumption 2020
@@ -80,7 +126,12 @@ function plotOecdMeatSorted2019(elmt, url, results) {
       tooltips: {
         mode: 'label',
         callbacks: {
-          label: (tooltipItem, data) => data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value + ' kg'
+          label: (ttItem, data) => data.datasets[ttItem.datasetIndex].label + ': ' + Math.round(ttItem.value * 10) / 10 + ' kg',
+          title: (ttItem) => {
+            let v = 0;
+            ttItem.forEach(t => v += parseInt(t.value * 10, 10));
+            return ttItem[0].label + ': ' + v / 10 + ' kg';
+          }
         }
       },
       scales: {
@@ -102,51 +153,7 @@ function plotOecdMeatSorted2019(elmt, url, results) {
 }
 
 
-//
-// OECD Meat Consumption 2020
-//
-function plotOecdMeat(elmt, url, results) {
-  let id = insertAccordionAndCanvas(elmt);
-  console.log('OECD Meat:', url, results.data.length);
-  insertSourceAndLink(results, id, url);
-  // We only want the World dataset
-  let country = results.data.find(x => {
-    return x.country === "WLD"
-  });
-  let color = colorArrayToAlpha(mkColorArray(country.datasets.length), 0.8);
-  // Add colors to the datasets
-  country.datasets.forEach(d => {
-    d.backgroundColor = color.pop();
-    fill = true;
-    showLine = true;
-  });
-  new Chart(document.getElementById(id.canvasId), {
-    type: 'line',
-    options: {
-      tooltips: {
-        callbacks: {
-          label: (tooltipItem, data) => data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value + ' kg'
-        }
-      },
-      scales: {
-        xAxes: [{
-          type: 'linear',
-          ticks: { max: 2019, min: 1991 }
-        }],
-        yAxes: [{
-          stacked: true,
-          ticks: {
-            fontSize: 10,
-            callback: v => v + ' kg'
-          }
-        }]
-      }
-    },
-    data: {
-      datasets: country.datasets
-    }
-  });
-}
+
 
 
 //
@@ -270,7 +277,7 @@ function plotPolestar(elmt, url, results) {
 //
 function plotBitcoin(elmt, url, url2, results, results2) {
   let id = insertAccordionAndCanvas(elmt);
-  console.log('Polestar:', url);
+  console.log('Bitcoin:', url);
   insertSourceAndLink(results, id, url);
   insertSourceAndLink(results2, id, url2);
 
@@ -327,7 +334,6 @@ function plotBitcoin(elmt, url, url2, results, results2) {
     }
   });
 }
-
 
 
 //
@@ -441,10 +447,16 @@ function plotIrena(elmt, results, url) {
     data: [0.177, 0.177, 0.177, 0.177, 0.177, 0.177, 0.177, 0.177, 0.177],
   });
 
-  let myChart = new Chart(document.getElementById(id.canvasId), {
+  new Chart(document.getElementById(id.canvasId), {
     type: 'bar',
     options: {
       aspectRatio: 0.8,
+      tooltips: {
+        mode: 'label',
+        callbacks: {
+          label: (ttItem) => ttItem.value + ' $/kWh'
+        }
+      },
       scales: {
         xAxes: [{
           gridLines: {
@@ -459,7 +471,7 @@ function plotIrena(elmt, results, url) {
           ticks: {
             fontSize: 10,
             min: 0,
-            callback: v => v + ' $/kWh'
+            callback: v => v ? v + ' $/kWh' : v
           }
         }]
       }
