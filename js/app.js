@@ -1661,7 +1661,7 @@ function plotBothCCS(elmt, url, results) {
     options: {
       scales: {
         xAxes: [{
-          ticks: { callback: v => v + 'Mt' }
+          ticks: { callback: v => v + ' Mt' }
         }]
       },
       tooltips: {
@@ -1672,6 +1672,11 @@ function plotBothCCS(elmt, url, results) {
       },
       legend: {
         display: false
+      },
+      title: {
+        text: 'Million tons CO2 captured',
+        display: true,
+        position: 'top'
       }
     }
   });
@@ -1704,15 +1709,18 @@ function plotSafety(elmt) {
     plugins: [],
     options: {
       tooltips: {
-        axis: 'y'
+        axis: 'y',
+        callbacks: {
+          label: (ttItem) => ttItem.value + ' deaths per TWh electricity'
+        }
       },
       legend: {
         display: false
       },
       title: {
-        text: 'Deaths per TWh',
+        text: 'Deaths per TWh generated',
         display: true,
-        position: 'bottom'
+        position: 'top'
       }
     }
   });
