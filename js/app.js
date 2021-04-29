@@ -52,7 +52,7 @@ Chart.defaults.global.animation.duration = 0;
 
 Chart.plugins.unregister(ChartDataLabels);
 
-let currentYear = moment().format('YYYY');
+const currentYear = moment().format('YYYY');
 
 //
 // OECD Meat Consumption 2020
@@ -112,8 +112,6 @@ function plotOecdMeatSorted2019(elmt, url, results) {
   // Add colors to the datasets
   results.data.datasets.forEach(d => {
     d.backgroundColor = color.pop();
-    fill = true;
-    showLine = true;
   });
 
   new Chart(document.getElementById(id.canvasId), {
@@ -159,21 +157,22 @@ function plotEiaLcoe(elmt, results, url) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('EIA LCOE:', url, results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-  let color = mkColorArray(results.data.datasets.length);
+  let color = mkColorArray(3);
 
-  // Add colors to the datasets
-  results.data.datasets.forEach(d => {
-    d.backgroundColor = color.pop();
-    d.borderWidth = 0;
-  });/*
-  results.data.datasets.forEach(d => {
-    d.data = d.data.map(x => Math.round(x) / 1000)
-  });*/
-  results.data.labels = results.data.fuels;
+  // Replace dataset colors
+  let bgColor = results.data.datasets[0].backgroundColor;
+  for (let i = 0; i < bgColor.length; i++) {
+    if (bgColor[i] === "red") bgColor[i] = color[1];
+    if (bgColor[i] === "yellow") bgColor[i] = color[0];
+    if (bgColor[i] === "green") bgColor[i] = color[2];
+  };
 
   new Chart(document.getElementById(id.canvasId), {
     type: 'bar',
     options: {
+      legend: {
+        display: false
+      },
       tooltips: {
         callbacks: {
           label: (ttItem) => Math.trunc(ttItem.value) / 1000 + ' $/kWh'
