@@ -108,8 +108,8 @@ function plotOecdMeatSorted2019(elmt, url, results) {
   console.log('OECD Meat Sorted:', url, results.data.length);
   insertSourceAndLink(results, id, url);
 
-  let color = colorArrayToAlpha(mkColorArray(4), 0.7);
   // Add colors to the datasets
+  let color = colorArrayToAlpha(mkColorArray(4), 0.7);
   results.data.datasets.forEach(d => {
     d.backgroundColor = color.pop();
   });
@@ -749,13 +749,14 @@ function plotCoronaDeathsByCapita(elmt, url, results) {
   console.log("Corona deaths per capita:", url, results.data.length)
   let id = insertAccordionAndCanvas(elmt);
   insertSourceAndLink(results, id, url);
+  let c = colorArrayToAlpha(mkColorArray(1), 0.6);
 
   new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
     data: {
       labels: results.data.countries,
       datasets: [{
-        backgroundColor: '#c8745e',
+        backgroundColor: c.pop(),
         categoryPercentage: 0.5,
         data: results.data.percapita,
         data2: results.data.total
@@ -766,7 +767,6 @@ function plotCoronaDeathsByCapita(elmt, url, results) {
         display: true,
         text: 'Deaths per one million',
         position: 'bottom',
-        fontStyle: 'normal'
       },
       legend: {
         display: false,
@@ -1628,37 +1628,22 @@ function plotGlobalSeaLevel(elmt, urls, results) {
 //
 // CCS - Carbon Capture
 //
-function plotCCS(elmt) {
-  plotBothCCS(elmt, 'https://api.dashboard.eco/operational-ccs', redisOperationalCCS)
-}
-function plotPlannedCCS(elmt) {
-  plotBothCCS(elmt, 'https://api.dashboard.eco/planned-ccs', redisPlannedCCS)
-}
-
 function plotBothCCS(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  console.log('CCS:', results.data.length);
+  console.log('CCS:', results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-  // remove any null projects, then sort it
-  let d = results.data.filter(x => x.project != null).sort((a, b) => b.capacity - a.capacity);
-  let colors = mkColorArray(2);
-  let lineColor = d.map(x => {
-    return x.type === 'EOR' ? colors[1] : (x.type == 'Storage' ? colors[0] : '#777');
-  });
   new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
-    data: {
-      labels: d.map(x => x.project + ", " + x.country),
-      datasets: [{
-        data: d.map(x => x.capacity),
-        backgroundColor: lineColor,
-        borderColor: lineColor,
-        categoryPercentage: 0.5,
-      }]
-    },
+    data: results.data,
     plugins: [],
     options: {
+      aspectRatio: 0.8,
       scales: {
+        yAxes: [{
+          ticks: {
+            fontSize: 10
+          }
+        }],
         xAxes: [{
           ticks: { callback: v => v + ' Mt' }
         }]
@@ -1675,7 +1660,6 @@ function plotBothCCS(elmt, url, results) {
       title: {
         text: 'Million tons CO2 captured',
         display: true,
-        position: 'top'
       }
     }
   });

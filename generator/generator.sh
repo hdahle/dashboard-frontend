@@ -150,10 +150,10 @@ echo ";" >> ${JSFILE}
 echo -n "redisOperationalCCS" 
 wc ${JSFILE}
 
-echo "let redisPlannedCCS =" >> ${JSFILE}
-curl -s "http://api.dashboard.eco/planned-ccs" >> ${JSFILE}
+echo "let redisOperationalCCS2020 =" >> ${JSFILE}
+curl -s "http://api.dashboard.eco/operational-ccs-2020" >> ${JSFILE}
 echo ";" >> ${JSFILE}
-echo -n "redisPlannedCCS" 
+echo -n "redisOperationalCCS2020" 
 wc ${JSFILE}
 
 echo "let redisMortalityElectricity =" >> ${JSFILE}
