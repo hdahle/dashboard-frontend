@@ -380,10 +380,10 @@ function plotPlasticWaste(elmt, results, url) {
   insertSourceAndLink(results, id, url);
   console.log(id.canvasId);
 
-  let n = 3;
-  let color = mkColorArray(n);
+  let color = mkColorArray(1).pop();
+  results.data.datasets.forEach(d => d.backgroundColor = color);
 
-  results.data.datasets[0].backgroundColor = color[Math.floor(Math.random() * n)];
+  //  results.data.datasets[0].backgroundColor = color[Math.floor(Math.random() * n)];
 
   new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
@@ -396,12 +396,7 @@ function plotPlasticWaste(elmt, results, url) {
         }]
       }
     },
-    data: {
-      labels: results.data.labels,
-      datasets: [
-        results.data.datasets[0]
-      ]
-    }
+    data: results.data
   });
 }
 
