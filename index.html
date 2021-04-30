@@ -177,6 +177,31 @@
   <!-- Limit content width to 960px -->
   <div class="w3-content w3-padding-32">
 
+    <!-- Poore Nemacek 2018 -->
+    <div class="w3-row" id="poore-nemecek">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Food production and greenhouse gas emissions: Data from 119 countries and 38000 farms</h2>
+        <h4>April 30, 2021</h4>
+        <p>
+          Ourworldindata has an excellent <a href="https://ourworldindata.org/food-choice-vs-eating-local"
+            rel="noopener">article</a> based on Poore and Nemecek 2018, based on data from 38000 farms in 119
+          countries. This is the most thorough analysis of farming and green house gas emissions to date.
+        </p>
+        <p>
+          The data represents global averages, hence there may be significant local differences.
+          Interestingly, transport represents a relatively small amount of the GHG emissions.
+        </p>
+        <p>
+          Data is reported as greenhouse gas emissions in kilograms of CO2-equivalents per 1 kilogram of food product.
+        </p>
+      </div>
+      <script>
+        plotOecdMeatSorted2019(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/poore-nemecek-2018",
+          redisPooreNemecek2018);
+      </script>
+    </div>
+
     <!-- Plastic Waste -->
     <div class="w3-row" id="plastic-waste">
       <div class="w3-container w3-col m6 l7">
@@ -198,30 +223,6 @@
       </div>
       <script>
         plotPlasticWaste(document.currentScript.parentNode.getAttribute('id'), redisPlasticWaste, 'https://api.dashboard.eco/plastic-waste-2016');
-      </script>
-    </div>
-
-    <!-- OECD Meat -->
-    <div class="w3-row" id="poore-nemecek">
-      <div class="w3-container w3-col m6 l7">
-        <h2>Greenhouse gas emissions from various foods</h2>
-        <h4>April 30, 2021</h4>
-        <p>
-          Ourworldindata has an excellent article based on Poore and Nemecek 2018, based on data from 38000 farms in 119
-          countries. This is the most thorough analysis of farming and green house gas emissions to date.
-        </p>
-        <p>
-          It is worth noting that the data represents global averages, hence there may be significant local differences.
-          It is also worth noting that transport represents a relatively small amount of the GHG emissions.
-        </p>
-        <p>
-          Data is reported as greenhouse gas emissions in kilograms of CO2-equivalents per 1 kilogram of food product.
-        </p>
-      </div>
-      <script>
-        plotOecdMeatSorted2019(document.currentScript.parentNode.getAttribute('id'),
-          "https://api.dashboard.eco/poore-nemecek-2018",
-          redisPooreNemecek2018);
       </script>
     </div>
 
