@@ -105,11 +105,11 @@ function plotOecdMeat(elmt, url, results) {
 //
 function plotOecdMeatSorted2019(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  console.log('OECD Meat Sorted:', url, results.data.length);
+  console.log('OECD Meat Sorted:', url, results.data.datasets.length);
   insertSourceAndLink(results, id, url);
 
   // Add colors to the datasets
-  let color = colorArrayToAlpha(mkColorArray(4), 0.7);
+  let color = colorArrayToAlpha(mkColorArray(results.data.datasets.length), 0.7);
   results.data.datasets.forEach(d => {
     d.backgroundColor = color.pop();
   });
@@ -118,9 +118,8 @@ function plotOecdMeatSorted2019(elmt, url, results) {
     type: 'horizontalBar',
     data: results.data,
     options: {
-      aspectRatio: 0.8,
+      aspectRatio: 0.75,
       tooltips: {
-        //mode: 'label',
         itemSort: (a, b) => b.datasetIndex - a.datasetIndex,
         callbacks: {
           label: (ttItem, data) => data.datasets[ttItem.datasetIndex].label + ': ' + Math.round(ttItem.value * 10) / 10 + ' kg',
@@ -141,7 +140,8 @@ function plotOecdMeatSorted2019(elmt, url, results) {
         xAxes: [{
           stacked: true,
           ticks: {
-            callback: v => v + ' kg'
+            callback: v => v + ' kg',
+            min: 0
           }
         }]
       }
@@ -382,8 +382,6 @@ function plotPlasticWaste(elmt, results, url) {
 
   let color = mkColorArray(1).pop();
   results.data.datasets.forEach(d => d.backgroundColor = color);
-
-  //  results.data.datasets[0].backgroundColor = color[Math.floor(Math.random() * n)];
 
   new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',

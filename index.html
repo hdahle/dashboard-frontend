@@ -201,6 +201,30 @@
       </script>
     </div>
 
+    <!-- OECD Meat -->
+    <div class="w3-row" id="poore-nemecek">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Greenhouse gas emissions from various foods</h2>
+        <h4>April 30, 2021</h4>
+        <p>
+          Ourworldindata has an excellent article based on Poore and Nemecek 2018, based on data from 38000 farms in 119
+          countries. This is the most thorough analysis of farming and green house gas emissions to date.
+        </p>
+        <p>
+          It is worth noting that the data represents global averages, hence there may be significant local differences.
+          It is also worth noting that transport represents a relatively small amount of the GHG emissions.
+        </p>
+        <p>
+          Data is reported as emissions in kilograms of CO2-equivalents from 1 kilogram of farmed food.
+        </p>
+      </div>
+      <script>
+        plotOecdMeatSorted2019(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/poore-nemecek-2018",
+          redisPooreNemecek2018);
+      </script>
+    </div>
+
 
     <!-- OECD Meat -->
     <div class="w3-row" id="oecd-meat-2020">
