@@ -103,7 +103,7 @@ function plotOecdMeat(elmt, url, results) {
 //
 // OECD Meat Consumption 2020
 //
-function plotOecdMeatSorted2019(elmt, url, results) {
+function plotOecdMeatSorted2019(elmt, url, results, minX) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('OECD Meat Sorted:', url, results.data.datasets.length);
   insertSourceAndLink(results, id, url);
@@ -140,8 +140,12 @@ function plotOecdMeatSorted2019(elmt, url, results) {
         xAxes: [{
           stacked: true,
           ticks: {
-            callback: v => v + ' kg',
-            min: 0
+            callback: v => {
+              if (v < 0) return null;
+              if (v === 0) return v;
+              else return v + ' kg'
+            },
+            min: (minX === undefined) ? 0 : minX
           }
         }]
       }
