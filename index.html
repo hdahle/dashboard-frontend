@@ -196,6 +196,25 @@
       </script>
     </div>
 
+    <!-- Emissions by fuel type -->
+    <div class="w3-row" id="plotEmissionsByFuelType">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Global Carbon Project: CO2 emissions from fossil fuels increased by only 0.1&percnt; in 2019.
+          A decrease in emissions of about 7&percnt; is expected in 2020 due to Covid
+        </h2>
+        <h4>Updated May 24, 2021</h4>
+        According to fossil fuel and cement production emissions data provided by the
+        <a href="https://www.globalcarbonproject.org/carbonbudget/">
+          Global Carbon Project
+        </a>
+        there was a 2&percnt; increase in CO2 emissions from fossil fuels in 2018, and a 0.1&percnt; increase in 2019.
+        Coal is the number one source of CO2.
+
+      </div>
+      <script>
+        plotEmissionsByFuelType(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/emissions-by-fuel-type', redisEmissionsByFuelType);
+      </script>
+    </div>
 
     <!-- Poore Nemacek 2018 -->
     <div class="w3-row" id="poore-nemecek">
@@ -1114,25 +1133,7 @@
       </script>
     </div>
 
-    <!-- Emissions by fuel type -->
-    <div class="w3-row" id="plotEmissionsByFuelType">
-      <div class="w3-container w3-col m6 l7">
-        <h2>Global Carbon Project: CO2 emissions from fossil fuels increased by only 0.1&percnt; in 2019.
-          A decrease in emissions of about 7&percnt; is expected in 2020 due to Covid
-        </h2>
-        <h4>Updated May 24, 2021</h4>
-        According to fossil fuel and cement production emissions data provided by the
-        <a href="https://www.globalcarbonproject.org/carbonbudget/">
-          Global Carbon Project
-        </a>
-        there was a 2&percnt; increase in CO2 emissions from fossil fuels in 2018, and a 0.1&percnt; increase in 2019.
-        Coal is the number one source of CO2.
 
-      </div>
-      <script>
-        plotEmissionsByFuelType(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/emissions-by-fuel-type', redisEmissionsByFuelType);
-      </script>
-    </div>
 
     <!-- Ozone Hole -->
     <div class="w3-row" id="plotOzone">
