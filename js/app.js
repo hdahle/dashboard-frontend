@@ -63,7 +63,7 @@ function plotOecdMeat(elmt, url, results) {
   insertSourceAndLink(results, id, url);
   // We only want the World dataset
   let country = results.data.find(x => x.country === "World");
-  let color = colorArrayToAlpha(mkColorArray(country.datasets.length), 0.8);
+  let color = colorArrayToAlpha(mkColorArray(country.datasets.length), 0.7);
   // Add colors to the datasets
   country.datasets.forEach(d => {
     d.backgroundColor = color.pop();
