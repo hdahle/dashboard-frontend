@@ -176,6 +176,26 @@
 
   <!-- Limit content width to 960px -->
   <div class="w3-content w3-padding-32">
+    <!-- Global Oil Production -->
+    <div class="w3-row" id="plotEiaOil">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Global oil production: almost 100 mb/d (million barrels per day) in 2019, 92 mb/d in 2020 due to Covid-19
+        </h2>
+        <h4>Updated May 25, 2021</h4>
+        According to April 30 2021 data from the US Energy Information Administration EIA,
+        global oil production is now about 92 million barrels per day, down from 98 mb/d in 2019.
+        <p>According to the
+          <a href="https://www.iea.org/reports/oil-2021" target="_blank" rel="noopener">International Energy Agency IEA
+          </a>, global oil demand will reach 104 million barrels per day in 2026. The growth in demand will come from
+          emerging and developing countries, with Asian oil demand increasing sharply. OECD demand is not expected to
+          return to pre-Covid levels.
+        </p>
+      </div>
+      <script>
+        plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-oil", redisEiaGlobalOil);
+      </script>
+    </div>
+
 
     <!-- Poore Nemacek 2018 -->
     <div class="w3-row" id="poore-nemecek">
@@ -1030,26 +1050,6 @@
       </div>
       <script>
         plotWorldPopulation(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/WPP2019_TotalPopulationByRegion', redisPopulationByRegion);
-      </script>
-    </div>
-
-    <!-- Global Oil Production -->
-    <div class="w3-row" id="plotEiaOil">
-      <div class="w3-container w3-col m6 l7">
-        <h4>Updated May 25, 2021</h4>
-        <h2>Global oil production: almost 100 mb/d (million barrels per day) in 2019, 92 mb/d in 2020 due to Covid-19
-        </h2>
-        According to April 30 2021 data from the US Energy Information Administration EIA,
-        global oil production is now about 92 million barrels per day, down from 98 mb/d in 2019.
-        <p>According to the
-          <a href="https://www.iea.org/reports/oil-2021" target="_blank" rel="noopener">International Energy Agency IEA
-          </a>, global oil demand will reach 104 million barrels per day in 2026. The growth in demand will come from
-          emerging and developing countries, with Asian oil demand increasing sharply. OECD demand is not expected to
-          return to pre-Covid levels.
-        </p>
-      </div>
-      <script>
-        plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-oil", redisEiaGlobalOil);
       </script>
     </div>
 
