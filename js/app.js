@@ -1346,7 +1346,7 @@ function plotEmissionsNorway(elmt, url, results) {
     c.shift();
   });
   makeStackedLineChart(id.canvasId,
-    { max: 2019 },
+    { max: 2020 },
     { callback: (value) => Math.trunc(value / 1000) + " Mt" },
     datasets
   );
