@@ -176,6 +176,41 @@
 
   <!-- Limit content width to 960px -->
   <div class="w3-content w3-padding-32">
+
+
+    <!-- Plot Renewables Cost -->
+    <div class="w3-row" id="irena-cost-of-renewables-2020">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Cost of renewable power generation decreasing sharply, now competitive with fossil fuel based power
+          generation</h2>
+        <h4>October 5, 2021</h4>
+        <p>
+          IRENA has updated
+          <a href="https://www.irena.org/publications/2020/Jun/Renewable-Power-Costs-in-2019" ref="noreferrer"
+            rel="noopener">
+            their annual detailed study
+          </a> on the cost of utility-scale power generation at a global level based on renewable resources.
+          The report shows a continuing decreasing trend in LCOE (levelised cost of electricity, which includes
+          financial costs,
+          operations, management etc) for renewable power generation: New solar and wind power plants are now less
+          expensive than most coal-fired plants. Since 2010, the cost of utility scale solar power has decreased by
+          85&percnt; and the cost of on-shore wind has decreased by 56&percnt; with continuing price reduction expected.
+        </p>
+        <p>
+          The grey band in the chart represents the range of costs for fossil fuel based plants.
+        </p>
+        <p>
+          According to IRENA, the comparable costs for fossil fuel based power plants varies from 0.05 $/kWh (new
+          Chinese coal-fired plants located close to coal mines) to 0.177 $/kWh.
+        </p>
+      </div>
+      <script>
+        plotIrena(document.currentScript.parentNode.getAttribute('id'), redisIrena2021, 'https://api.dashboard.eco/irena-2021');
+      </script>
+    </div>
+
+
+
     <!-- Global Oil Production -->
     <div class="w3-row" id="plotEiaOil">
       <div class="w3-container w3-col m6 l7">

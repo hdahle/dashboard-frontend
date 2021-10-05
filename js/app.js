@@ -450,7 +450,7 @@ function plotIrena(elmt, results, url) {
         callbacks: {
           label: (ttItem) => {
             if (ttItem.datasetIndex > 1) return null;
-            let year = (ttItem.datasetIndex == 0) ? "2010" : "2019";
+            let year = (ttItem.datasetIndex == 0) ? "2010" : "2020";
             return year + ': ' + ttItem.value + ' $/kWh'
           }
         }

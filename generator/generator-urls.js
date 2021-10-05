@@ -140,6 +140,10 @@ const urlmap = [
     varName: "redisIrena2020"
   },
   {
+    url: "http://api.dashboard.eco/irena-2021",
+    varName: "redisIrena2021"
+  },
+  {
     url: "http://api.dashboard.eco/eia-lcoe-2025",
     varName: "redisEiaLcoe"
   },
