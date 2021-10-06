@@ -414,7 +414,6 @@ function plotIrena(elmt, results, url) {
 
   results.data.datasets.forEach(d => {
     d.backgroundColor = color.pop();
-    d.borderWidth = 0;
   });
 
   new Chart(document.getElementById(id.canvasId), {
