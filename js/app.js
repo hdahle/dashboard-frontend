@@ -76,8 +76,8 @@ function plotOecdMeat(elmt, url, results) {
       tooltips: {
         itemSort: (a, b) => b.datasetIndex - a.datasetIndex,
         callbacks: {
-          label: (tooltipItem, data) =>
-            data.datasets[tooltipItem.datasetIndex].label + ': ' + Math.round(tooltipItem.value * 10) / 10 + ' kg'
+          label: (ttItem, data) =>
+            data.datasets[ttItem.datasetIndex].label + ': ' + Math.round(ttItem.value * 10) / 10 + ' kg'
         }
       },
       scales: {
@@ -358,7 +358,7 @@ function plotGlobalEwaste(elmt, results, url) {
     options: {
       tooltips: {
         callbacks: {
-          label: (tooltipItem) => tooltipItem.value + ' kg per capita'
+          label: (ttItem) => ttItem.value + ' kg per capita'
         }
       },
       scales: {
@@ -412,33 +412,10 @@ function plotIrena(elmt, results, url) {
 
   let color = mkColorArray(results.data.datasets.length);
 
-  // add padding to labels
-  results.data.fuels.unshift('');
-  results.data.labels = results.data.fuels;
-  // add padding to datasets
-  results.data.datasets.forEach(d => {
-    d.data.unshift(0);
-  });
-  // Add colors to the datasets
+  //results.data.labels = results.data.fuels;
   results.data.datasets.forEach(d => {
     d.backgroundColor = color.pop();
-    d.backgroundColor = (d.label == 2010) ? colorToAlpha(d.backgroundColor, 0.3) : d.backgroundColor;
     d.borderWidth = 0;
-  });
-  results.data.datasets.push({
-    label: 'Fossil fuels, lower bound',
-    type: 'line',
-    pointRadius: 0,
-    backgroundColor: 'white',
-    borderDash: [5, 5],
-    data: [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
-  });
-  results.data.datasets.push({
-    label: 'Fossil fuels, upper bound',
-    type: 'line',
-    pointRadius: 0,
-    borderDash: [5, 5],
-    data: [0.177, 0.177, 0.177, 0.177, 0.177, 0.177, 0.177, 0.177, 0.177],
   });
 
   new Chart(document.getElementById(id.canvasId), {
@@ -448,10 +425,10 @@ function plotIrena(elmt, results, url) {
       tooltips: {
         mode: 'label',
         callbacks: {
-          label: (ttItem) => {
+          label: (ttItem, d) => {
+            const year =  d.datasets[ttItem.datasetIndex].label;
             if (ttItem.datasetIndex > 1) return null;
-            let year = (ttItem.datasetIndex == 0) ? "2010" : "2020";
-            return year + ': ' + ttItem.value + ' $/kWh'
+            return year + ': ' +  ttItem.value + ' $/kWh'
           }
         }
       },
@@ -459,10 +436,6 @@ function plotIrena(elmt, results, url) {
         xAxes: [{
           gridLines: {
             display: false
-          },
-          ticks: {
-            min: 'Biomass',
-            max: 'Wind onshore',
           }
         }],
         yAxes: [{
@@ -625,12 +598,12 @@ function plotCoronaDeaths3(elmt, json) {
           mode: 'index',
           callbacks: {
             title: (tooltip) => moment(tooltip[0].xLabel, 'YYYY-MM-DD').format('MMMM D, YYYY'),
-            label: (tooltipItem, data) => {
-              let t = data.datasets[tooltipItem.datasetIndex].tooltipText;
+            label: (ttItem, data) => {
+              let t = data.datasets[ttItem.datasetIndex].tooltipText;
               t = (t === undefined) || (t === null) ? '' : t;
               t0 = Array.isArray(t) && t.length > 0 ? t[0] : t;
               t1 = Array.isArray(t) && t.length > 1 ? t[1] : '';
-              return t0 + Math.round(tooltipItem.yLabel) + t1;
+              return t0 + Math.round(ttItem.yLabel) + t1;
             }
           }
         },
@@ -1246,12 +1219,12 @@ function plotScatter(elmt, urls, res, labels, xTicks = {}, yTicks = {}, xAxesTyp
     options: {
       tooltips: {
         callbacks: {
-          label: (tooltipItem) => {
-            let x = tooltipItem.xLabel;
+          label: (ttItem) => {
+            let x = ttItem.xLabel;
             if (moment(x, 'YYYY-MM-DD', true).isValid()) {
               x = moment(x, 'YYYY-MM-DD').format('MMM YYYY');
             }
-            return x + ': ' + tooltipItem.yLabel;
+            return x + ': ' + ttItem.yLabel;
           },
         }
       },
@@ -1648,7 +1621,7 @@ function plotBothCCS(elmt, url, results) {
       tooltips: {
         axis: 'y',
         callbacks: {
-          label: (tooltipItem) => tooltipItem.value + ' Mt CO2 captured'
+          label: (ttItem) => ttItem.value + ' Mt CO2 captured'
         }
       },
       legend: {
