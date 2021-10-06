@@ -412,7 +412,6 @@ function plotIrena(elmt, results, url) {
 
   let color = mkColorArray(results.data.datasets.length);
 
-  //results.data.labels = results.data.fuels;
   results.data.datasets.forEach(d => {
     d.backgroundColor = color.pop();
     d.borderWidth = 0;
