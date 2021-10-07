@@ -284,15 +284,17 @@ function plotBitcoin(elmt, url, url2, results, results2) {
 
   let datasets = [results.data.datasets.pop(), results2.data.datasets.pop()];
   const leftColor = 'rgba(140,40,40,0.9)';
-  const leftColorSoft = 'rgba(140,40,40,0.1)';
   const rightColor = 'rgba(40,140,40,0.9)';
-  const rightColorSoft = 'rgba(40,140,40,0.1)';
   datasets[0].borderColor = leftColor;
-  datasets[0].backgroundColor = leftColorSoft;
-  datasets[0].yAxisID = 'L'
+  datasets[0].backgroundColor = leftColor;
+  datasets[0].yAxisID = 'L';
+  datasets[0].showLine = false;
+  datasets[0].pointRadius = 1;
   datasets[1].borderColor = rightColor;
-  datasets[1].backgroundColor = rightColorSoft;
+  datasets[1].backgroundColor = rightColor;
   datasets[1].yAxisID = 'R';
+  datasets[1].showLine = false;
+  datasets[1].pointRadius = 1;
 
   new Chart(document.getElementById(id.canvasId), {
     type: 'line',
@@ -308,9 +310,6 @@ function plotBitcoin(elmt, url, url2, results, results2) {
             min: 0,
             fontColor: leftColor
           },
-          gridLines: {
-            color: leftColorSoft
-          }
         }, {
           id: 'R',
           position: 'right',
@@ -318,9 +317,6 @@ function plotBitcoin(elmt, url, url2, results, results2) {
             min: 0,
             fontColor: rightColor
           },
-          gridLines: {
-            color: rightColorSoft
-          }
         }],
         xAxes: [{
           type: 'time',
@@ -1641,38 +1637,17 @@ function plotSafety(elmt) {
   insertSourceAndLink(redisMortalityElectricity, id, 'https://api.dashboard.eco/mortality-electricity');
   insertSourceAndLink(redisMortalityElectricitySovacool, id, 'https://api.dashboard.eco/mortality-electricity-sovacool');
   insertSourceAndLink(redisMortalityElectricityMarkandya, id, 'https://api.dashboard.eco/mortality-electricity-markandya');
-  let d = redisMortalityElectricity.data;
-  console.log('Safety electricity:', d.length);
-  let colors = mkColorArray(2);
-  let lineColor = d.map(x => x.deaths > 1 ? colors[0] : colors[1]);
+  let data = redisMortalityElectricity.data;
+  console.log('Safety electricity:', data.datasets.length);
+  let color = mkColorArray(1)[0];
+
+  data.datasets.forEach(dataset => {
+    dataset.backgroundColor = color;
+    dataset.minBarLength = 3;
+  });
+
   new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
-    data: {
-      labels: d.map(x => x.resource),
-      datasets: [{
-        data: d.map(x => x.deaths),
-        backgroundColor: lineColor,
-        borderColor: lineColor,
-        minBarLength: 3,
-        categoryPercentage: 0.5,
-      }]
-    },
-    plugins: [],
-    options: {
-      tooltips: {
-        axis: 'y',
-        callbacks: {
-          label: (ttItem) => ttItem.value + ' deaths per TWh electricity'
-        }
-      },
-      legend: {
-        display: false
-      },
-      title: {
-        text: 'Deaths per TWh generated',
-        display: true,
-        position: 'top'
-      }
-    }
+    data: data
   });
 }
