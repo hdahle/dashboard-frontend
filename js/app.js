@@ -1612,13 +1612,7 @@ function plotBothCCS(elmt, url, results) {
           ticks: { callback: v => v + ' Mt' }
         }]
       },
-      tooltips: {
-        axis: 'y',
-        callbacks: {
-          label: (ttItem) => ttItem.value + ' Mt CO2 captured'
-        }
-      },
-      legend: {
+     legend: {
         display: false
       },
       title: {
