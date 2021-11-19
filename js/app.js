@@ -163,6 +163,7 @@ function plotEiaLcoe(elmt, results, url) {
   insertSourceAndLink(results, id, url);
   let color = mkColorArray(3);
 
+  /*
   // Replace dataset colors
   let bgColor = results.data.datasets[0].backgroundColor;
   for (let i = 0; i < bgColor.length; i++) {
@@ -170,7 +171,7 @@ function plotEiaLcoe(elmt, results, url) {
     if (bgColor[i] === "yellow") bgColor[i] = color[0];
     if (bgColor[i] === "green") bgColor[i] = color[2];
   };
-
+*/
   new Chart(document.getElementById(id.canvasId), {
     type: 'bar',
     options: {
