@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>futureplanet.eco</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/w3.css">
+<link rel="stylesheet" href="css/w3-custom-theme.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Roboto+Condensed&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+  body,
+  html {
+    font-family: "Roboto", sans-serif;
+    height: 100%;
+    word-wrap: break-word;
+  }
+
+  h2 {
+    font-family: "Roboto Condensed", sans-serif;
+    font-weight: 700;
+    background-color: transparent;
+    color: #444;
+  }
+
+  h4,
+  .fp-small-font {
+    font-weight: normal;
+    background-color: transparent;
+    letter-spacing: 0.5px;
+    font-size: small;
+    text-rendering: optimizeLegibility;
+    color: #777;
+  }
+
+  .fp-ppm-font {
+    font-weight: 100;
+    font-size: xx-large;
+  }
+
+  .fp-white-font {
+    letter-spacing: 1px;
+    text-rendering: optimizeLegibility;
+    color: #fff;
+  }
+
+  .fp-logo-font {
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-rendering: optimizeLegibility;
+    color: #fff;
+  }
+
+  .fp-logo-eco-font {
+    font-weight: normal;
+    letter-spacing: 1px;
+  }
+
+  .fa-twitter,
+  .fa-instagram {
+    background: white;
+    color: black;
+    text-decoration: none;
+  }
+
+  .w3-row {
+    padding-bottom: 76px;
+  }
+
+  /* Hero-image */
+  .bgimage {
+    background-attachment: fixed;
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #777;
+    min-height: 300px;
+  }
+
+  /* Hero-image for small screens */
+  @media only screen and (max-width:812px) {
+    .bgimage {
+      background-image:
+        url('img/gabriel-miklos-unsplash-600x600.jpg');
+      background-attachment: scroll;
+    }
+  }
+
+  /* Hero-image for larger screens */
+  @media only screen and (min-width:813px) {
+    .bgimage {
+      background-image:
+        url('img/gabriel-miklos-unsplash-1600x400.jpg');
+      background-attachment: scroll;
+    }
+  }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="js/redis-values.js"></script>
+<script src="js/app.js"></script>
+<script src="js/cb.js "></script>
+<script src="js/dom.js"></script>
+
+<body>
+  <div id="pngPlaceHolder" class="w3-hide">
+
+  </div>
+  <div class="w3-top">
+    <div class="w3-bar w3-theme">
+      <div>
+        <a href="#Top" class="w3-bar-item w3-button fp-logo-font">
+          futureplanet<span class="fp-logo-eco-font">.eco</span>
+        </a>
+        <a href="#About" class="w3-bar-item w3-button w3-hide-small w3-right">About</a>
+        <!--<a href="#API" class="w3-bar-item w3-button w3-hide-small w3-right">API</a>-->
+        <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
+          onclick="clickBurger()"><i class="fa fa-bars"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu on small screens  -->
+  <div id="burger" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-theme w3-top" style="margin-top:38px">
+    <!-- <a href="#API" class="w3-bar-item w3-button" onClick="clickBurger()">API</a> -->
+    <a href="#About" class="w3-bar-item w3-button" onClick="clickBurger()">About</a>
+  </div>
+
+  <script>
+    function clickBurger() {
+      var x = document.getElementById("burger");
+      if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+      } else {
+        x.className = x.className.replace(" w3-show", "");
+      }
+    }
+  </script>
+
+  <!-- Landing page header: Image with parallax-scrolling -->
+
+  <div class="bgimage w3-display-container" id="Top">
+    <!-- Text -->
+    <div class="w3-display-bottomright w3-right">
+      <!-- Todays CO2 level -->
+      <div class="w3-content" id="dailyCO2">
+        <div class="w3-container fp-white-font">
+          <div class="w3-padding-16 w3-right-align w3-small">
+            Atmospheric CO2
+            <span id="fp-co2-date"></span><br>
+            <span id="fp-co2-ppm" class="fp-ppm-font"></span><br>
+            <span id="fp-co2-last"></span> than 1 year ago<br>
+            <span id="fp-co2-ten"></span> than 10 years ago<br>
+            Source:
+            <a href="https://esrl.noaa.gov/gmd/" rel="noopener">NOAA ESRL</a>
+          </div>
+          <script>
+            if (1) {
+              let d = redisCO2Now.data[0];
+              document.getElementById('fp-co2-date').innerHTML = moment(d.date, 'YYYY-MM-DD').format('dddd MMM D');
+              document.getElementById('fp-co2-ppm').innerHTML = Math.trunc(d.value) + ' ppm';
+              document.getElementById('fp-co2-last').innerHTML =
+                Math.trunc(1000 * (d.value - d.valueLastYear) / d.valueLastYear) / 10 + '&percnt;' +
+                ((d.value > d.valueLastYear) ? ' higher' : ' lower');
+              document.getElementById('fp-co2-ten').innerHTML =
+                Math.trunc(1000 * (d.value - d.value10yrsAgo) / d.value10yrsAgo) / 10 + '&percnt;' +
+                ((d.value > d.value10yrsAgo) ? ' higher' : ' lower');
+            }
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Limit content width to 960px -->
+  <div class="w3-content w3-padding-32">
+
+
+    <!-- Plot Renewables Cost -->
+    <div class="w3-row" id="irena-cost-of-renewables-2020">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Cost of renewable power generation decreasing sharply, now competitive with fossil fuel based power
+          generation</h2>
+        <h4>October 5, 2021</h4>
+        <p>
+          IRENA has updated
+          <a href="https://www.irena.org/publications/2020/Jun/Renewable-Power-Costs-in-2019" ref="noreferrer"
+            rel="noopener">
+            their annual detailed study
+          </a> on the cost of utility-scale power generation at a global level based on renewable resources.
+          The report shows a continuing decreasing trend in LCOE (levelised cost of electricity, which includes
+          financial costs,
+          operations, management etc) for renewable power generation: New solar and wind power plants are now less
+          expensive than most coal-fired plants. Since 2010, the cost of utility scale solar power has decreased by
+          85&percnt; and the cost of on-shore wind has decreased by 56&percnt; with continuing price reduction expected.
+        </p>
+        <p>
+          According to IRENA, the comparable costs for newly commissioned fossil fuel based power plants varies from 0.055 $/kWh to 0.148 $/kWh.
+        </p>
+      </div>
+      <script>
+        plotIrena(document.currentScript.parentNode.getAttribute('id'), redisIrena2021, 'https://api.dashboard.eco/irena-2021');
+      </script>
+    </div>
+
+
+
+    <!-- Global Oil Production -->
+    <div class="w3-row" id="plotEiaOil">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Global oil production: almost 100 mb/d (million barrels per day) in 2019, 92 mb/d in 2020 due to Covid-19
+        </h2>
+        <h4>Updated May 25, 2021</h4>
+        According to April 30 2021 data from the US Energy Information Administration EIA,
+        global oil production is now about 92 million barrels per day, down from 98 mb/d in 2019.
+        <p>According to the
+          <a href="https://www.iea.org/reports/oil-2021" target="_blank" rel="noopener">International Energy Agency IEA
+          </a>, global oil demand will reach 104 million barrels per day in 2026. The growth in demand will come from
+          emerging and developing countries, with Asian oil demand increasing sharply. OECD demand is not expected to
+          return to pre-Covid levels.
+        </p>
+      </div>
+      <script>
+        plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-oil", redisEiaGlobalOil);
+      </script>
+    </div>
+
+    <!-- Emissions by fuel type -->
+    <div class="w3-row" id="plotEmissionsByFuelType">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Global Carbon Project: CO2 emissions from fossil fuels increased by only 0.1&percnt; in 2019.
+          A decrease in emissions of about 7&percnt; is expected in 2020 due to Covid
+        </h2>
+        <h4>Updated May 24, 2021</h4>
+        According to fossil fuel and cement production emissions data provided by the
+        <a href="https://www.globalcarbonproject.org/carbonbudget/">
+          Global Carbon Project
+        </a>
+        there was a 2&percnt; increase in CO2 emissions from fossil fuels in 2018, and a 0.1&percnt; increase in 2019.
+        Coal is the number one source of CO2.
+
+      </div>
+      <script>
+        plotEmissionsByFuelType(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/emissions-by-fuel-type', redisEmissionsByFuelType);
+      </script>
+    </div>
+
+    <!-- Poore Nemacek 2018 -->
+    <div class="w3-row" id="poore-nemecek">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Food production and greenhouse gas emissions: Data from 119 countries and 38000 farms</h2>
+        <h4>April 30, 2021</h4>
+        <p>
+          Ourworldindata has an excellent <a href="https://ourworldindata.org/food-choice-vs-eating-local"
+            rel="noopener">article</a> based on Poore and Nemecek 2018, based on data from 38000 farms in 119
+          countries. This is the most thorough analysis of farming and green house gas emissions to date.
+        </p>
+        <p>
+          The data represents global averages, hence there may be significant local differences.
+          Interestingly, at a global level transport represents a small amount of the GHG emissions.
+        </p>
+        <p>
+          The data also shows that nuts and a few other foods have a negative land use change figure, as carbon is
+          stored in the trees. Most other food sources require deforestation.
+        </p>
+        <p>
+          Data is reported as greenhouse gas emissions in kilograms of CO2-equivalents per 1 kilogram of food product.
+        </p>
+      </div>
+      <script>
+        plotOecdMeatSorted2019(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/poore-nemecek-2018",
+          redisPooreNemecek2018,
+          -2);
+      </script>
+    </div>
+
+    <!-- Plastic Waste -->
+    <div class="w3-row" id="plastic-waste">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Plastic Waste: Top Countries 2016</h2>
+        <h4>April 29, 2021</h4>
+        <p>
+          According to research by K.L.Law et.al. the top plastic waste producing countries in the world are USA and
+          United Kingdom.
+          USA generates 130 kg plastic waste per person every year - this is about 2.5 kg
+          per person per week.
+        </p>
+        <p>
+          While EU citizens generate less than half of the waste compared to Americans, it is still more than 1 kg per
+          week for every person.
+
+          India and China are also big polluters, but not on a per capita basis with about 20 kg and 16 kg per person
+          per year.
+        </p>
+      </div>
+      <script>
+        plotPlasticWaste(document.currentScript.parentNode.getAttribute('id'), redisPlasticWaste, 'https://api.dashboard.eco/plastic-waste-2016');
+      </script>
+    </div>
+
+
+    <!-- OECD Meat -->
+    <div class="w3-row" id="oecd-meat-2020">
+      <div class="w3-container w3-col m6 l7">
+        <h2>OECD/FAO: Global meat consumption keeps increasing, but consumption in 2019 was reduced due to African Swine
+          Fever outbreak in Asia </h2>
+        <h4>April 26, 2021</h4>
+        <p>
+          OECD/FAO agricultural outlook shows how meat consumption is increasing globally. The reduction in consumption
+          in 2019 is due to the <a href="http://www.fao.org/ag/againfo/programmes/en/empres/ASF/situation_update.html"
+            rel="noopener"></a>African Swine Fever outbreak in Asia.</a>
+        </p>
+        <p>
+          Consumption data is reported in kilograms per capita, using ready-to-cook retail weight.
+        </p>
+      </div>
+      <script>
+        plotOecdMeat(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/oecd-meat-2020",
+          redisOecdMeat2020);
+      </script>
+    </div>
+
+    <!-- OECD Meat Sorted List for a Single Year-->
+    <div class="w3-row" id="oecd-meat-sorted-2019">
+      <div class="w3-container w3-col m6 l7">
+        <h2>OECD/FAO: US meat consumption at 3 times world average and 30 times that of some developing countries </h2>
+        <h4>April 27, 2021</h4>
+        <p>
+          OECD/FAO agricultural outlook shows how western countries consume far more meat than the world average.
+          Top meat consuming countries are USA, Israel, Argentina, Australia with 90-100 kg meat per capita per year.
+          Argentina is the top beef-consuming country with almost 40 kg beef per capita. Israel is top poultry consumer
+          with 64 kg per capita.
+        </p>
+        <p>
+          Consumption data is reported in kilograms per capita, using ready-to-cook retail weight.
+        </p>
+      </div>
+      <script>
+        plotOecdMeatSorted2019(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/oecd-meat-sorted-2019",
+          redisOecdMeatSorted2019);
+      </script>
+    </div>
+
+    <!-- EMA Antibiotics in food production -->
+    <div class="w3-row" id="antibiotics">
+      <div class="w3-container w3-col m6 l7">
+        <h2>European Medicines Agency: Sales of antibiotics for food-producing animals in 31 European countries</h2>
+        <h4>March 25, 2021</h4>
+        <p>
+          A 2020 report from EMA shows that sales of antibiotics declined by 34&percnt; between 2011 and 2018.
+          Figures are reported as 'mg per PCU', where 1 PCU is a metric ton of slaughtered animals (includes
+          farmed fish).
+        </p>
+        <p>Usage of antibiotics varies widely between countries.</p>
+      </div>
+      <script>
+        plotAntibiotics(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/eu-antibiotics-details-2018",
+          redisEuAntibioticsDetails2018);
+      </script>
+    </div>
+
+
+    <!-- Eindhoven University Life cycle analysis -->
+    <div class="w3-row" id="eindhoven">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Eindhoven University: Battery electric cars have at least 50&percnt; lower life-time
+          CO2 emissions on standard EU electricity mix</h2>
+        <h4>March 2, 2021</h4>
+        <p>
+          A 2019 report from Eindhoven University 2019 shows that battery electric cars have significantly lower CO2
+          emissions compared to similar fossil-fueled cars over their lifetime using the EU electricity mix.
+        <p>
+          The report assumes that the cars are driven 250.000 km in their lifetime.
+        <p>
+          The report assumes an EU electricity mix is used, but also that this electricity mix will continue its trend
+          towards lower CO2 emissions. The Polestar report below does not make this assumption, and probably
+          overestimates the emissions of electric cars.
+        </p>
+      </div>
+      <script>
+        plotPolestar(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/eindhoven",
+          redisEindhoven);
+      </script>
+    </div>
+
+    <!-- Polestar / Volvo Life cycle analysis -->
+    <div class="w3-row" id="polestar">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Polestar 2 battery electric vehicle life-cycle analysis: Lower CO2 emissions than a comparable
+          petrol/gasoline powered car</h2>
+        <h4>March 1, 2021</h4>
+        <p>
+          In their own 2019 report, Polestar says that the Polestar 2 BEV (battery electric vehicle)
+          has lower CO2 emissions during its lifetime than a Volvo XC40 ICE (internal combustion engine).
+        <p>
+          Assumptions in the report: Cars are driven 200.000 km in their lifetime.
+          Chinese electricity mix is used for Polestar 2 manufacturing.
+          Polestar battery cells are manufactured in China and Korea.
+          Emissions for the XC40 includes 'well-to-tank' related emissions for petrol/gasoline.
+        <p>
+          The report finds that if the electricity is generated by wind power then the Polestar
+          generates less than half of the CO2 emissions of an XC40 petrol/gasoline powered car.
+          If the electricity is generated using an EU electricity mix then the emissions savings over the lifetime of
+          the car is about 27&percnt;
+        </p>
+      </div>
+      <script>
+        plotPolestar(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/polestar",
+          redisPolestar);
+      </script>
+    </div>
+
+    <!-- Bitcoin power consumption -->
+    <div class="w3-row" id="bitcoin-power">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Bitcoin power consumption is about 0.5&percnt; of global electricity consumption</h2>
+        <h4>February 17, 2021</h4>
+        <p>
+          This chart shows the Cambridge Bitcoin Electricity Consumption Index (CBECI) as estimated by the
+          <a href="https://cbeci.org/" rel="noopener">Cambridge Centre for Alternative Finance.</a>
+          If Bitcoin power consumption is 120 TWh per year, this is almost 0.5&percnt; of global electricity generation
+          which was about 25 000 TWh in 2018 (see another chart on this page).
+        </p>
+        <p>This chart is updated daily.</p>
+      </div>
+      <script>
+        plotBitcoin(document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/bitcoin-power",
+          "https://api.dashboard.eco/bitcoin-price",
+          redisBitcoinPower, redisBitcoinPrice);
+      </script>
+    </div>
+
+    <!-- Global Temperature Anomaly -->
+    <div class="w3-row" id="plotGlobalTemp">
+      <div class="w3-container w3-col m6 l7">
+        <h2>NASA: 2020 and 2016 were the warmest years on record; 1.2&deg;C higher than global average surface
+          temperature in the late 1800's.</h2>
+        <h4>Updated January 15, 2021</h4>
+        The
+        <a href="https://data.giss.nasa.gov/gistemp/" rel="noopener">NASA GISTEMPv4 dataset</a>
+        shows that the global average surface temperature in 2020 was equal to the temperature in 2016 - these are the
+        two warmest years ever.
+        Read the NASA post <a href="https://www.giss.nasa.gov/research/news/20210114/" rel="noopener">here</a>
+        <p>
+          The HadCRUT4 dataset from
+          <a href="https://uea.ac.uk/" rel="noopener">Climatic Research Unit, Univ of East
+            Anglia</a>
+          and
+          <a href="https://www.metoffice.gov.uk/weather/climate-change/organisations-and-reports/met-office-hadley-centre"
+            rel="noopener">Hadley Centre (UK Met Office)</a>
+          shows the same trend. Note that the HadCRUT dataset refers to the average of 1961-1990,
+          so it is slightly offset compared to the NASA dataset.
+          This chart is updated monthly.
+        </p>
+        <p>The UAH datset from
+          <a href="https://www.nsstc.uah.edu/nsstc/" rel="noopener">NSSTC, University of Alabama</a>
+          uses 1981-2010 as the reference so it offset from the other datasets, but is shows a similar increase in
+          global temperatures.
+        </p>
+      </div>
+      <script>
+        plotGlobalTemp(document.currentScript.parentNode.getAttribute('id'),
+          ["https://api.dashboard.eco/global-temperature-anomaly", "https://api.dashboard.eco/global-temperature-hadcrut", "https://api.dashboard.eco/global-temperature-uah"],
+          [redisGlobalTemperatureAnomaly, redisGlobalTemperatureHadcrut, redisGlobalTemperatureUah]
+        );
+      </script>
+    </div>
+
+
+    <!-- Global E-Waste -->
+    <div class="w3-row" id="globalewaste-2020">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Electrical and electronic waste in 2019: 7.3 kg per person on earth. Africa: 2.5kg per person, Norway: 24kg
+          per person</h2>
+        <h4>October 7, 2020</h4>
+        <p>The Global E-Waste Statistics Partnership has published the
+          <a href="https://globalewaste.org/">Global E-Waste Monitor 2020</a>
+          which shows that in 2019, the world generated 53.6 million tons of e-waste, or 7.3 kg of e-waste per person on
+          earth.
+        </p>
+        <p>
+          The amount of e-waste generated has grown by 20% since 2014, and is expected to keep growing.
+          Rich countries generate more e-waste per person than poor countries, with Norway generating the most.
+          About 17.4&percnt;of all e-waste is documented to be recycled, unchanged since 2014.
+        </p>
+      </div>
+      <script>
+        plotGlobalEwaste(document.currentScript.parentNode.getAttribute('id'), redisGlobalEwaste, 'https://api.dashboard.eco/globalewaste-2020');
+      </script>
+    </div>
+
+    <!-- Emissions by income -->
+    <div class="w3-row" id="oxfam-2020">
+      <div class="w3-container w3-col m6 l7">
+        <h2>CO2 emissions by global income group: The 10&percnt; richest people on earth are responsible for more than
+          half of all CO2 emissions</h2>
+        <h4>September 21, 2020</h4>
+        <p>This chart uses data from the
+          <a href="https://www.oxfam.org">Oxfam</a> and
+          <a href="https://www.sei.org/">Stockholm Environment Institute</a> joint research report on
+          how CO2 emissions
+          are distributed between income groups.
+        </p>
+        <p> The report shows that over the period from 1990 to 2015, the top 10&percnt; richest people on earth were
+          responsible
+          for more than half (52&percnt;) of all CO2 emitted in the period.
+          The poorest 50&percnt; contributed only 7&percnt; of cumulative emissions. The middle 40&percnt; income group
+          were behind 41&percnt; of all CO2 emissions.
+        </p>
+      </div>
+      <script>
+        plotOxfam(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/oxfam-2020', redisOxfam2020);
+      </script>
+    </div>
+
+    <!-- Emissions by sector 2016 -->
+    <div class="w3-row" id="wri-emissions-2016">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Greenhouse Gas emissions by sector, 2016</h2>
+        <h4>September 17, 2020</h4>
+        <p>This chart uses data from
+          <a href="https://www.wri.org">World Resources Institute</a> and shows
+          which sectors greenhouse gas (CO2, CH4, N20, etc)
+          emissions originate from.
+        </p>
+        <p>
+          WRI provides an even more detailed analysis into each sector. As an example, while 15.9&percnt; of emissions
+          are from transport, road transport is by far the largest contributor (11.9&percnt;)
+          with air transport at 1.9&percnt; and ship at 1.7&percnt;. Rail contributes only 0.4&percnt;
+        </p>
+      </div>
+      <script>
+        plotWri(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/wri-2016', redisWri2016);
+      </script>
+    </div>
+
+    <!-- Plot EIA LCOE -->
+    <div class="w3-row" id="eia-cost-of-electricity">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Cost of electricity generation in the United States in 2025:
+          Solar photovoltaic least expensive technology</h2>
+        <h4>September 10, 2020</h4>
+        <p>
+          A <a href="https://www.eia.gov/outlooks/aeo/pdf/electricity_generation.pdf" ref="noreferrer" rel="noopener">
+            report
+          </a> from the US Energy Information Administration has estimated the levelised cost of electricity (LCOE)
+          generation for new plants coming online in the United States in 2025.
+          LCOE includes all aspects of building and running plants such as
+          financial costs, fuel, operations, management and more.
+        </p>
+        <p>
+          Photovoltaic solar plants will be the least expensive, with roughly the same costs as geothermal,
+          combined cycle natural gas, and onshore wind turbines.
+        </p>
+        <p>
+          Coal-fired plants will remain an expensive option.
+          As another post on our site shows, offshore wind costs are decreasing rapidly but remain high in the near
+          term.
+        </p>
+      </div>
+      <script>
+        plotEiaLcoe(document.currentScript.parentNode.getAttribute('id'), redisEiaLcoe, 'https://api.dashboard.eco/eia-lcoe-2025');
+      </script>
+    </div>
+
+    <!-- Plot Renewables Cost -->
+    <div class="w3-row" id="irena-cost-of-renewables">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Cost of renewable power generation decreasing sharply, now competitive with fossil fuel based power
+          generation</h2>
+        <h4>September 9, 2020</h4>
+        <p>
+          IRENA has published
+          <a href="https://www.irena.org/publications/2020/Jun/Renewable-Power-Costs-in-2019" ref="noreferrer"
+            rel="noopener">
+            a detailed study
+          </a> on the cost of utility-scale power generation at a global level based on renewable resources.
+          The report shows a clear trend in LCOE (levelised cost of electricity, which includes financial costs,
+          operations, management etc) for renewable power generation: New solar and wind power plants are now less
+          expensive than most coal-fired plants. Since 2019, the cost of utility scale solar power has decreased by
+          82&percnt;
+        </p>
+          <p>
+          According to IRENA, the comparable costs for fossil fuel based power plants varies from 0.05 $/kWh (new
+          Chinese coal-fired plants located close to coal mines) to 0.177 $/kWh.
+        </p>
+      </div>
+      <script>
+        plotIrena(document.currentScript.parentNode.getAttribute('id'), redisIrena2020, 'https://api.dashboard.eco/irena-2020');
+      </script>
+    </div>
+
+    <!-- Plot Schiphol Air Traffic 
+    <div class="w3-row" id="schiphol-air-traffic">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Initial Covid-19 impact on air traffic: 85-90&percnt; decrease at Amsterdam Airport. Traffic now at
+          60&percnt;
+          of normal levels</h2>
+        <h4>September 3, 2020 &nbsp; | &nbsp; Chart updates daily</h4>
+        <p>
+          Amsterdam Airport Schiphol usually has about 650 airplane arrivals per day.
+          Since mid-March, the number of airplane arrivals has dropped to about 70-90 per day, a decrease of more than
+          85&percnt; </p>
+        <p>
+          Covid-19 travel restrictions: The Dutch government put in place restrictions
+          starting on March 13 2020 when all flights to and from China, Italy, Iran and South Korea were cancelled.
+          Since then a number of additional restrictions have been put in place, stopping all non-essential travel.
+        </p>
+        <p> This chart is updated daily.
+        </p>
+      </div>
+      <script>
+        plotSpainElectricity(
+          document.currentScript.parentNode.getAttribute('id'),
+          redisSchipholFlights,
+          [
+            'https://api.dashboard.eco/schiphol-flights-2020'
+          ]
+        );
+      </script>
+    </div>
+  -->
+    <!-- Plot Spain Electricity 
+    <div class="w3-row" id="spain-electricity-consumption">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Covid-19 impact in Spain: Electricity consumption down about 20&percnt;, now back to normal</h2>
+        The chart uses data from <a href="https://www.ree.es/en"   rel="noopener">Red Electrica de
+          Espana</a>,
+        the operator of the Spanish electricity grid.
+        The chart shows the daily electricity consumption for this year compared to the last five years.
+        In mid-March power consumption dropped about 20&percnt; with
+        weekday consumption down from about 750GWh to 600GWh per day.
+        Since the beginning of August electricity consumption is back at normal levels.
+        <p>Covid-19 in Spain: Events started shutting down in late February,
+          the first schools closures were announced on March 9,
+          and National lockdown started on March 14</p>
+        <p>The unusual pattern in the usage is because power consumption is far lower on weekends than on weekdays.
+          This chart is updated daily.</p>
+      </div>
+      <script>
+        plotSpainElectricity(
+          document.currentScript.parentNode.getAttribute('id'),
+          redisSpainElectricity,
+          [
+            'https://api.dashboard.eco/spain-electricity-2020',
+            'https://api.dashboard.eco/spain-electricity-2019',
+            'https://api.dashboard.eco/spain-electricity-2018',
+            'https://api.dashboard.eco/spain-electricity-2017',
+            'https://api.dashboard.eco/spain-electricity-2016'
+          ],
+          'GWh'
+        );
+      </script>
+    </div>
+  -->
+    <!-- Plot Norway Traffic 
+    <div class="w3-row" id="norway-traffic">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Covid-19 impact in Norway: Reduced road traffic, but now above normal levels</h2>
+        The
+        <a href="https://www.vegvesen.no" target="_blank" rel="noopener">
+          Norwegian Public Roads Administration
+        </a> monitors vehicle traffic at hundreds of locations in Norway.
+        This chart displays the number of cars per day passing Oslo/Ring 3/Smestad.
+        In March-April 2019, weekday traffic volume was around 55000 cars per hour,
+        weekend traffic 30000-35000 cars per day.
+        <p>After Covid-19 lockdown measures were implemented in Norway on March 12,
+          weekday traffic fell to about 32000 cars per day, but has since increased to beyond normal levels.
+        </p>
+        This chart is updated daily.
+      </div>
+      <script>
+        plotSpainElectricity(
+          document.currentScript.parentNode.getAttribute('id'),
+          redisNorwayTrafficSmestad,
+          [
+            'https://api.dashboard.eco/norway-traffic-smestad-2020',
+            'https://api.dashboard.eco/norway-traffic-smestad-2019'
+          ]
+        );
+      </script>
+    </div>
+  -->
+    <!-- Plot CO2 multiple annual charts -->
+    <div class="w3-row" id="co2-annual">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Will the Covid-19 pandemic cause a reduction in atmospheric CO2 levels? No.</h2>
+        <h4>Chart is updated daily</h4>
+        With reduced travel and reduced economic activity,
+        global CO2 emissions might be lower than previous years.
+        However, even slightly reduced CO2 emissions add to the overall CO2 levels in the atmosphere.
+        <p>
+          The chart uses data from
+          <a href="https://esrl.noaa.gov/gmd/" target="_blank" rel="noopener">
+            NOAA ESRL Global Monitoring Division, Boulder, Colorado, USA
+          </a> and
+          shows the atmospheric CO2 levels for each of the last 10 years.
+          Ever since measurements started there has been a consistent increase in atmospheric CO2
+          of about 0.5 - 0.6&percnt; per year.
+        </p>
+        <p> The atmospheric CO2 levels continues increasing year over year,
+          as indicated by the upper line in the chart.
+          This chart is updated daily based on measurements from the Mauna Loa Observatory.
+        </p>
+      </div>
+      <script>
+        plotDailyCO2(
+          document.currentScript.parentNode.getAttribute('id'),
+          "https://api.dashboard.eco/co2-daily",
+          redisCO2Daily
+        );
+      </script>
+    </div>
+
+    <!-- Corona Deaths Global -->
+    <div class="w3-row" id="corona-deaths-per-capita">
+      <div class="w3-container w3-col m4 l5">
+        <h2>Covid-19 confirmed deaths per million per day per region</h2>
+        <h4>September 16, 2020&nbsp; |&nbsp; Chart updates daily</h4>
+        This chart uses data from
+        <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
+          Johns Hopkins University Center for
+          Systems Science and Engineering </a> (JHU CSSE)
+        and shows the daily number of confirmed Covid-19 Coronavirus deaths. The chart is updated every 24 hours.
+        <p>
+          In these charts, Northern America consists of USA, Canada, Greenland, Bermuda and St Pierre and Miquelon.
+          Latin America
+          consists of all countries south of the USA, including the Caribbean countries.
+        </p>
+      </div>
+      <script>
+        plotCoronaDeathsMulti(
+          document.currentScript.parentNode.getAttribute('id'),
+          redisCovidDeathsRegions,
+          "https://api.dashboard.eco/covid-deaths-regions"
+        );
+      </script>
+    </div>
+
+    <!-- Plot Corona Deaths 3 Charts -->
+    <div id="plotCoronaDeathsMultiChart">
+      <div class="w3-row" style="padding-bottom:16px;">
+        <div class="w3-container">
+          <h2>Covid-19 confirmed deaths per day</h2>
+          These charts use data from
+          <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
+            Johns Hopkins University Center for
+            Systems Science and Engineering </a> (JHU CSSE)
+          <p>
+            The charts show the number of deaths per day averaged over the last seven days.
+          </p>
+          This chart is updated every 24 hours.
+        </div>
+      </div>
+      <div class="w3-row">
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch1"></canvas></div>
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch2"></canvas></div>
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch3"></canvas></div>
+      </div>
+      <div class="w3-row">
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch4"></canvas></div>
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch5"></canvas></div>
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch6"></canvas></div>
+      </div>
+      <div class="w3-row">
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch7"></canvas></div>
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch8"></canvas></div>
+        <div class="w3-mobile" style="width:33%;float:left;"><canvas id="ch9"></canvas></div>
+      </div>
+      <script>
+        plotCoronaDeaths3(
+          ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9"],
+          redisCovidDeathsSelect,
+          []
+        );
+      </script>
+    </div>
+
+
+    <!-- Plot Corona Deaths Per Capita -->
+    <div class="w3-row" id="corona-deaths-top-20">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Covid-19 deaths per capita: Top 20 countries</h2>
+        <h4>Chart is updated daily</h4>
+        This chart uses data from
+        <a href="https://systems.jhu.edu/" target="_blank" rel="noopener">
+          Johns Hopkins University Center for
+          Systems Science and Engineering </a> (JHU CSSE)
+        and shows the current top 20 countries hardest hit by Covid-19 in terms of confirmed deaths per one
+        million inhabitants.
+        Countries with less than 50000 inhabitants are not included.
+        <p>
+          This chart is updated every 24 hours. JHU CSSE updates their data around midnight UTC, this chart is
+          automatically updated shortly thereafter.
+        </p>
+      </div>
+      <script>
+        plotCoronaDeathsByCapita(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/covid-deaths-top", redisCovidDeathsTop);
+      </script>
+    </div>
+
+    <!-- Plot Resource Consumption -->
+    <div class="w3-row" id="circularity-resource-waste-2020">
+      <div class="w3-container w3-col m6 l7">
+        <h2>We use 100 billion tons of resources per year. Half of it goes straight to waste.</h2>
+        According to the
+        <a href="" target="_blank" rel="noopener">
+          Circularity Gap Report 2020</a>
+        we now (2017) use more than 100 billion tons (Gt) of resources every year.
+        That's about 13 tons per person on earth.
+        We use 24 Gt of biomass (plants and trees, seafoods and animals), 15 Gt of fossil fuels,
+        and over 60 Gt of metal ores and minerals.
+        <p>
+          38&percnt; of resources are used for buildings,
+          21&percnt; for food and drink,
+          9-10&percnt; each for transport, healthcare and services,
+          7&percnt; for consumables such as clothing and other stuff, and
+          5&percnt; for communication.
+        </p>
+        <p>
+          In the end, 55&percnt; is wasted (either in the environment or collected) and 14&percnt; goes up in smoke.
+          The rest, about 31&percnt; is in use. About 8&percnt; is recovered or reused.
+        </p>
+      </div>
+      <script>
+        plotCircularity(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/circularity-2020", redisCircularity2020);
+      </script>
+    </div>
+
+    <!-- Plot CO2 vs GDP -->
+    <div class="w3-row" id="co2-vs-gdp">
+      <div class="w3-container">
+        <!-- w3-col m6 l7" -->
+        <h2>CO2 emissions and GDP</h2>
+        With data from EIA, we can see a certain relationship between emissions and GDP (Gross Domestic Product).
+        The chart uses GDP per capita (at purchasing power parity) along the X-axis,
+        and emissions per capita along the Y-axis.
+        <p>
+          In other words, poor regions with low emissions end up in the lower left hand corner, while rich regions
+          with
+          high emissions are in the top right hand corner.
+        </p>
+      </div>
+      <script>
+        plotCO2vsGDP(document.currentScript.parentNode.getAttribute('id'));
+      </script>
+    </div>
+
+    <!-- Plot Glaciers -->
+    <div class="w3-row" id="norway-glaciers">
+      <div class="w3-container">
+        <h2>Glaciers in Norway are shrinking</h2>
+        All glaciers tracked by
+        <a href="https://nve.no" target="_blank" rel="noopener">NVE - Norwegian Water
+          Resources and Energy Directorate
+        </a>
+        over the last 100 years are shrinking.
+        The chart shows how the position of the front edge of the glaciers have retreated
+        by between 600 meters and 3.1 kilometers (2 miles).
+        <p class="w3-hide-large w3-hide-medium">This particular chart is best viewed in landscape mode.</p>
+      </div>
+      <script>
+        plotGlaciers(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/glacier-length-nor-', redisGlaciers);
+      </script>
+    </div>
+
+    <!-- Plot CO2 -->
+    <div class="w3-row" id="plotAtmosphericCO2">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Atmospheric CO2 levels are increasing</h2>
+        The <a href="https://www.esrl.noaa.gov/gmd/obop/mlo/" target="_blank" rel="noopener">
+          NOAA/ESRL (Earth Systems Research Laboratory)</a>
+        operates the Mauna Loa Observatory in Hawaii,
+        collecting atmospheric data every hour since the 1950s.
+        <p>
+          Notice the <a
+            href="https://scripps.ucsd.edu/programs/keelingcurve/2013/06/04/why-does-atmospheric-co2-peak-in-may/"
+            target="_blank" rel="noopener">
+            saw-tooth pattern
+          </a> in the chart:
+          There are more forests in the Northern
+          hemisphere than in the Southern hemisphere. During the
+          northern winter, the forests release CO2 to the atmospere.
+          When spring comes in the north, forests starts consuming CO2 as part of photosynthesis
+          and this reduces the level in the atmosphere.
+          <br>
+          The chart is updated monthly.
+        </p>
+      </div>
+      <script>
+        plotScatter(document.currentScript.parentNode.getAttribute('id'),
+          ["https://api.dashboard.eco/maunaloaco2-sm"],
+          [redisMaunaLoaCO2Sm],
+          ['Atmospheric CO2 in ppm'],
+          { autoSkip: true, maxTicksLimit: 8, min: '1958-01-01', max: '2022-01-01' },
+          { callback: v => v = v + 'ppm' },
+          'time');
+      </script>
+    </div>
+
+    <!-- Plot Law Dome 2000 years of CO2 -->
+    <div class="w3-row" id="plotLawDome">
+      <div class="w3-container w3-col m6 l7">
+        <h2>CO2 levels over the last 2000 years</h2>
+        This chart contains data from the
+        <a href="https://cdiac.ess-dive.lbl.gov/trends/co2/modern_co2.html" target="_blank" rel="noopener">
+          Law Dome ice core
+        </a>
+        drilled in East Antarctica.
+        The CO2 data starts at year 154 and ends in 1996, and provides more detail than the "Vostok" dataset.
+        <p>
+          The Law Dome data set shows how atmospheric CO2 levels started rising sharply
+          in the second half of the 1800's,
+          when fossil fuels started powering the industrial revolution.
+        </p>
+      </div>
+      <script>
+        plotScatter(document.currentScript.parentNode.getAttribute('id'),/*"plotLawDome",*/
+          ["https://api.dashboard.eco/maunaloa-annual-mean", "https://api.dashboard.eco/law2018co2"],
+          [redisMaunaLoaAnnualMean, redisLaw2018CO2],
+          ["Mauna Loa", "Law Dome"],
+          {
+            autoSkip: true,
+            maxTicksLimit: 8,
+            max: 2020,
+            callback: (x) => x == 2000 ? null : x
+          }, {
+          callback: (y) => y += "ppm"
+        });
+      </script>
+    </div>
+
+    <!-- Plot Vostok 420.000 years of CO2 -->
+    <div class="w3-row " id="plotVostok">
+      <div class="w3-container w3-col m6 l7">
+        <h2>CO2 levels over the last 420.000 years</h2>
+        This chart contains data from the "Vostok" ice core drilled in Antarctica in 1998
+        as a collaborative project between
+        France, Russia and USA.
+        The CO2 data goes back over 400.000 years,
+        and shows how CO2 levels in the air has varied between 180 and 280ppm
+        through four climate cycles.
+        <p>
+          By combining the "Vostok" dataset with the Mauna Loa dataset,
+          we clearly see the sharp increase in CO2 levels the last
+          100 years.
+        </p>
+      </div>
+      <script>
+        plotScatter(document.currentScript.parentNode.getAttribute('id'),
+          ["https://api.dashboard.eco/maunaloa-annual-mean", "https://api.dashboard.eco/law2018co2", "https://api.dashboard.eco/vostok"],
+          [redisMaunaLoaAnnualMean, redisLaw2018CO2, redisVostok],
+          ["Mauna Loa", "Law Dome", "Vostok"],
+          {
+            autoSkip: true,
+            maxTicksLimit: 8,
+            min: -420000,
+            max: 2020,
+            callback: (x) => (x == 2000 || x == 0 || x == -400000) ? null : x
+          }, {
+          callback: (y) => y += "ppm"
+        });
+      </script>
+    </div>
+
+    <!-- Plot CO2 by region -->
+    <div class="w3-row" id="plotEmissionsByRegion">
+      <div class="w3-container w3-col m6 l7">
+        <h2>CO2 emissions by region - Asia is driving the growth</h2>
+        While emissions are declining in Europe and North America, Asia is driving the growth in global emissions.
+        Most Asian countries have far lower emissions per capita than western countries,
+        but emissions will increase as more people move towards a higher standard of living.
+        China, the country with the highest emissions in the world,
+        still has only about one third of the emissions per capita compared to countries such as USA, Canada and
+        Australia.
+        <p>
+          Emissions from international transport such as shipping and air travel is counted as a separate
+          region.
+        </p>
+        <p>
+          This chart is based on December 2020 data from
+          <a href="https://www.globalcarbonproject.org/carbonbudget/" target="_blank" rel="noopener">
+            Global Carbon Project</a>
+        </p>
+      </div>
+      <script>
+        plotEmissionsByRegion(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/emissions-by-region', redisEmissionsByRegion);
+      </script>
+    </div>
+
+    <!-- Emissions Norway -->
+    <div class="w3-row" id="plotEmissionsNorway">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Greenhouse gas emissions Norway</h2>
+        <h4>Updated June 8, 2021</h4>
+        While CO2 emissions have increased from 35 to 42
+        million tons per year since 1990,
+        emissions of perfluorocarbons (PFC) and sulphur hexafluoride (SF6) from the
+        aluminum and magnesium industries are now close to 0.
+        Emissions of hydrofluorocarbons (HFC) from air-con and cooling systems have increased,
+        but this should be sharply reduced soon
+        as new coolants with lower global warming potential is being used.
+        More on this at
+        <a href="https://miljostatus.miljodirektoratet.no/tema/klima/norske-utslipp-av-klimagasser/f-gasser/"
+          target="_blank" rel="noopener">
+          Ministry of Climate and Environment.
+        </a>
+        <p>
+          Oil and gas production represents about
+          27&percnt; of total Norwegian emissions. These emissions are expected to
+          be reduced in the future at the cost of higher global emissions,
+          when on-shore hydroelectric power replaces off-shore gas turbines
+          for powering oil and gas extraction.
+          Numbers are in million tons CO2 equivalents.
+        </p>
+      </div>
+      <script>
+        plotEmissionsNorway(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/emissions-norway', redisEmissionsNorway);
+      </script>
+    </div>
+
+    <!-- Methane CH4 -->
+    <div class="w3-row" id="plotAtmosphericCH4">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Atmospheric methane levels are increasing</h2>
+        Methane (CH4) is a powerful greenhouse gas, with a global heating potential 25 times that of CO2.
+        Sources of methane are natural gas manufacturing, agriculture, waste management, coal mining and more.
+        About two thirds of methane emissions are from human activities.
+        <a href="https://www.esrl.noaa.gov/gmd/ccgg/trends_ch4/" target="_blank" rel="noopener">NOAA</a>
+        tracks the atmospheric levels of methane using a global network of monitoring sites.
+        <p>
+          The
+          <a href="https://www.epa.gov/ghgemissions/overview-greenhouse-gases" target="_blank" rel="noopener">
+            US Environmental Protection Agency EPA</a>
+          has a good overview of the various greehouse gases and their impact.
+        </p>
+        <p>
+          Methane levels are measured in ppb (parts per billion). The chart is updated monthly.
+        </p>
+      </div>
+      <script>
+        plotScatter(document.currentScript.parentNode.getAttribute('id'),
+          ['https://api.dashboard.eco/maunaloach4-sm'],
+          [redisMaunaLoaCH4Sm],
+          ['Atmospheric CH4 (methane) in ppb'],
+          { autoSkip: true, maxTicksLimit: 8, min: '1980-01-01', max: '2020-12-31' },
+          { callback: v => v = v + 'ppb' },
+          'time');
+      </script>
+    </div>
+
+    <!-- Arctic Ice Extent -->
+    <div class="w3-row" id="ArcticIce">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Ice extent in the Arctic close to record lows. July 2020 showed lowest ice coverage for any July month since
+          measurements began</h2>
+        <h4>Updated September 14, 2020</h4>
+        <a href="https://nsidc.org" target="_blank" rel="noopener">NSIDC</a>
+        (National Snow and Ice Data Center at University of Colorado)
+        provides imagery and data to help understand
+        how sea ice is retreating in the Arctic and Antarctic regions.
+        Sea ice extent is defined as areas of the sea with at least 15% ice cover.
+        The extent of sea ice is measured in thousands of square kilometers.
+        The chart shows the annual cycle for several years.
+        In the Arctic, sea ice cover is at its lowest in September, before the onset of winter.
+        <p>
+          The NSIDC dataset contains ice extent data since 1979.
+          July 2020 is the lowest month of July ever measured.
+          September 2012 had the lowest ice cover recorded.
+          This chart is updated monthly.
+        </p>
+      </div>
+      <script>
+        plotArcticIce(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/ice-nsidc', redisIceNsidc);
+      </script>
+    </div>
+
+    <!-- World Population -->
+    <div class="w3-row" id="plotWorldPopulation">
+      <div class="w3-container w3-col m6 l7">
+        <h2>World population will stabilize at about 11 billion in 2100</h2>
+        World population is currently 7.7 billion.
+        The UN projects that the number of people on earth will reach about
+        11 billion in year 2100, and will then remain stable.
+        <p>
+          Virtually all the population growth will be in Africa, where
+          the population will grow by 3 billion from 1.3 to 4.3 billion.
+        </p>
+      </div>
+      <script>
+        plotWorldPopulation(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/WPP2019_TotalPopulationByRegion', redisPopulationByRegion);
+      </script>
+    </div>
+
+    <!-- Global Gas Production -->
+    <div class="w3-row" id="plotEiaGas">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Global gas production is accelerating</h2>
+        <h4>Updated January 6, 2021</h4>
+        According to October 2020 data from the US Energy Information Administration EIA,
+        global production of natural gas is accelerating.
+        Other charts on our site confirm this, and show that gas is in fact
+        the main driver of increased CO2 emissions globally, ahead of coal and oil.
+        <p>Production numbers are in 1000 BCM - Billion cubic meters
+        </p>
+        <p>
+          Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
+        </p>
+      </div>
+      <script>
+        plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-gas", redisEiaGlobalGas, 2018);
+      </script>
+    </div>
+
+    <!-- Global Coal Production -->
+    <div class="w3-row" id="plotEiaCoal">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Coal production increasing again</h2>
+        <h4>Updated January 6, 2021</h4>
+        According to December 2020 data from the US Energy Information Administration EIA,
+        global coal production is rising again after declining since the 2013 peak.
+        China alone represents 45&percnt;
+        of total global coal production.
+        US coal production is slowly declining
+        <p>
+          The chart shows annual coal production in million metric tons since 1980.
+          For more on peak coal, read
+          <a href="https://www.forbes.com/sites/rrapier/2019/06/28/coal-demand-rises-but-remains-below-peak-levels/#4a629bc42646"
+            target="_blank" rel="noopener">
+            Forbes article on coal demand
+          </a>
+        </p>
+        <p> Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
+        </p>
+      </div>
+      <script>
+        plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-coal", redisEiaGlobalCoal);
+      </script>
+    </div>
+
+    <!-- Global Electricity Generation -->
+    <div class="w3-row" id="plotEiaEl">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Global electricity generation, steady increase in Asia</h2>
+        Charts based on data from the US Energy Information Administration EIA.
+        The increase in global electricity generation is mainly due to China.
+        <p>Figures in this chart are in 1000 TWh (terawatt hours)</p>
+        <p>Note: EIA uses the term Eurasia to denote the countries in the former Soviet Union
+        </p>
+      </div>
+      <script>
+        plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-electricity", redisEiaGlobalElectricity);
+      </script>
+    </div>
+
+
+
+    <!-- Ozone Hole -->
+    <div class="w3-row" id="plotOzone">
+      <div class="w3-container w3-col m6 l7">
+        <h2>And now some good news: The ozone hole is (slowly) shrinking</h2>
+        <h4>Updated February 23, 2021</h4>
+        Ozone is a colorless gas present in the upper atmosphere which absorbs UV radiation from the sun.
+        Reduced atmospheric ozone leads to sunburn, eye damage and skin cancer.
+        Without any ozone at all there would be no life on earth.
+        CFC (chlorofluorocarbon) gases typically used in refrigerators destroy ozone molecules.
+        In 1989, all UN members ratified
+        <a href="https://en.wikipedia.org/wiki/Montreal_Protocol" target="_blank" rel="noopener">
+          the Montreal Protocol
+        </a>,
+        agreeing to phase out the production of ozone depleting gases.
+        <p>
+          NASA Ozone Watch tracks the size of the ozone hole over the Antarctic
+          and the Arctic.
+          The Antarctic ozone hole reaches its peak size in September/October.
+          The chart shows the mean size of
+          the hole during this period, in millions of square km.
+        </p>
+      </div>
+      <script>
+        plotOzoneHole(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/ozone-nasa', redisOzoneNasa);
+      </script>
+    </div>
+
+
+    <!-- Svalbard Temperature Anomaly -->
+    <div class="w3-row" id="plotSvalbardTemp">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Arctic temperatures increasing dramatically: +5&deg; since 1900</h2>
+        Data from The Norwegian Meteorological Institute and
+        The Norwegian Centre for Climate Services indicate that temperatures in the Arctic,
+        as measured at Svalbard Airport (78.24 degrees North),
+        are now at least 5&deg;C higher than 50-100 years ago.
+        The increased temperature in the Arctic leads to thawing of the permafrost,
+        which in turn releases CO2 and methane currently trapped in the permafrost.
+        <p>
+          The report
+          <a href="https://cms.met.no/site/2/klimaservicesenteret/climate-in-svalbard-2100/_attachment/14428?_ts=169fd13ff23"
+            rel="noopener">
+            Climate in Svalbard 2100 by NCCS
+          </a>
+          is an excellent overview of future climate impact in the Arctic.
+        </p>
+      </div>
+      <script>
+        plotSvalbardTemp(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/temperature-svalbard', redisTemperatureSvalbard);
+      </script>
+    </div>
+
+    <!-- Brazil Forest Fire Activity -->
+    <div class="w3-row" id="plotBrazil">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Forest fire activity in the Amazon: 2019 and 2020 below average. 2007 remains record year</h2>
+        <h4>Updated September 14, 2020</h4>
+        Brazil's
+        <a href="https://queimadas.dgi.inpe.br/queimadas/portal" rel="noopener">
+          National Institute for Space Research (INPE)
+        </a>
+        monitors forest fire activity in Latin America daily using satellites.
+        This chart shows monthly fire activity for each year since 1998.
+        The highest activity was recorded in 2007, with 2004 and 2010 also showing high fire activity.
+        <p>
+          The data is a measure of fire activity, and not the number of fires per month.
+          When a satellite image indicates an area with fire activity,
+          there might actually be more than one fire within that image pixel.
+          Also, a single forest fire may span several pixels.
+        </p>
+        <p> This chart is updated daily.
+        </p>
+      </div>
+      <script>
+        plotBrazilFires(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/queimadas-brazil', redisQueimadasBrazil);
+      </script>
+    </div>
+
+    <!-- Global Sea Level Rise -->
+    <div class="w3-row" id="plotSeaLevel">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Sea levels have increased 250mm since 1880, current rate of increase: 50mm per decade</h2>
+        Global mean sea levels have increased by over 200mm since the late 1800's.
+        Data from Commonwealth Scientific and
+        Industrial Research Organisation (CSIRO) is updated continously and show a statistically significant
+        acceleration since measurements started.
+        <p>The dataset covering 1880-2009 is based on measurements from a large number of stations (38
+          stations in 1900, 235 stations in the 1980s).
+          The dataset from 1993 and onwards uses satellite technology.
+          Units in mm (millimeters). Chart is updated monthly.
+        </p>
+      </div>
+      <script>
+        plotGlobalSeaLevel(document.currentScript.parentNode.getAttribute('id'),
+          ['https://api.dashboard.eco/CSIRO_Recons_2015', 'https://api.dashboard.eco/CSIRO_Alt'],
+          [redisCsiroRecons2015, redisCsiroAlt]
+        );
+      </script>
+    </div>
+
+    <!-- CCS Carbon Capture -->
+    <div class="w3-row" id="plotCCS">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Carbon Capture and Storage in 2020: CCS captures about 0.1&percnt; of global CO2 emissions. Most of the
+          captured CO2 is used to extract more oil</h2>
+        <h4>Updated April 29, 2021</h4>
+        According to
+        <a href="https://www.globalccsinstitute.com/" rel="noopener">
+          Global CCS Institute
+        </a>
+        there are 26 large-scale CCS projects in operation at end-of-2020,
+        capturing 38 million tons CO2 annually, no increase over 2019. The captured CO2 is less than 0.1&percnt; of
+        global CO2 emissions.
+        <p>
+          Most of the captured CO2 (30 million tons) is used for EOR - Enhanced Oil Recovery:
+          Injection of CO2 into oil wells in order to extract more oil.
+          <a href="https://www.iea.org/commentaries/can-co2-eor-really-provide-carbon-negative-oil" rel="noopener">
+            IEA
+          </a>
+          estimates that this accounts for an extra 500.000 barrels of oil per day,
+          which equals 78 million tons CO2 emissions per year.
+        </p>
+        <p>
+          The chart lists all commercial operational CCS projects as of 2020. Those in red color use captured CO2 for
+          EOR. Those in grey have stopped operations.
+        </p>
+      </div>
+      <script>
+        plotBothCCS(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/operational-ccs-2020', redisOperationalCCS2020);
+      </script>
+    </div>
+
+    <!-- Safety in Electricity Generation -->
+
+    <div class="w3-row" id="plotSafety">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Electricity generation: Natural gas is 100 times more deadly than renewables. Coal is 1000 times more deadly
+          than renewables
+        </h2>
+        University of Oxford's
+        <a href="https://ourworldindata.org/safest-sources-of-energy" rel="noopener">
+          Our World in Data
+        </a>
+        has looked at the number of deaths per TWh (terawatt-hour) of electricity
+        generated from different sources.
+        Data includes accidents and
+        longer term effects due to pollution and radiation,
+        but does not include effects of CO2 emissions and global warming.
+        <p>
+          Brown coal is the deadliest power-generator with more than 32 deaths per TWh,
+          mainly due to air pollution. This is 1000 times as many deaths as wind, hydro and solar.
+          For the same amount of energy generated,
+          even natural gas causes about 100 times as many deaths as renewable
+          sources.
+        </p>
+        <p>
+          Nuclear power has a relatively low mortality rate,
+          even when the Chernobyl and Fukushima accidents are included.
+          Our World in Data uses the
+          <a href="https://www.iaea.org/newscenter/pressreleases/chernobyl-true-scale-accident">IAEA/WHO</a>
+          estimate for Chernobyl-related deaths, 4000.
+          This chart uses a higher estimate, 45.000, based on the
+          <a href="https://www.chernobylreport.org/" rel="noopener">TORCH report</a>
+        </p>
+      </div>
+      <script>
+        plotSafety(document.currentScript.parentNode.getAttribute('id'));
+      </script>
+    </div>
+
+    <!-- API -->
+
+    <!-- 
+    <div class="w3-container w3-section" id="API">
+    </div>
+    <div class="w3-container w3-section fp-api-links">
+      <h2>API</h2>
+      These API calls return self-explanatory JSON payloads for all charts on this page
+      <p id='API-list' style="font-size:small;">
+      </p>
+      <script>
+        insertFpUrls('API-list');
+      </script>
+    </div>
+    -->
+    <!-- ABOUT -->
+
+    <div class="w3-container w3-section" id="About">
+    </div>
+    <div class="w3-container w3-section">
+      <h2>About</h2>
+      This website visualizes publicly available data from reliable sources on the state of the earth.
+      <p>H&aring;kon Dahle, Oslo, Norway, 2020</p>
+
+    </div>
+
+    <!-- end w3-content -->
+  </div>
+
+
+  <!-- Footer with social media icons and credits -->
+
+  <footer class="w3-center w3-padding">
+    <div class="w3-large w3-section">
+      <a href="https://www.linkedin.com/company/futureplanet-eco/" class="fa fa-linkedin" rel="noopener"></a>
+      &nbsp;
+      <a href="https://www.instagram.com/futureplanet.eco/" class="fa fa-instagram" rel="noopener"></a>
+      &nbsp;
+      <a href="https://profiles.eco/dashboard" ref="noreferrer" rel="noopener">
+        <img style="width:16px" src="eco-mark.svg">
+      </a>
+    </div>
+    <p>
+    <div class="w3-center w3-padding fp-small-font">
+      design by futureplanet.eco
+      <br>
+      photos by
+      <a rel="noopener noreferrer" href="https://unsplash.com/">
+        gabriel miklos, unsplash.com
+      </a>
+    </div>
+  </footer>
+
+</body>
+
+</html>
