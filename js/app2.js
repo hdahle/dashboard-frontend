@@ -1218,31 +1218,22 @@ function plotEmissionsNorway(elmt, url, results) {
 //
 function plotArcticIce(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  console.log('ICE NSIDC:', results.data.length);
+  console.log('ICE NSIDC2:', results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-  let datasets = [];
-  for (let year = 1979; year <= parseInt(currentYear); year++) {
-    // Extract data for a particular year
-    let tmp = results.data.filter(x => x.year === year);
-    datasets.push({
-      data: tmp.map(x => x.extent),
-      label: year,
-      fill: false,
-      pointRadius: year == currentYear ? 4 : 0,
-    });
-  }
+
+  let c = colorArrayToAlpha(mkColorArray(Math.trunc(results.data.datasets.length * 2)), 0.4);
+
+  results.data.datasets.forEach( (d) => {
+    let color = c.pop();
+    d.backgroundColor = color;
+    d.borderColor = color;
+    d.fill = false
+  });
+
   new Chart(document.getElementById(id.canvasId), {
     type: 'line',
-    data: {
-      datasets: datasets,
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    },
+    data: results.data,
     options: {
-      plugins:{
-        colorschemes: {
-          scheme : 'tableau.Blue20',
-        }
-      },
       tooltips: {
         enabled: false
       },
