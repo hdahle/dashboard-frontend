@@ -56,6 +56,10 @@ const urlmap = [
     varName: "redisIceNsidc"
   },
   {
+    url: "http://api.dashboard.eco/ice-nsidc2",
+    varName: "redisIceNsidc2"
+  },
+  {
     url: "http://api.dashboard.eco/WPP2019_TotalPopulationByRegion",
     varName: "redisPopulationByRegion"
   },
