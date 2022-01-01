@@ -64,6 +64,10 @@ const urlmap = [
     varName: "redisPopulationByRegion"
   },
   {
+    url: "http://api.dashboard.eco/population-by-region",
+    varName: "redisPopulationByRegion2"
+  },
+  {
     url: "http://api.dashboard.eco/eia-global-oil",
     varName: "redisEiaGlobalOil"
   },

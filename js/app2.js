@@ -1220,16 +1220,13 @@ function plotArcticIce(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('ICE NSIDC2:', results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-
   let c = colorArrayToAlpha(mkColorArray(Math.trunc(results.data.datasets.length * 2)), 0.4);
-
   results.data.datasets.forEach( (d) => {
     let color = c.pop();
     d.backgroundColor = color;
     d.borderColor = color;
     d.fill = false
   });
-
   new Chart(document.getElementById(id.canvasId), {
     type: 'line',
     data: results.data,
@@ -1249,20 +1246,25 @@ function plotArcticIce(elmt, url, results) {
 //
 function plotWorldPopulation(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  console.log('Population:', results.data.length);
+  console.log('Population:', results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-  let datasets = [];
-  while (results.data.length) {
-    let x = results.data.pop();
-    x.region = x.region.replace('Latin America and the Caribbean', 'S America');
-    x.region = x.region.replace('Northern America', 'N America');
-    datasets.push({
-      label: x.region,
-      data: x.data,
-      fill: false
-    });
-  }
-  makeMultiLineChart(id.canvasId, {}, { callback: v => v / 1000 + ' bn' }, true, 'right', 'linear', 1, datasets);
+
+  results.data.datasets.forEach( (d) => {
+    d.pointRadius = 1
+  });
+
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'scatter',
+    data: results.data,
+    options: {
+      tooltips: {
+        callbacks: {
+          title: (tt) => tt[0].xLabel,
+          label: (tt) => results.data.datasets[tt.datasetIndex].label + ': ' + tt.yLabel,
+        }
+      },
+    }
+  });
 }
 
 
