@@ -52,6 +52,10 @@ const urlmap = [
     varName: "redisEmissionsNorway"
   },
   {
+    url: "http://api.dashboard.eco/ghg-norway",
+    varName: "redisEmissionsNorway2"
+  },
+  {
     url: "http://api.dashboard.eco/ice-nsidc",
     varName: "redisIceNsidc"
   },
