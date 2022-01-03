@@ -1175,7 +1175,7 @@ function plotEmissionsByRegion(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('CO2 Emissions by region:', results.data.length);
   insertSourceAndLink(results, id, url);
-/*
+
   results.data.datasets.forEach( d => {
     d.showLine = true;
     d.fill = false
@@ -1193,8 +1193,8 @@ function plotEmissionsByRegion(elmt, url, results) {
       }
     }
   });
-*/
-  
+
+/*  
   let datasets = [];
   results.data.forEach(d => {
     datasets.push({
@@ -1208,7 +1208,9 @@ function plotEmissionsByRegion(elmt, url, results) {
     { callback: v => v + ' Gt' },
     datasets
   );
-}
+  */
+ }
+
 
 //
 // Norway Annual GHG Emissions
