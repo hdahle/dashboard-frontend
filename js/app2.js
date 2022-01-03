@@ -1175,6 +1175,26 @@ function plotEmissionsByRegion(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('CO2 Emissions by region:', results.data.length);
   insertSourceAndLink(results, id, url);
+/*
+  results.data.datasets.forEach( d => {
+    d.showLine = true;
+    d.fill = false
+  });
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'scatter',
+    data: results.data,
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            callback: v => (results.data.yAxisLabel)? v + ' ' + results.data.yAxisLabel : v 
+          }
+        }]  
+      }
+    }
+  });
+*/
+  
   let datasets = [];
   results.data.forEach(d => {
     datasets.push({
@@ -1197,20 +1217,29 @@ function plotEmissionsNorway(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Norway:', results.data.length);
   insertSourceAndLink(results, id, url);
-  let datasets = [];
-  // Plot all datasets except 0 which is the Total
-  results.data.shift();
-  results.data.forEach(d => {
-    datasets.push({
-      data: d.values,//.map(x => ({ x: x.t, /* + "-12-31"*/ y: x.y })),
-      label: d.name
-    })
+  results.data.datasets.forEach( d => {
+    d.showLine = true;
+    d.fill = false
   });
-  makeStackedLineChart(id.canvasId,
-    { max: 2020 },
-    { callback: (value) => Math.trunc(value / 1000) + " Mt" },
-    datasets
-  );
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'scatter',
+    data: results.data,
+    options: {
+      tooltips: {
+        callbacks: {
+          title: (tt) => tt[0].xLabel,
+          label: (tt) => results.data.datasets[tt.datasetIndex].label + ': ' + tt.yLabel,
+        }
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            callback: v => (results.data.yAxisLabel)? v + ' ' + results.data.yAxisLabel : v 
+          }
+        }]  
+      }
+    }
+  });
 }
 
 //
@@ -1248,11 +1277,9 @@ function plotWorldPopulation(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Population:', results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-
   results.data.datasets.forEach( (d) => {
     d.pointRadius = 1
   });
-
   new Chart(document.getElementById(id.canvasId), {
     type: 'scatter',
     data: results.data,
