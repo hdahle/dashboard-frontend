@@ -54,6 +54,21 @@ Chart.plugins.unregister(ChartDataLabels);
 
 const currentYear = moment().format('YYYY');
 
+
+
+//
+// Top 15 Wind and Solar
+//
+function plotTop15WindSolar(elmt, url, results) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('Top15 wind and solar:', results.data.datasets.length);
+  insertSourceAndLink(results, id, url);
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'horizontalBar',
+    data: results.data,
+  });
+ }
+
 //
 // OECD Meat Consumption 2020
 //
@@ -1173,51 +1188,7 @@ function makeStackedLineChart(canvas, xTicks, yTicks, datasets = []) {
 //
 function plotEmissionsByRegion(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
-  console.log('CO2 Emissions by region:', results.data.length);
-  insertSourceAndLink(results, id, url);
-
-  results.data.datasets.forEach( d => {
-    d.showLine = true;
-    d.fill = false
-  });
-  new Chart(document.getElementById(id.canvasId), {
-    type: 'scatter',
-    data: results.data,
-    options: {
-      scales: {
-        yAxes: [{
-          ticks: {
-            callback: v => (results.data.yAxisLabel)? v + ' ' + results.data.yAxisLabel : v 
-          }
-        }]  
-      }
-    }
-  });
-
-/*  
-  let datasets = [];
-  results.data.forEach(d => {
-    datasets.push({
-      label: d.country,
-      fill: true,
-      data: d.data
-    });
-  })
-  makeStackedLineChart(id.canvasId,
-    { min: 1959, max: 2019, callback: x => x === 1960 ? null : x },
-    { callback: v => v + ' Gt' },
-    datasets
-  );
-  */
- }
-
-
-//
-// Norway Annual GHG Emissions
-//
-function plotEmissionsNorway(elmt, url, results) {
-  let id = insertAccordionAndCanvas(elmt);
-  console.log('Norway:', results.data.length);
+  console.log('CO2 Emissions by region:', results.data.datasets.length);
   insertSourceAndLink(results, id, url);
   results.data.datasets.forEach( d => {
     d.showLine = true;
@@ -1230,7 +1201,39 @@ function plotEmissionsNorway(elmt, url, results) {
       tooltips: {
         callbacks: {
           title: (tt) => tt[0].xLabel,
-          label: (tt) => results.data.datasets[tt.datasetIndex].label + ': ' + tt.yLabel,
+          label: (tt) => results.data.datasets[tt.datasetIndex].label + ': ' + tt.yLabel + ' ' + results.data.yAxisLabel
+        }
+      },
+      scales: {  
+        yAxes: [{
+          ticks: {
+            callback: v => (results.data.yAxisLabel)? v + ' ' + results.data.yAxisLabel : v 
+          }
+        }]  
+      }
+    }
+  });
+ }
+
+//
+// Norway Annual GHG Emissions
+//
+function plotEmissionsNorway(elmt, url, results) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('Norway:', results.data.datasets.length);
+  insertSourceAndLink(results, id, url);
+  results.data.datasets.forEach( d => {
+    d.showLine = true;
+    d.fill = false
+  });
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'scatter',
+    data: results.data,
+    options: {
+      tooltips: {
+        callbacks: {
+          title: (tt) => tt[0].xLabel,
+          label: (tt) => results.data.datasets[tt.datasetIndex].label + ': ' + tt.yLabel + ' ' + results.data.yAxisLabel,
         }
       },
       scales: {
