@@ -54,6 +54,27 @@ Chart.plugins.unregister(ChartDataLabels);
 
 const currentYear = moment().format('YYYY');
 
+//
+// Emissions per capita by income group
+//
+function plotEmissionsPerCapitaByIncome(elmt, url, results) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('Emissions per capita by income', results.data.datasets.length);
+  insertSourceAndLink(results, id, url);
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'bar',
+    data: results.data,
+    options: {
+      /*scales: {
+        xAxes: [{
+          ticks: {
+            callback: v => (results.data.yAxisLabel)? v + ' ' + results.data.yAxisLabel : v 
+          }
+        }]  
+      }*/
+    }
+  });
+ }
 
 //
 // Global Electricity Mix
@@ -62,7 +83,6 @@ function plotGlobalElectricityMix(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Global electricity mix:', results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-
   results.data.datasets.forEach( (d) => {
     d.showLine = true;
     d.fill= false;
@@ -384,7 +404,6 @@ function plotPlasticWaste(elmt, results, url) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Plastic waste:', url, results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-  console.log(id.canvasId);
   new Chart(document.getElementById(id.canvasId), {
     type: 'horizontalBar',
     options: {

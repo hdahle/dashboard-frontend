@@ -178,6 +178,26 @@
   <!-- Limit content width to 960px -->
   <div class="w3-content w3-padding-32">
 
+    <!-- Plot Emissions Per Capita By Income Group -->
+    <div class="w3-row" id="emissions-per-capita-by-income-2020">
+      <div class="w3-container w3-col m6 l7">
+        <h2>Emissions per capita and income group in world regions</h2>
+        <h4>January 4, 2022</h4>
+        <p>
+          In the December 22 2021 report
+          <a href="https://wid.world/document/climate-change-the-global-inequality-of-carbon-emissions-1990-2020-world-inequality-lab-working-paper-2021-21/" ref="noreferrer" rel="noopener">
+            Climate Change &percnt; the Global Inequality of Carbon Emissions
+          </a> by Lucas Chancel, we see how emissions per capita are dependent of income. 
+          The emissions levels are based on consumption
+          According to the report, a sustainable emission level in order to stay below 1.5&deg; global warming is 1.1 tCO2E per capita, 
+          and 3.4 tCO2E to stay below 2&deg; warming. 
+        </p>
+        </div>
+      <script>
+        plotEmissionsPerCapitaByIncome(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/emissions-per-capita-by-income-2020', redisEmissionsPerCapitaByIncome);
+      </script>
+    </div>
+
     <!-- Plot Global electricity mix 2020 -->
     <div class="w3-row" id="global-electricity-mix-2020">
       <div class="w3-container w3-col m6 l7">
