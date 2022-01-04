@@ -210,6 +210,10 @@ const urlmap = [
   {
     url: "http://api.dashboard.eco/top15windsolar-2020",
     varName: "redisTop15WindSolar"
+  },
+  {
+    url: "http://api.dashboard.eco/global-electricity-mix-2020",
+    varName: "redisGlobalElectricityMix"
   }
 ];
 

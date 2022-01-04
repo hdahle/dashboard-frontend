@@ -55,6 +55,45 @@ Chart.plugins.unregister(ChartDataLabels);
 const currentYear = moment().format('YYYY');
 
 
+//
+// Global Electricity Mix
+//
+function plotGlobalElectricityMix(elmt, url, results) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('Global electricity mix:', results.data.datasets.length);
+  insertSourceAndLink(results, id, url);
+
+  results.data.datasets.forEach( (d) => {
+    d.showLine = true;
+    d.fill= false;
+  });  
+  let res = {
+    data: {
+      datasets: results.data.datasets.filter(d => {
+        return ['Nuclear', 'Coal', 'Gas & oil', 'Wind and solar', 'Hydro, bioenergy & other renewables'].findIndex(x => d.label==x) > -1
+      })
+    }
+  }
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'scatter',
+    data: res.data,
+    options: {
+      tooltips: {
+        callbacks: {
+          title: (tt) => tt[0].xLabel,
+          label: (tt) => res.data.datasets[tt.datasetIndex].label + ': ' + tt.yLabel + ' ' + results.data.yAxisLabel,
+        }
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            callback: v => (results.data.yAxisLabel)? v + ' ' + results.data.yAxisLabel : v 
+          }
+        }]  
+      }
+    }
+  });
+ }
 
 //
 // Top 15 Wind and Solar
