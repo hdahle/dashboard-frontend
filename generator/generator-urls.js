@@ -214,6 +214,10 @@ const urlmap = [
   {
     url: "http://api.dashboard.eco/global-electricity-mix-2020",
     varName: "redisGlobalElectricityMix"
+  },
+  {
+    url: "http://api.dashboard.eco/emissions-per-capita-by-income-2020",
+    varName: "redisEmissionsPerCapitaByIncome"
   }
 ];
 
