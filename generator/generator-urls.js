@@ -218,6 +218,10 @@ const urlmap = [
   {
     url: "http://api.dashboard.eco/emissions-per-capita-by-income-2020",
     varName: "redisEmissionsPerCapitaByIncome"
+  },
+  {
+    url: "http://api.dashboard.eco/nve-lcoe-2021",
+    varName: "redisNveLcoe2021"
   }
 ];
 
