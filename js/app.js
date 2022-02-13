@@ -65,16 +65,16 @@ function plotEmissionsPerCapitaByIncome(elmt, url, results) {
     type: 'bar',
     data: results.data,
     options: {
-      /*scales: {
-        xAxes: [{
+      scales: {
+        yAxes: [{
           ticks: {
-            callback: v => (results.data.yAxisLabel)? v + ' ' + results.data.yAxisLabel : v 
+            callback: v => (results.data.units) ? v + ' ' + results.data.units : v
           }
-        }]  
-      }*/
+        }]
+      }
     }
   });
- }
+}
 
 //
 // Global Electricity Mix
@@ -83,14 +83,14 @@ function plotGlobalElectricityMix(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Global electricity mix:', results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-  results.data.datasets.forEach( (d) => {
+  results.data.datasets.forEach((d) => {
     d.showLine = true;
-    d.fill= false;
-  });  
+    d.fill = false;
+  });
   let res = {
     data: {
       datasets: results.data.datasets.filter(d => {
-        return ['Nuclear', 'Coal', 'Gas & oil', 'Wind and solar', 'Hydro, bioenergy & other renewables'].findIndex(x => d.label==x) > -1
+        return ['Nuclear', 'Coal', 'Gas & oil', 'Wind and solar', 'Hydro, bioenergy & other renewables'].findIndex(x => d.label == x) > -1
       })
     }
   }
@@ -107,13 +107,13 @@ function plotGlobalElectricityMix(elmt, url, results) {
       scales: {
         yAxes: [{
           ticks: {
-            callback: v => (results.data.yAxisLabel)? v + ' ' + results.data.yAxisLabel : v 
+            callback: v => (results.data.yAxisLabel) ? v + ' ' + results.data.yAxisLabel : v
           }
-        }]  
+        }]
       }
     }
   });
- }
+}
 
 //
 // Top 15 Wind and Solar
@@ -126,7 +126,7 @@ function plotTop15WindSolar(elmt, url, results) {
     type: 'horizontalBar',
     data: results.data,
   });
- }
+}
 
 //
 // OECD Meat Consumption 2020
@@ -426,6 +426,10 @@ function plotIrena(elmt, results, url) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Renewables:', url, results.data.datasets.length);
   insertSourceAndLink(results, id, url);
+  let yUnits = '$/kWh';
+  if (results.data.units !== undefined) {
+    yUnits = results.data.units;
+  }
   new Chart(document.getElementById(id.canvasId), {
     type: 'bar',
     options: {
@@ -434,9 +438,10 @@ function plotIrena(elmt, results, url) {
         mode: 'label',
         callbacks: {
           label: (ttItem, d) => {
-            const year =  d.datasets[ttItem.datasetIndex].label;
+            const year = d.datasets[ttItem.datasetIndex].label;
             if (ttItem.datasetIndex > 1) return null;
-            return year + ': ' +  ttItem.value + ' $/kWh'
+            console.log(ttItem)
+            return year + ': ' + ttItem.yLabel.toFixed(2) + ' ' + yUnits;
           }
         }
       },
@@ -450,7 +455,7 @@ function plotIrena(elmt, results, url) {
           ticks: {
             fontSize: 10,
             min: 0,
-            callback: v => v ? v + ' $/kWh' : null
+            callback: v => v ? v.toFixed(2) + ' ' + yUnits : null
           }
         }]
       }
@@ -539,9 +544,9 @@ function plotDailyCO2(elmt, url, results) {
       datasets: datasets
     },
     options: {
-      plugins:{
+      plugins: {
         colorschemes: {
-          scheme : 'tableau.ClassicOrangeBlue13',
+          scheme: 'tableau.ClassicOrangeBlue13',
         }
       },
       legend: {
@@ -710,7 +715,7 @@ function plotCoronaDeathsMulti(elmt, results, url, deathsPerMillion = true) {
 // Corona cases by capita
 //
 function plotCoronaDeathsByCapita(elmt, url, results) {
-  console.log("Corona deaths per capita:", url, results.data.length)
+  console.log("Corona deaths per capita:", url, (results !== undefined && results.data !== undefined))
   let id = insertAccordionAndCanvas(elmt);
   insertSourceAndLink(results, id, url);
 
@@ -1248,7 +1253,7 @@ function plotEmissionsByRegion(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('CO2 Emissions by region:', results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-  results.data.datasets.forEach( d => {
+  results.data.datasets.forEach(d => {
     d.showLine = true;
     d.fill = false
   });
@@ -1262,16 +1267,16 @@ function plotEmissionsByRegion(elmt, url, results) {
           label: (tt) => results.data.datasets[tt.datasetIndex].label + ': ' + tt.yLabel + ' ' + results.data.yAxisLabel
         }
       },
-      scales: {  
+      scales: {
         yAxes: [{
           ticks: {
-            callback: v => (results.data.yAxisLabel)? v + ' ' + results.data.yAxisLabel : v 
+            callback: v => (results.data.yAxisLabel) ? v + ' ' + results.data.yAxisLabel : v
           }
-        }]  
+        }]
       }
     }
   });
- }
+}
 
 //
 // Norway Annual GHG Emissions
@@ -1280,7 +1285,7 @@ function plotEmissionsNorway(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Norway:', results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-  results.data.datasets.forEach( d => {
+  results.data.datasets.forEach(d => {
     d.showLine = true;
     d.fill = false
   });
@@ -1297,9 +1302,9 @@ function plotEmissionsNorway(elmt, url, results) {
       scales: {
         yAxes: [{
           ticks: {
-            callback: v => (results.data.yAxisLabel)? v + ' ' + results.data.yAxisLabel : v 
+            callback: v => (results.data.yAxisLabel) ? v + ' ' + results.data.yAxisLabel : v
           }
-        }]  
+        }]
       }
     }
   });
@@ -1313,7 +1318,7 @@ function plotArcticIce(elmt, url, results) {
   console.log('ICE NSIDC2:', results.data.datasets.length);
   insertSourceAndLink(results, id, url);
   let c = colorArrayToAlpha(mkColorArray(Math.trunc(results.data.datasets.length * 2)), 0.4);
-  results.data.datasets.forEach( (d) => {
+  results.data.datasets.forEach((d) => {
     let color = c.pop();
     d.backgroundColor = color;
     d.borderColor = color;
@@ -1340,7 +1345,7 @@ function plotWorldPopulation(elmt, url, results) {
   let id = insertAccordionAndCanvas(elmt);
   console.log('Population:', results.data.datasets.length);
   insertSourceAndLink(results, id, url);
-  results.data.datasets.forEach( (d) => {
+  results.data.datasets.forEach((d) => {
     d.pointRadius = 1
   });
   new Chart(document.getElementById(id.canvasId), {
@@ -1571,7 +1576,7 @@ function plotBothCCS(elmt, url, results) {
           ticks: { callback: v => v + ' Mt' }
         }]
       },
-     legend: {
+      legend: {
         display: false
       },
       title: {
