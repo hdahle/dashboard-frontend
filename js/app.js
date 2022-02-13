@@ -440,7 +440,7 @@ function plotIrena(elmt, results, url) {
           label: (ttItem, d) => {
             const year = d.datasets[ttItem.datasetIndex].label;
             if (ttItem.datasetIndex > 1) return null;
-            console.log(ttItem)
+            //console.log(ttItem)
             return year + ': ' + ttItem.yLabel.toFixed(2) + ' ' + yUnits;
           }
         }
