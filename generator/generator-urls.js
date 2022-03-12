@@ -222,6 +222,10 @@ const urlmap = [
   {
     url: "http://api.dashboard.eco/nve-lcoe-2021",
     varName: "redisNveLcoe2021"
+  },
+  {
+    url: "http://api.dashboard.eco/ticker-wco2.xfra",
+    varName: "redisTickerWco2Xfra"
   }
 ];
 
