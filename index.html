@@ -188,6 +188,31 @@
     <!-- Limit content width to 960px -->
     <div class="w3-content w3-padding-32">
 
+      <!-- EU Emissions/Carbon Pricing -->
+      <div class="w3-row" id="wco2-xfra">
+        <div class="w3-container w3-col m6 l7">
+          <h2>Cost of EU Emissions Allowances</h2>
+          <h4>March 12, 2022</h4>
+          <p> 
+            The <a href="https://ec.europa.eu/clima/eu-action/eu-emissions-trading-system-eu-ets_en"> EU ETS (Emissions Trading System)</a> covers all EU member states plus Norway and Liechtenstein.
+            Companies in the power generation and manufacturing sectors are required by EU law to purchase emission allowances for their greenhouse gas emissions. 
+            These allowances may be traded on the open market.
+            There is a cap on the number of allowances in the market. 
+            The number of allowances is reduced over time, forcing a reduction in emissions.
+          </p>
+          <p>
+          The chart shows the market closing price of <a href="https://www.wisdomtree.eu/en-gb/products/ucits-etfs-unleveraged-etps/commodities/wisdomtree-carbon">WisdomTree Carbon ETC</a> (exchange traded commodity) which is designed to track the value of EU Emissions Allowances. 
+          The left axis shows the price for a single share of this ETC, while the right axis shows the corresponding EU Emission Allowance price in euros per ton of CO2-equivalents.
+          </p>
+          <p>
+            The major drop in price in late February 2022 was due to the russian invasion of Ukraine.
+          </p>
+        </div>
+        <script>
+          plotWco2(document.currentScript.parentNode.getAttribute('id'), redisTickerWco2Xfra, 'https://api.dashboard.eco/ticker-wco2.xfra');
+        </script>
+      </div>
+
       <!-- Plot LCOE for Norwegian power 2021-2030 -->
       <div class="w3-row" id="nve-lcoe">
         <div class="w3-container w3-col m6 l7">

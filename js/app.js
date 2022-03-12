@@ -55,6 +55,79 @@ Chart.plugins.unregister(ChartDataLabels);
 const currentYear = moment().format('YYYY');
 
 //
+// EU ETS
+//
+function plotWco2(elmt, results, url) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('Wisdomtree Carbon', results.data.length);
+  insertSourceAndLink(results, id, url);
+  const scaleFactor = 2.92;
+  const minY = 10;
+  const maxY = 40;
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'line',
+    options: {
+      tooltips: {
+        intersect: false,
+        callbacks: {
+          label: (ttItem, data) => {
+            var label = data.datasets[ttItem.datasetIndex].label
+            return [
+              label + ': ' + ttItem.yLabel,
+              'EU ETS Carbon Price: ' + Math.round(ttItem.yLabel * scaleFactor * 100) / 100
+            ]
+          }
+        }
+      },
+      responsive: true,
+      scales: {
+        yAxes: [{
+          id: 'L',
+          position: 'left',
+          ticks: {
+            fontSize: 10,
+            min: minY,
+            max: maxY,
+            callback: (val) => val + '€'
+          },
+          gridLines: {
+            drawBorder: false,
+            borderDash: [2, 4],
+            color: 'rgba(0,0,0,0.15)'
+          }
+        }, {
+          id: 'R',
+          position: 'right',
+          ticks: {
+            min: minY * scaleFactor,
+            max: maxY * scaleFactor,
+            callback: (val, index) =>
+              (val % 10 === 0) ? val + '€/ton' : null
+          }
+        }],
+        xAxes: [{
+          type: 'time',
+          time: {
+            unit: 'month'
+          },
+          ticks: {
+            min: '2021-11-01'
+          }
+        }],
+      }
+    },
+    data: {
+      datasets: [{
+        yAxisID: 'L',
+        label: "WisdomTree Carbon ETC",
+        fill: false,
+        data: results.data
+      }]
+    }
+  })
+}
+
+//
 // Emissions per capita by income group
 //
 function plotEmissionsPerCapitaByIncome(elmt, url, results) {
