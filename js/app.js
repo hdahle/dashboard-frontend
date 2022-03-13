@@ -62,19 +62,19 @@ function plotWco2(elmt, results, url) {
   console.log('Wisdomtree Carbon', results.data.length);
   insertSourceAndLink(results, id, url);
   const scaleFactor = 2.92;
-  const minY = 10;
-  const maxY = 40;
   new Chart(document.getElementById(id.canvasId), {
     type: 'line',
     options: {
       tooltips: {
         intersect: false,
         callbacks: {
+          title: (ttItem) => {
+            return moment(ttItem[0].xLabel).format('MMM d, YYYY')
+          },
           label: (ttItem, data) => {
-            var label = data.datasets[ttItem.datasetIndex].label
             return [
-              label + ': ' + ttItem.yLabel,
-              'EU ETS Carbon Price: ' + Math.round(ttItem.yLabel * scaleFactor * 100) / 100
+              data.datasets[ttItem.datasetIndex].label + ': ' + Math.round(ttItem.yLabel / scaleFactor * 100) / 100 + ' €/share',
+              'EU Carbon Price: ' + Math.round(ttItem.yLabel * 100) / 100 + ' €/ton CO2'
             ]
           }
         }
@@ -82,46 +82,20 @@ function plotWco2(elmt, results, url) {
       responsive: true,
       scales: {
         yAxes: [{
-          id: 'L',
-          position: 'left',
           ticks: {
-            fontSize: 10,
-            min: minY,
-            max: maxY,
-            callback: (val) => val + '€'
-          },
-          gridLines: {
-            drawBorder: false,
-            borderDash: [2, 4],
-            color: 'rgba(0,0,0,0.15)'
-          }
-        }, {
-          id: 'R',
-          position: 'right',
-          ticks: {
-            min: minY * scaleFactor,
-            max: maxY * scaleFactor,
-            callback: (val, index) =>
-              (val % 10 === 0) ? val + '€/ton' : null
+            callback: (v) => v + ' €/ton'
           }
         }],
         xAxes: [{
-          type: 'time',
-          time: {
-            unit: 'month'
-          },
-          ticks: {
-            min: '2021-11-01'
-          }
+          type: 'time'
         }],
       }
     },
     data: {
       datasets: [{
-        yAxisID: 'L',
         label: "WisdomTree Carbon ETC",
         fill: false,
-        data: results.data
+        data: results.data.map(d => ({ x: d.x, y: d.y * scaleFactor }))
       }]
     }
   })
