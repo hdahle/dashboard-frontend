@@ -69,7 +69,7 @@ function plotWco2(elmt, results, url) {
         intersect: false,
         callbacks: {
           title: (ttItem) => {
-            return moment(ttItem[0].xLabel).format('MMM d, YYYY')
+            return moment(ttItem[0].xLabel).format('MMM D, YYYY')
           },
           label: (ttItem, data) => {
             return [
