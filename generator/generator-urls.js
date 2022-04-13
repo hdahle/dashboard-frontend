@@ -194,6 +194,10 @@ const urlmap = [
   {
     url: "http://api.dashboard.eco/poore-nemecek-2018",
     varName: "redisPooreNemecek2018"
+  },
+  {
+    url: "http://api.dashboard.eco/bloomberg-battery",
+    varName: "redisBloombergBattery"
   }
 ];
 
