@@ -178,6 +178,27 @@
   <div class="w3-content w3-padding-32">
 
 
+    <!-- Plot Battery Cost Evolution -->
+    <div class="w3-row" id="bloomberg-battery">
+      <div class="w3-container w3-col m6 l7">
+        <h2>BloombergNEF: Cost of battery packs reduced by 80&percnt; since 2013</h2>
+        <h4>April 13, 2022</h4>
+        <p>
+          <a href="https://about.bnef.com/blog/battery-pack-prices-fall-to-an-average-of-132-kwh-but-rising-commodity-prices-start-to-bite/" ref="">
+          BloombergNEF's annual battery price survey
+          </a> 
+          finds that battery packs fell by 6&percnt; from 2020 to 2021 and by 80&percnt; from 2013 to 2021. 
+          However they also write that increasing commodity prices are having an impact on prices in the near term.
+        </p>
+        <p>
+          The survey looks at battery packs and battery cells for electric vehicles, buses and energy storage projects. Battery pack prices were lowest in China at $111 per kWh, prices in US and EU were 40 to 60&percnt; higher.
+        </p>
+      </div>
+      <script>
+        plotBloombergBattery(document.currentScript.parentNode.getAttribute('id'), redisBloombergBattery, 'https://api.dashboard.eco/bloomberg-battery');
+      </script>
+    </div>
+
     <!-- Plot Renewables Cost -->
     <div class="w3-row" id="irena-cost-of-renewables-2020">
       <div class="w3-container w3-col m6 l7">
@@ -186,7 +207,8 @@
         <h4>October 5, 2021</h4>
         <p>
           IRENA has updated
-          <a href="https://www.irena.org/publications/2020/Jun/Renewable-Power-Costs-in-2019" ref="noreferrer"
+          <a href="https://www.irena.org/publications/2020/Jun/Renewable-Power-Costs-in-2019" 
+            ref="noreferrer"
             rel="noopener">
             their annual detailed study
           </a> on the cost of utility-scale power generation at a global level based on renewable resources.
@@ -216,7 +238,7 @@
         According to April 30 2021 data from the US Energy Information Administration EIA,
         global oil production is now about 92 million barrels per day, down from 98 mb/d in 2019.
         <p>According to the
-          <a href="https://www.iea.org/reports/oil-2021" target="_blank" rel="noopener">International Energy Agency IEA
+          <a href="https://www.iea.org/reports/oil-2021" rel="noopener">International Energy Agency IEA
           </a>, global oil demand will reach 104 million barrels per day in 2026. The growth in demand will come from
           emerging and developing countries, with Asian oil demand increasing sharply. OECD demand is not expected to
           return to pre-Covid levels.
