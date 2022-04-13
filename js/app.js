@@ -55,6 +55,30 @@ Chart.plugins.unregister(ChartDataLabels);
 const currentYear = moment().format('YYYY');
 
 //
+// Bloomberg Battery 
+//
+function plotBloombergBattery(elmt, results, url) {
+  let id = insertAccordionAndCanvas(elmt);
+  console.log('Bloomberg Battery', results.data.length);
+  insertSourceAndLink(results, id, url);
+  new Chart(document.getElementById(id.canvasId), {
+    type: 'bar',
+    options: {
+      responsive: true,
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            callback: (v) => v + ' $/kWh'
+          }
+        }]
+      }
+    },
+    data: results.data
+  })
+}
+
+//
 // EU ETS
 //
 function plotWco2(elmt, results, url) {

@@ -188,6 +188,32 @@
     <!-- Limit content width to 960px -->
     <div class="w3-content w3-padding-32">
 
+  <!-- Plot Battery Cost Evolution -->
+  <div class="w3-row" id="bloomberg-battery">
+    <div class="w3-container w3-col m6 l7">
+      <h2>BloombergNEF: Cost of battery packs reduced by 80&percnt; since 2013</h2>
+      <h4>April 13, 2022</h4>
+      <p>
+        <a href="https://about.bnef.com/blog/battery-pack-prices-fall-to-an-average-of-132-kwh-but-rising-commodity-prices-start-to-bite/" ref="">
+        BloombergNEF's annual battery price survey
+        </a> 
+        finds that battery packs fell by 6&percnt; from 2020 to 2021 and by 80&percnt; from 2013 to 2021. 
+        However they also write that increasing commodity prices are having an impact on prices in the near term.
+      </p>
+      <p>
+        The survey looks at battery packs and battery cells for electric vehicles, buses and energy storage projects. Battery pack prices were lowest in China at $111 per kWh, prices in US and EU were 40 to 60&percnt; higher.
+      </p>
+      <p>
+        BloombergNEF also says: "...by 2024 average pack prices should be below $100/kWh. 
+        It is at around this price point that automakers should be able to produce and sell mass-market EVs at the same price 
+        (and with the same margin) as comparable internal combustion vehicles in some markets"
+      </p>
+    </div>
+    <script>
+      plotBloombergBattery(document.currentScript.parentNode.getAttribute('id'), redisBloombergBattery, 'https://api.dashboard.eco/bloomberg-battery');
+    </script>
+  </div>
+
       <!-- EU Emissions/Carbon Pricing -->
       <div class="w3-row" id="wco2-xfra">
         <div class="w3-container w3-col m6 l7">
@@ -235,103 +261,10 @@
         </script>
       </div>
 
-<<<<<<< HEAD
-    <!-- Plot Battery Cost Evolution -->
-    <div class="w3-row" id="bloomberg-battery">
-      <div class="w3-container w3-col m6 l7">
-        <h2>BloombergNEF: Cost of battery packs reduced by 80&percnt; since 2013</h2>
-        <h4>April 13, 2022</h4>
-        <p>
-          <a href="https://about.bnef.com/blog/battery-pack-prices-fall-to-an-average-of-132-kwh-but-rising-commodity-prices-start-to-bite/" ref="">
-          BloombergNEF's annual battery price survey
-          </a> 
-          finds that battery packs fell by 6&percnt; from 2020 to 2021 and by 80&percnt; from 2013 to 2021. 
-          However they also write that increasing commodity prices are having an impact on prices in the near term.
-        </p>
-        <p>
-          The survey looks at battery packs and battery cells for electric vehicles, buses and energy storage projects. Battery pack prices were lowest in China at $111 per kWh, prices in US and EU were 40 to 60&percnt; higher.
-        </p>
-      </div>
-      <script>
-        plotBloombergBattery(document.currentScript.parentNode.getAttribute('id'), redisBloombergBattery, 'https://api.dashboard.eco/bloomberg-battery');
-      </script>
-    </div>
-
     <!-- Plot Renewables Cost -->
     <div class="w3-row" id="irena-cost-of-renewables-2020">
       <div class="w3-container w3-col m6 l7">
         <h2>Cost of renewable power generation decreasing sharply, now competitive with fossil fuel based power
-=======
-      <!-- Plot Emissions Per Capita By Income Group -->
-      <div class="w3-row" id="emissions-per-capita-by-income-2020">
-        <div class="w3-container w3-col m6 l7">
-          <h2>World Inequality Database: "Extreme wealth comes with extreme pollution"</h2>
-          <h4>January 4, 2022</h4>
-          <p> 
-          In the December 22 2021 report
-          <a href="https://wid.world/document/climate-change-the-global-inequality-of-carbon-emissions-1990-2020-world-inequality-lab-working-paper-2021-21/" ref="noreferrer" rel="noopener">
-            Climate Change &percnt; the Global Inequality of Carbon Emissions
-          </a> by Lucas Chancel, we see how emission per capita is dependent on income. 
-          The emission levels in this chart are consumption-based.
-          According to the report, a sustainable emission level in order to stay below 1.5&deg; global warming is 1.1 tCO2E per capita, 
-          and 3.4 tCO2E to stay below 2&deg; warming. 
-        </p>
-          <p>While the bottom 50&percnt; in many regions are close to these levels, in North America even the bottom 50&percnt; have emissions far excess.</p>
-          <p>The top 1&percnt; richest globally emit on average 106 tCO2E per year.</p>
-        </div>
-        <script>
-          plotEmissionsPerCapitaByIncome(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/emissions-per-capita-by-income-2020', redisEmissionsPerCapitaByIncome);
-        </script>
-      </div>
-
-      <!-- Plot Global electricity mix 2020 -->
-      <div class="w3-row" id="global-electricity-mix-2020">
-        <div class="w3-container w3-col m6 l7">
-          <h2>Ember's Global Electricity Review: Global electricity mix 2000-2020</h2>
-          <h4>January 4, 2022</h4>
-          <p>
-          Ember's report
-          <a href="https://ember-climate.org/data/global-electricity/" ref="noreferrer" rel="noopener">
-            Global Electricity Review 2021
-          </a> 
-          shows the development in the global electricity generation mix over the last 20 years. 
-          Total global electricity generation is now almost 26000 TWh per year.
-          Coal is on the decline and natural gas is increasing. Wind and solar will be generating as much electricity as nuclear in 2021.
-          </p>
-          <p>
-          Ember is an independent climate and energy think-tank focusing on the coal-to-clean transition. 
-        </p>
-        </div>
-        <script>
-          plotGlobalElectricityMix(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/global-electricity-mix-2020', redisGlobalElectricityMix);
-        </script>
-      </div>
-
-      <!-- Plot Top15 Wind and Solar -->
-      <div class="w3-row" id="top15windsolar-2020">
-        <div class="w3-container w3-col m6 l7">
-          <h2>Ember's Global Electricity Review: Top 15 countries in solar and wind electricity generation</h2>
-          <h4>January 3, 2022</h4>
-          <p>
-          Ember's report
-          <a href="https://ember-climate.org/commentary/2021/07/08/top-15-wind-and-solar-power-countries-in-2020/" ref="noreferrer" rel="noopener">
-            Global Electricity Review
-          </a> 
-          shows that several countries in Europe use wind and solar to generate more than 25&percnt; of their electricity. 
-          Ember is an independent climate and energy think-tank focusing on the coal-to-clean transition. 
-        </p>
-          <p>Denmark is the clear leader with more than 60&percnt; of electricity generated by wind and solar.</p>
-        </div>
-        <script>
-          plotTop15WindSolar(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/top15windsolar-2020', redisTop15WindSolar);
-        </script>
-      </div>
-
-      <!-- Plot Renewables Cost -->
-      <div class="w3-row" id="irena-cost-of-renewables-2020">
-        <div class="w3-container w3-col m6 l7">
-          <h2>Cost of renewable power generation decreasing sharply, now competitive with fossil fuel based power
->>>>>>> 3ad0b4d673441c44b0ad88a523bafcd347c8f27c
           generation</h2>
           <h4>October 5, 2021</h4>
           <p>
