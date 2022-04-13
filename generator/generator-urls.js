@@ -208,10 +208,10 @@ const urlmap = [
     varName: "redisPooreNemecek2018"
   },
   {
-<<<<<<< HEAD
     url: "http://api.dashboard.eco/bloomberg-battery",
     varName: "redisBloombergBattery"
-=======
+  },
+  {
     url: "http://api.dashboard.eco/top15windsolar-2020",
     varName: "redisTop15WindSolar"
   },
@@ -230,7 +230,6 @@ const urlmap = [
   {
     url: "http://api.dashboard.eco/ticker-wco2.xfra",
     varName: "redisTickerWco2Xfra"
->>>>>>> 3ad0b4d673441c44b0ad88a523bafcd347c8f27c
   }
 ];
 
