@@ -4,10 +4,13 @@
   "description": "",
   "main": "generator.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "node generator.js --web > redis-values.js && node generator.js --bot > redis-values2.js",
+    "web" : "node generator.js --web > redis-values.js",
+    "bot" : "node generator.js --bot > redis-values2.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "HD",
   "license": "ISC",
   "dependencies": {
     "minimist": "1.2.6",
