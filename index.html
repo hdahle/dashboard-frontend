@@ -188,6 +188,28 @@
     <!-- Limit content width to 960px -->
     <div class="w3-content w3-padding-32">
 
+      <!-- Emissions by fuel type -->
+      <div class="w3-row" id="plotEmissionsByFuelType">
+        <div class="w3-container w3-col m6 l7">
+          <h2>Global Carbon Project: CO2 emissions from fossil fuels decreased by 5.4&percnt; in 2020 due to the Covid pandemic.
+            Emissions are expected to rebound close to pre-Covid levels in 2021.
+        </h2>
+          <h4>Updated June 13, 2022</h4>
+        According to fossil fuel and cement production emissions data provided by the
+        <a href="https://www.globalcarbonproject.org/carbonbudget/">
+          Global Carbon Project
+        </a> there was a record decrease in emissions in 2020, 1.9 million tonnes of CO2 (GtCO2). 
+        Emissions are projected to grow 4.9&percnt; in 2021, or 1.6 GtCO2. 
+        <p>
+        While emissions for EU and USA will remain under 2019 levels in 2021, emissions from China are projected to be 5.5&percnt; above 2019 levels in 2021.
+        Coal remains the number one source of CO2.
+        </p>
+      </div>
+        <script>
+          plotEmissionsByFuelType(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/emissions-by-fuel-type', redisEmissionsByFuelType);
+        </script>
+      </div>
+
   <!-- Plot Battery Cost Evolution -->
   <div class="w3-row" id="bloomberg-battery">
     <div class="w3-container w3-col m6 l7">
@@ -306,26 +328,6 @@
         </div>
         <script>
           plotEia(document.currentScript.parentNode.getAttribute('id'), "https://api.dashboard.eco/eia-global-oil", redisEiaGlobalOil);
-        </script>
-      </div>
-
-      <!-- Emissions by fuel type -->
-      <div class="w3-row" id="plotEmissionsByFuelType">
-        <div class="w3-container w3-col m6 l7">
-          <h2>Global Carbon Project: CO2 emissions from fossil fuels increased by only 0.1&percnt; in 2019.
-          A decrease in emissions of about 7&percnt; is expected in 2020 due to Covid
-        </h2>
-          <h4>Updated May 24, 2021</h4>
-        According to fossil fuel and cement production emissions data provided by the
-        <a href="https://www.globalcarbonproject.org/carbonbudget/">
-          Global Carbon Project
-        </a>
-        there was a 2&percnt; increase in CO2 emissions from fossil fuels in 2018, and a 0.1&percnt; increase in 2019.
-        Coal is the number one source of CO2.
-
-      </div>
-        <script>
-          plotEmissionsByFuelType(document.currentScript.parentNode.getAttribute('id'), 'https://api.dashboard.eco/emissions-by-fuel-type', redisEmissionsByFuelType);
         </script>
       </div>
 
