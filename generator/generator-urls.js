@@ -84,6 +84,10 @@ const urlmap = [
     varName: "redisEiaGlobalCoal"
   },
   {
+    url: "http://api.dashboard.eco/eia-global-gdp-pop-co2",
+    varName: "redisEiaGlobalGdpPopCo2"
+  },
+  {
     url: "http://api.dashboard.eco/eia-global-electricity",
     varName: "redisEiaGlobalElectricity"
   },
