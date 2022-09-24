@@ -979,8 +979,7 @@
                 plotScatter(document.currentScript.parentNode.getAttribute('id'), ["https://api.dashboard.eco/maunaloaco2-sm"], [redisMaunaLoaCO2Sm], ['Atmospheric CO2 in ppm'], {
                   autoSkip: true,
                   maxTicksLimit: 8,
-                  min: '1958-01-01',
-                  max: '2022-01-01'
+                  min: '1958-01-01'
                 }, {
                   callback: v => v = v + 'ppm'
                 }, 'time');
@@ -1142,8 +1141,7 @@
                 plotScatter(document.currentScript.parentNode.getAttribute('id'), ['https://api.dashboard.eco/maunaloach4-sm'], [redisMaunaLoaCH4Sm], ['Atmospheric CH4 (methane) in ppb'], {
                   autoSkip: true,
                   maxTicksLimit: 8,
-                  min: '1980-01-01',
-                  max: '2020-12-31'
+                  min: '1980-01-01'
                 }, {
                   callback: v => v = v + 'ppb'
                 }, 'time');
