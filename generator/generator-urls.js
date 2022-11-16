@@ -48,6 +48,10 @@ const urlmap = [
     varName: "redisEmissionsByRegion"
   },
   {
+    url: "http://api.dashboard.eco/emissions-by-region-2022",
+    varName: "redisEmissionsByRegion2022"
+  },
+  {
     url: "http://api.dashboard.eco/emissions-norway",
     varName: "redisEmissionsNorway"
   },
@@ -94,6 +98,10 @@ const urlmap = [
   {
     url: "http://api.dashboard.eco/emissions-by-fuel-type",
     varName: "redisEmissionsByFuelType"
+  },
+  {
+    url: "http://api.dashboard.eco/emissions-by-fuel-type-2022",
+    varName: "redisEmissionsByFuelType22"
   },
   {
     url: "http://api.dashboard.eco/queimadas-brazil",
